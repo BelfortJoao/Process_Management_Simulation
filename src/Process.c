@@ -4,20 +4,25 @@
 
 #include <limits.h>
 #include "Process.h"
-void initMemory(struct process* proc) {
-    char* firstLine = proc->prog[0];
-    int lengthMem;
-    char lixo;
-
-    sscanf(firstLine, "%c %d", &lixo, &lengthMem); // extrai o valor de X da primeira linha do programa
-
-    proc->mem = (int*) malloc(lengthMem * sizeof(int));
-
-    // inicializa todos os elementos do vetor com zero
-    for (int i = 0; i < lengthMem; i++) {
-        proc->mem[i] = 0;
-    }
+// função para inicializar a memória de um processo com valores zero
+void initMemory(struct process* proc, int lengthMem) {
+    proc->mem= (int*) calloc(lengthMem, sizeof(int)); // aloca o vetor de memória e o preenche com zeros
     proc->lengthMem=lengthMem;
+}
+
+void declareVar(struct process* proc, int position){
+    proc->mem[position]=0;
+}
+
+void changeVar(struct process* proc, int possition, int value){
+    proc->mem[possition]= value;
+}
+
+void addVar(struct process* proc, int possition, int value){
+    proc->mem[possition]+= value;
+}
+void subVar(struct process* proc, int possition, int value){
+    proc->mem[possition]-= value;
 }
 
 void initProcess(struct process* proc, char* name) {
@@ -64,4 +69,26 @@ void excludeProcess(struct process* proc) {
 
     // desaloca o proc
     free(proc);
+}
+
+process* criarNovoProcesso(struct process* proc) {
+    // aloca memória para o novo processo
+    struct process* newprocess = (struct Processo*) malloc(sizeof(struct Processo));
+
+    // copia o array de programa do processo atual para o novo processo
+    newprocess->numLines = proc->numLines;
+    newprocess->prog = (char**) malloc(newprocess->numLines * sizeof(char*));
+    for (int i = 0; i < newprocess->numLines; i++) {
+        newprocess->prog[i] = strdup(proc->prog[i]);
+    }
+
+    // copia o vetor de memória do processo atual para o novo processo
+    newprocess->lengthMem = proc->lengthMem;
+    newprocess->mem.vetor = (int*) malloc(newprocess->mem.tamanho * sizeof(int));
+    for (int i = 0; i < newprocess->lengthMem; i++) {
+        newprocess->mem.vetor[i] = proc->mem.vetor[i];
+    }
+
+    // retorna o novo processo criado
+    return newprocess;
 }

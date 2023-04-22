@@ -9,7 +9,7 @@
 #include "../Process.h"
 
 typedef struct CPU{
-    struct process* program;
+    struct process* proc;
     int pc;
     int* memory;
     time program_timer;
