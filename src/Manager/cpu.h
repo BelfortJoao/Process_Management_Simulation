@@ -7,11 +7,17 @@
 
 #include "timer.h"
 #include "../Process.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct CPU{
-    struct process* proc;
+    process* proc;
     int pc;
     timer program_timer;
     timer executing_timer;
 }CPU;
+void initCPU(CPU* cpu);
+void freeCPU(CPU* cpu);
+void interpreter(CPU* cpu);
+void changeProcess(CPU* cpu,process* proc, int pc, timer program_timer, timer executing_timer);
 #endif //SRC_CPU_H

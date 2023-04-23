@@ -31,9 +31,11 @@ void initProcess(process* proc, char* name) {
         printf("Erro ao abrir o archive.\n");
         return;
     }
+    printf("Abrindo arquivo\n");
     // conta o número de linhas no archive
-    int numLines = 0;
+    int numLines = 1;
     char c = getc(archive);
+    if (c == EOF){ printf("cu");}
     while (c != EOF) {
         if (c == '\n') {
             numLines++;
@@ -41,6 +43,7 @@ void initProcess(process* proc, char* name) {
         c = getc(archive);
     }
     rewind(archive);
+
     proc->numLines=numLines;
     // aloca o array dinamicamente
     proc->prog = (char**) malloc(numLines * sizeof(char*));
@@ -53,6 +56,7 @@ void initProcess(process* proc, char* name) {
     while (fgets(proc->prog[linhaAtual], CHAR_MAX, archive) != NULL) {
         linhaAtual++;
     }
+    proc->numLines = linhaAtual;
 
     fclose(archive);
 }
@@ -67,8 +71,6 @@ void excludeProcess(process* proc) {
     // desaloca a memoria
     free(proc->mem);
 
-    // desaloca o proc
-    free(proc);
 }
 
 process* generateNewProcess(process* proc) {
@@ -91,4 +93,18 @@ process* generateNewProcess(process* proc) {
 
     // retorna o novo processo criado
     return newprocess;
+}
+void printMem(process* proc) {
+    printf("Memory:\n");
+    for (int i = 0; i < proc->lengthMem; i++) {
+        printf("%d ", proc->mem[i]);
+    }
+    printf("\n");
+}
+
+void printProg(process* proc) {
+    printf("Program:\n");
+    for (int i = 0; i < proc->numLines; i++) {
+        printf("%s\n", proc->prog[i]);
+    }
 }

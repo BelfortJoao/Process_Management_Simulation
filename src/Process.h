@@ -26,4 +26,6 @@ void changeVar(process* proc, int possition, int value);
 void addVar(process* proc, int possition, int value);
 void subVar(process* proc, int possition, int value);
 process* generateNewProcess(process* proc);
+void printMem(process* proc);
+void printProg(process* proc);
 #endif //SRC_PROCESS_H

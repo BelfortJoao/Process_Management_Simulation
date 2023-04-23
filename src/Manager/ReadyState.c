@@ -53,6 +53,7 @@ void removeReady(Ready* r, int pid, int priority) {
 }
 
 //TA TUDO ERRADO AQUI CONCERTO AMANHÃ
+/*
 void moveFromPriorityToPriority(Ready* ready, int sourcePriority, int destinationPriority, int processId) {
     int* sourceQueue = ready->queues[sourcePriority];
     int* destinationQueue = ready->queues[destinationPriority];
@@ -76,3 +77,4 @@ void moveFromPriorityToPriority(Ready* ready, int sourcePriority, int destinatio
         processId;
     }
 }
+ */
