@@ -71,9 +71,9 @@ void excludeProcess(struct process* proc) {
     free(proc);
 }
 
-process* criarNovoProcesso(struct process* proc) {
+process* generateNewProcess(struct process* proc) {
     // aloca memória para o novo processo
-    struct process* newprocess = (struct Processo*) malloc(sizeof(struct process));
+    struct process* newprocess = (struct process*) malloc(sizeof(struct process));
 
     // copia o array de programa do processo atual para o novo processo
     newprocess->numLines = proc->numLines;

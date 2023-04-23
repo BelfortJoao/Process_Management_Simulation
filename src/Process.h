@@ -25,5 +25,5 @@ void declareVar(struct process* proc, int position);
 void changeVar(struct process* proc, int possition, int value);
 void addVar(struct process* proc, int possition, int value);
 void subVar(struct process* proc, int possition, int value);
-process* criarNovoProcesso(struct process* proc);
+process* generateNewProcess(struct process* proc);
 #endif //SRC_PROCESS_H
