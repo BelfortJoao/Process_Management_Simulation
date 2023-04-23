@@ -5,27 +5,27 @@
 #include <limits.h>
 #include "Process.h"
 // função para inicializar a memória de um processo com valores zero
-void initMemory(struct process* proc, int lengthMem) {
+void initMemory(process* proc, int lengthMem) {
     proc->mem= (int*) calloc(lengthMem, sizeof(int)); // aloca o vetor de memória e o preenche com zeros
     proc->lengthMem=lengthMem;
 }
 
-void declareVar(struct process* proc, int position){
+void declareVar(process* proc, int position){
     proc->mem[position]=0;
 }
 
-void changeVar(struct process* proc, int possition, int value){
+void changeVar(process* proc, int possition, int value){
     proc->mem[possition]= value;
 }
 
-void addVar(struct process* proc, int possition, int value){
+void addVar(process* proc, int possition, int value){
     proc->mem[possition]+= value;
 }
-void subVar(struct process* proc, int possition, int value){
+void subVar(process* proc, int possition, int value){
     proc->mem[possition]-= value;
 }
 
-void initProcess(struct process* proc, char* name) {
+void initProcess(process* proc, char* name) {
     FILE* archive= fopen(name, "r");
     if (archive == NULL) {
         printf("Erro ao abrir o archive.\n");
@@ -57,7 +57,7 @@ void initProcess(struct process* proc, char* name) {
     fclose(archive);
 }
 
-void excludeProcess(struct process* proc) {
+void excludeProcess(process* proc) {
     // desaloca o array de programa
     for (int i = 0; i < proc->lengthMem; i++) {
         free(proc->prog[i]);
@@ -71,7 +71,7 @@ void excludeProcess(struct process* proc) {
     free(proc);
 }
 
-process* generateNewProcess(struct process* proc) {
+process* generateNewProcess(process* proc) {
     // aloca memória para o novo processo
     struct process* newprocess = (struct process*) malloc(sizeof(struct process));
 

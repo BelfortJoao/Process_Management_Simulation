@@ -3,6 +3,6 @@
 //
 
 #include "timer.h"
- void timeUp(time t){
+ void timeUp(timer t){
     *t++;
 }

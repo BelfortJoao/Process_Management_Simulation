@@ -11,8 +11,7 @@
 typedef struct CPU{
     struct process* proc;
     int pc;
-    int* memory;
-    time program_timer;
-    time executing_timer;
-};
+    timer program_timer;
+    timer executing_timer;
+}CPU;
 #endif //SRC_CPU_H

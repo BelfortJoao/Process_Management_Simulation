@@ -18,12 +18,12 @@ typedef struct process{
     int numLines;
     int lengthMem;
 }process;
-void initProcess(struct process* proc, char* name);
-void initMemory(struct process* proc, int lengthMem);
-void excludeProcess(struct process* proc);
-void declareVar(struct process* proc, int position);
-void changeVar(struct process* proc, int possition, int value);
-void addVar(struct process* proc, int possition, int value);
-void subVar(struct process* proc, int possition, int value);
-process* generateNewProcess(struct process* proc);
+void initProcess(process* proc, char* name);
+void initMemory(process* proc, int lengthMem);
+void excludeProcess(process* proc);
+void declareVar(process* proc, int position);
+void changeVar(process* proc, int possition, int value);
+void addVar(process* proc, int possition, int value);
+void subVar(process* proc, int possition, int value);
+process* generateNewProcess(process* proc);
 #endif //SRC_PROCESS_H
