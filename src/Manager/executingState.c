@@ -3,3 +3,6 @@
 //
 
 #include "executingState.h"
+void contextExchange(int ID, executing* ex){
+    *ex = ID;
+}

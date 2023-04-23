@@ -26,6 +26,9 @@ void inicializarTabelaDeProcessos(processTable* table, int initialCapacity) {
         *table->CPUTime[i] = -1;
         table->father[i] = -1;
     }
+    contextExchange(-1, table->ex);
+    initBlockeds(table->bk, initialCapacity);
+    initReady(table->rd,initialCapacity);
 }
 int searchampitySpaceInProcessTable(processTable* pt){
     for (int i = 0; i < pt->tableCapacity; ++i) {
@@ -47,9 +50,11 @@ void addProcess(processTable* pt, char* arq, int prior, int father){
     pt->father[ID]=father;
 //    pt->initialTime[ID]=; Tempo inicial do processo
     pt->CPUTime[ID]=0;
+    insertReady(pt->rd,ID,prior);
 }
 void excludeProcessInPT(int ID, processTable* pt){
     excludeProcess(pt->proc[ID]);
+    removeReady(pt->rd,ID, pt->prioritis[ID]);
     pt->numProcess--;
     pt->ampitySpace[ID]=0;
     pt->proc=NULL;
@@ -59,6 +64,8 @@ void excludeProcessInPT(int ID, processTable* pt){
     pt->father[ID]=-1;
     *pt->initialTime[ID]= -1;
     *pt->CPUTime[ID]=-1;
+    removeBlocked(*pt->bk,ID);
+
 }
 void changeState(processTable* pt, int ID, char* state){
     pt->states[ID]=state;
@@ -74,6 +81,8 @@ void excludeProcessTable(processTable* pt){
             excludeProcess(pt->proc[i]);
         }
     }
+    freeReady(pt->rd);
+    freeBlockeds(pt->bk);
     free(pt->proc);
     free(pt->ampitySpace);
     free(pt->pc);

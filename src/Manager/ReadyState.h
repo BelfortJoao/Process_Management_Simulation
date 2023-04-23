@@ -4,5 +4,16 @@
 
 #ifndef SRC_READYSTATE_H
 #define SRC_READYSTATE_H
+typedef struct {
+    int** queues; // An array of queues (arrays of integers)
+    int size; // The size of each queue
+} Ready;
 
+void initReady(Ready* r, int size);
+
+void freeReady(Ready* r);
+
+void insertReady(Ready* r, int pid, int priority);
+
+void removeReady(Ready* r, int pid, int priority);
 #endif //SRC_READYSTATE_H

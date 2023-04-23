@@ -7,11 +7,14 @@
 
 #include "../Process.h"
 #include "timer.h"
+#include "ReadyState.h"
+#include "blockedState.h"
+#include "executingState.h"
 
 typedef struct processTable {
     int numProcess; // número de processos na tabela
-    int tableCapacity;
-    int* ampitySpace;
+    int tableCapacity; // capacidade maxima da tabela
+    int* ampitySpace; // vetor de flags para espaços vazios
     process** proc; // vetor de ponteiros para processos
     int* pc; // vetor de contadores de programa para cada processo
     int* father; //vetor de processos pais de cada processo
@@ -19,6 +22,9 @@ typedef struct processTable {
     char** states; // vetor de estados para cada processo (string com valores "Executando", "Pronto", "Bloqueado")
     timer* initialTime; // vetor de tempos de início para cada processo
     timer* CPUTime; // vetor de tempos de CPU usados para cada processo
+    Ready* rd;
+    blockeds* bk;
+    executing* ex;
 }processTable;
 
 void excludeProcessTable(processTable* pt);
