@@ -53,14 +53,14 @@ void removeReady(Ready* r, int pid, int priority) {
 }
 
 //TA TUDO ERRADO AQUI CONCERTO AMANHÃ
-/*
+
 void moveFromPriorityToPriority(Ready* ready, int sourcePriority, int destinationPriority, int processId) {
     int* sourceQueue = ready->queues[sourcePriority];
     int* destinationQueue = ready->queues[destinationPriority];
 
     // Find the process index in the source queue
     int processIndex = -1;
-    for (int i = 0; i < sourceSize; i++) {
+    for (int i = 0; i < ready->size; i++) {
         if (sourceQueue[i] == processId) {
             processIndex = i;
             break;
@@ -70,11 +70,10 @@ void moveFromPriorityToPriority(Ready* ready, int sourcePriority, int destinatio
     // If the process was found in the source queue
     if (processIndex != -1) {
         // Remove it from the source queue
-        for (int i = processIndex; i < sourceSize - 1; i++) {
+        for (int i = processIndex; i < ready->size - 1; i++) {
             sourceQueue[i] = sourceQueue[i + 1];
         }
         // Add it to the destination queue
         processId;
     }
 }
- */

@@ -6,7 +6,6 @@
 #include "cpu.h"
 
 void interpreter(CPU* cpu){
-    printf("____interpretando linha %s\n",cpu->proc->prog[cpu->pc]);
     process* proc2;
     char* token=  strtok(cpu->proc->prog[cpu->pc], " "); //Separando o input em Tokens
     char* arg1= strtok(NULL, " "); //Separando o input em Tokens

@@ -109,6 +109,12 @@ build CMakeFiles/src.dir/Printer/Printer.c.o: C_COMPILER__src_Debug /home/belfor
   OBJECT_DIR = CMakeFiles/src.dir
   OBJECT_FILE_DIR = CMakeFiles/src.dir/Printer
 
+build CMakeFiles/src.dir/Manager/manager.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Manager/manager.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/Manager/manager.c.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu99
+  OBJECT_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/Manager
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target src
@@ -117,7 +123,7 @@ build CMakeFiles/src.dir/Printer/Printer.c.o: C_COMPILER__src_Debug /home/belfor
 #############################################
 # Link the executable src
 
-build src: C_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.c.o CMakeFiles/src.dir/Manager/timer.c.o CMakeFiles/src.dir/Manager/cpu.c.o CMakeFiles/src.dir/Manager/executingState.c.o CMakeFiles/src.dir/Manager/blockedState.c.o CMakeFiles/src.dir/Manager/ReadyState.c.o CMakeFiles/src.dir/Manager/ProcessTable.c.o CMakeFiles/src.dir/Process.c.o CMakeFiles/src.dir/Control/Controler.c.o CMakeFiles/src.dir/Printer/Printer.c.o
+build src: C_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.c.o CMakeFiles/src.dir/Manager/timer.c.o CMakeFiles/src.dir/Manager/cpu.c.o CMakeFiles/src.dir/Manager/executingState.c.o CMakeFiles/src.dir/Manager/blockedState.c.o CMakeFiles/src.dir/Manager/ReadyState.c.o CMakeFiles/src.dir/Manager/ProcessTable.c.o CMakeFiles/src.dir/Process.c.o CMakeFiles/src.dir/Control/Controler.c.o CMakeFiles/src.dir/Printer/Printer.c.o CMakeFiles/src.dir/Manager/manager.c.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/src.dir
   POST_BUILD = :
