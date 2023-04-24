@@ -12,9 +12,11 @@
 #include "executingState.h"
 
 typedef struct processTable {
+    int idLv;
     int numProcess; // número de processos na tabela
     int tableCapacity; // capacidade maxima da tabela
     int* ampitySpace; // vetor de flags para espaços vazios
+    int* ID; //vetor de ids de processos de acordo com suas posições
     process** proc; // vetor de ponteiros para processos
     int* pc; // vetor de contadores de programa para cada processo
     int* father; //vetor de processos pais de cada processo
@@ -22,15 +24,19 @@ typedef struct processTable {
     char** states; // vetor de estados para cada processo (string com valores "Executando", "Pronto", "Bloqueado")
     timer* initialTime; // vetor de tempos de início para cada processo
     timer* CPUTime; // vetor de tempos de CPU usados para cada processo
-    Ready* rd;
-    blockeds* bk;
-    executing* ex;
+    Ready* rd; //vetor de processos prontos
+    blockeds* bk; //vetor de processos bloqueados
+    executing* ex;//processo em execução
 }processTable;
 
 void excludeProcessTable(processTable* pt);
-void changeState(processTable* pt, int ID, char* state);
 void excludeProcessInPT(int ID, processTable* pt);
-void addProcess(processTable* pt, char* arq, int prior, int father);
+void addProcess(processTable* pt, char* arq, int father, timer clock);
+void rewid(processTable* pt);
+void copyProcess(processTable* pt,process* proc,timer t);
 int searchampitySpaceInProcessTable(processTable* pt);
+int searchID(int ID, processTable* pt);
+void printProcessTable(processTable* pt);
 void inicializarTabelaDeProcessos(processTable* table, int initialCapacity);
+int nextID(processTable* pt);
 #endif //SRC_PROCESSTABLE_H

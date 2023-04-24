@@ -13,7 +13,9 @@ void initReady(Ready* r, int size);
 
 void freeReady(Ready* r);
 
-void insertReady(Ready* r, int pid, int priority);
+void insertReady(Ready* r, int pid);
 
-void removeReady(Ready* r, int pid, int priority);
+void removeReady(Ready* r, int pid);
+
+int nextReady(Ready* r);
 #endif //SRC_READYSTATE_H

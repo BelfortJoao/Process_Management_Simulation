@@ -1,30 +1,13 @@
-#include "Process.h"
-#include "Manager/cpu.h"
+#include <stdio.h>
+#include "Manager/manager.h"
 
-#define FILEPATH "/home/belfort/Documentos/GitHub/Process_Management_Simulation/src/file.txt"
 int main() {
-    process proc;
-    CPU cpu;
-    initProcess(&proc, FILEPATH);
-    initCPU(&cpu);
-    changeProcess(&cpu,&proc,0,0,0);
-    printProg(&proc);
-    interpreter(&cpu);
-    interpreter(&cpu);
-    interpreter(&cpu);
-    printMem(&proc);
-    interpreter(&cpu);
-    interpreter(&cpu);
-    printMem(&proc);
-    interpreter(&cpu);
-    printMem(&proc);
-    interpreter(&cpu);
-    printMem(&proc);
-    interpreter(&cpu);
-    printMem(&proc);
-    //fim
-    freeCPU(&cpu);
-    excludeProcess(&proc);
-    return 0;
+    computer comp;
+    printf("E\n");
+    initComputer(&comp);
+    printf("E\n");
+    addProcess(&comp.proctb,"file.txt",-1,0);
+    printf("E\n");
 
+    return 0;
 }

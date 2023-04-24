@@ -6,34 +6,44 @@
 #include "blockedState.h"
 void initBlockeds(blockeds* b, int size) {
     // Allocate memory for the blocked array
-    *b = (int*) malloc(size * sizeof(int));
+    b->Id = (int*) malloc(size * sizeof(int));
+    b->blocktime = (int*) malloc(size * sizeof(int));
     for (int i = 0; i < size; i++) {
-        (*b)[i] = -1; // Initialize all elements to -1
+        (b->Id)[i] = -1; // Initialize all elements to -1
+        (b->blocktime)[i] = -1; // Initialize all elements to -1
     }
 }
 
 void freeBlockeds(blockeds* b) {
-    free(*b);
-    *b = NULL;
+    free(b->blocktime);
+    free(b->Id);
 }
 
-void insertBlocked(blockeds b, int pid) {
+void insertBlocked(blockeds* b, int pid,int blocktime) {
     int i = 0;
-    while (b[i] != -1) {
+    while (b->Id[i] != -1) {
         i++;
     }
-    b[i] = pid;
+    b->Id[i] = pid;
+    b->blocktime[i] = blocktime;
 }
 
-void removeBlocked(blockeds b, int pid) {
+void removeBlocked(blockeds* b, int pid) {
     int i = 0;
-    while (b[i] != pid && b[i] != -1) {
+    while (b->Id[i] != pid && i< sizeof(b->Id)) {
         i++;
     }
-    if (b[i] == pid) {
-        while (b[i] != -1) {
-            b[i] = b[i + 1];
+    if (b->Id[i] == pid) {
+        while (b->Id[i] != -1 && i+1< sizeof(b->Id)) {
+            b->Id[i] = b->Id[i + 1];
+            b->blocktime[i]=b->blocktime[i+1];
             i++;
         }
+    }
+}
+
+void blockDownclock(blockeds* b){
+    for (int i = 0; i < sizeof(b->Id); ++i) {
+        if(b->Id[i]!=-1){b->blocktime[i]--;}
     }
 }

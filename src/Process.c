@@ -44,7 +44,6 @@ void initProcess(process* proc, char* name) {
     }
     rewind(archive);
 
-    proc->numLines=numLines;
     // aloca o array dinamicamente
     proc->prog = (char**) malloc(numLines * sizeof(char*));
     for (int i = 0; i < numLines; i++) {

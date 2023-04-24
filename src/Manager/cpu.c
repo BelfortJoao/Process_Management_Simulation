@@ -5,8 +5,7 @@
 
 #include "cpu.h"
 
-void interpreter(CPU* cpu){
-    process* proc2;
+int interpreter(CPU* cpu,int* blk, process* proce, char** arq){
     char* token=  strtok(cpu->proc->prog[cpu->pc], " "); //Separando o input em Tokens
     char* arg1= strtok(NULL, " "); //Separando o input em Tokens
     char* arg2= strtok(NULL, " "); //Separando o input em Tokens
@@ -22,46 +21,48 @@ void interpreter(CPU* cpu){
             initMemory(cpu->proc,atoi(arg1));
             printf("Memory initialized with size %d\n",atoi(arg1));
             cpu->pc++;
-            return;
+            return 0;
         case 'D':
             token=  strtok(cpu->proc->prog[cpu->pc], " ");
-            declareVar(cpu->proc,atoi(token));
-            printf("Var %d declarated\n",atoi(token));
+            declareVar(cpu->proc,atoi(arg1));
+            printf("Var %d declarated\n",atoi(arg1));
             cpu->pc++;
-            return;
+            return 0;
         case 'V':
             changeVar(cpu->proc,atoi(arg1), atoi(arg2));
             printf("Memory pos %d changed to %d\n",atoi(arg1), atoi(arg2));
             cpu->pc++;
-            return;
+            return 0;
         case 'A':
             addVar(cpu->proc,atoi(arg1), atoi(arg2));
             printf("Memory pos %d added in %d\n",atoi(arg1), atoi(arg2));
             cpu->pc++;
-            return;
+            return 0;
         case 'S':
             subVar(cpu->proc,atoi(arg1), atoi(arg2));
             printf("Memory pos %d sub in -%d\n",atoi(arg1), atoi(arg2));
             cpu->pc++;
-            return;
+            return 0;
         case 'B':
-            printf("tamo trabaiano nisso\n");
+            *blk=atoi(arg1);
+            printf("Processo bloqueado por %d tempo\n",*blk);
             cpu->pc++;
-            return;
+            return 1;
         case 'T':
             printf("excluindo processo\n");
             excludeProcess(cpu->proc);
             cpu->pc++;
-            return;
+            return 2;
         case 'F':
             printf("Copiando processo\n");
-            proc2=generateNewProcess(cpu->proc);
+            proce=generateNewProcess(cpu->proc);
             cpu->pc++;
-            return;
+            return 3;
         case 'R':
-            printf("tamo trabaiano nisso 2\n");
+            printf("Lendo o arquivo %s\n",arg1);
+            *arq=arg1;
             cpu->pc++;
-            return;
+            return 4;
     }
 }
 void changeProcess(CPU* cpu,process* proc, int pc, timer program_timer, timer executing_timer){

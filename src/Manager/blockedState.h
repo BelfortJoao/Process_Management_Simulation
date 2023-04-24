@@ -4,9 +4,14 @@
 
 #ifndef SRC_BLOCKEDSTATE_H
 #define SRC_BLOCKEDSTATE_H
-typedef int* blockeds;
+
+typedef struct blockeds{
+    int* blocktime;
+    int* Id;
+}blockeds; //Processos que estão atualmente bloqueados
 void initBlockeds(blockeds* b, int size);
 void freeBlockeds(blockeds* b);
-void insertBlocked(blockeds b, int pid);
-void removeBlocked(blockeds b, int pid);
+void insertBlocked(blockeds* b, int pid, int blocktime);
+void removeBlocked(blockeds* b, int pid);
+void blockDownclock(blockeds* b);
 #endif //SRC_BLOCKEDSTATE_H

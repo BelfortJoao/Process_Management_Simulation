@@ -27,28 +27,36 @@ void freeReady(Ready* r) {
     r->queues = NULL;
     r->size = 0;
 }
-
-void insertReady(Ready* r, int pid, int priority) {
+int nextReady(Ready* r){
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < r->size; ++j) {
+            if(r->queues[i][j]!=-1){
+                return r->queues[i][j];
+            }
+        }
+    }
+    return -1;
+}
+void insertReady(Ready* r, int pid) {
     int i = 0;
-    while (r->queues[priority][i] != -1 && i < r->size) {
+    for (int k = 0; k < r->size; ++k) {
+        if (r->queues[0][i] == -1) {
+            r->queues[0][i] = pid;
+            return;
+        }
         i++;
-    }
-    if (i < r->size) {
-        r->queues[priority][i] = pid;
-    }
+        }
+    printf("lista de prontos Cheia.");
 }
 
-void removeReady(Ready* r, int pid, int priority) {
+void removeReady(Ready* r, int pid) {
     int i = 0;
-    while (r->queues[priority][i] != pid && i < r->size) {
-        i++;
-    }
-    if (i < r->size) {
-        while (i < r->size - 1 && r->queues[priority][i + 1] != -1) {
-            r->queues[priority][i] = r->queues[priority][i + 1];
-            i++;
+    for (int j = 0; j < 4; ++j) {
+        for (int k = 0; k < r->size; ++k) {
+            if(r->queues[j][k]== pid){
+                r->queues[j][k]=-1;
+            }
         }
-        r->queues[priority][i] = -1;
     }
 }
 

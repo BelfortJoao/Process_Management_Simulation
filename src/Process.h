@@ -13,10 +13,10 @@
 typedef int* memory;
 typedef char** program;
 typedef struct process{
-    memory mem;
-    program prog;
-    int numLines;
-    int lengthMem;
+    memory mem; //Memoria individual que guarda as variaveis do processo
+    program prog; //Programa que o processo deverá executar no CPU
+    int numLines; //Numero de linhas que o programa guardado no processo contem
+    int lengthMem; //Tamanho da memoria do processo
 }process;
 void initProcess(process* proc, char* name);
 void initMemory(process* proc, int lengthMem);

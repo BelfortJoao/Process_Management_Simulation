@@ -4,31 +4,37 @@
 
 #include "ProcessTable.h"
 void inicializarTabelaDeProcessos(processTable* table, int initialCapacity) {
-
     table->numProcess = 0;
     table->tableCapacity = initialCapacity;
     table->proc = (struct process**) malloc(initialCapacity * sizeof(struct process*));
     table->pc = (int*) malloc(initialCapacity * sizeof(int));
+    table->ID = (int*) malloc(initialCapacity * sizeof(int));
     table->father = (int*) malloc(initialCapacity * sizeof(int));
     table->prioritis = (int*) malloc(initialCapacity * sizeof(int));
     table->states = (char**) malloc(initialCapacity * sizeof(char*));
-    table->initialTime = (int**) malloc(initialCapacity * sizeof(int));
-    table->CPUTime = (int**) malloc(initialCapacity * sizeof(int));
+    table->initialTime = (timer*) malloc(initialCapacity * sizeof(timer));
+    table->CPUTime = (timer*) malloc(initialCapacity * sizeof(timer));
     table->ampitySpace=(int*) malloc(initialCapacity * sizeof(int));
-
+    table->bk= malloc(sizeof (blockeds));
+    table->rd= malloc(sizeof (Ready));
+    table->ex= malloc(sizeof(executing));
+    table->idLv=0;
     for (int i = 0; i < initialCapacity; i++) {
-        table->proc[i] = NULL;
+        table->proc[i] = (struct process*) malloc(initialCapacity * sizeof(struct process));
         table->pc[i] = 0;
         table->prioritis[i] = -1;
-        table->states[i] = strdup("Bloqueado");
-        table->ampitySpace=0;
-        *table->initialTime[i] = -1;
-        *table->CPUTime[i] = -1;
+        table->states[i] = "BLOQUEADO";
+        table->ampitySpace[i]=0;
+        table->initialTime[i] = (int*)-1;
+        table->CPUTime[i] = (int*)-1;
         table->father[i] = -1;
     }
     contextExchange(-1, table->ex);
+    printf("A");
     initBlockeds(table->bk, initialCapacity);
+    printf("A");
     initReady(table->rd,initialCapacity);
+    printf("A");
 }
 int searchampitySpaceInProcessTable(processTable* pt){
     for (int i = 0; i < pt->tableCapacity; ++i) {
@@ -38,40 +44,37 @@ int searchampitySpaceInProcessTable(processTable* pt){
     }
     return -1;
 }
-void addProcess(processTable* pt, char* arq, int prior, int father){
-    process *proc;
+void addProcess(processTable* pt, char* arq, int father, timer clock){
     pt->numProcess++;
-    int ID=searchampitySpaceInProcessTable(pt);
-    pt->ampitySpace[ID]=1;
-    initProcess(proc, arq);
-    pt->proc[ID]=proc;
-    pt->prioritis[ID]=prior;
-    pt->states[ID]=strdup("Pronto");
-    pt->father[ID]=father;
-//    pt->initialTime[ID]=; Tempo inicial do processo
-    pt->CPUTime[ID]=0;
-    insertReady(pt->rd,ID,prior);
+    int i=searchampitySpaceInProcessTable(pt);
+    pt->ampitySpace[i]=1;
+    initProcess(pt->proc[i], arq);
+    pt->prioritis[i]=0;
+    pt->states[i]=strdup("PRONTO");
+    pt->father[i]=father;
+    pt->initialTime[i]= clock;
+    pt->CPUTime[i]=0;
+    pt->ID[i]= nextID(pt);
+    insertReady(pt->rd,i);
 }
 void excludeProcessInPT(int ID, processTable* pt){
-    excludeProcess(pt->proc[ID]);
-    removeReady(pt->rd,ID, pt->prioritis[ID]);
+    int i=searchID(ID,pt);
+    excludeProcess(pt->proc[i]);
+    removeReady(pt->rd,i);
     pt->numProcess--;
-    pt->ampitySpace[ID]=0;
+    pt->ampitySpace[i]=0;
     pt->proc=NULL;
-    pt->prioritis[ID]=-1;
+    pt->prioritis[i]=-1;
     pt->pc[ID]=0;
-    pt->states[ID]=strdup("Bloqueado");
+    pt->states[ID]="BLOQUEADO";
     pt->father[ID]=-1;
     *pt->initialTime[ID]= -1;
     *pt->CPUTime[ID]=-1;
-    removeBlocked(*pt->bk,ID);
+    removeBlocked(pt->bk,ID);
 
 }
-void changeState(processTable* pt, int ID, char* state){
-    pt->states[ID]=state;
-}
 
-void upPC(processTable* pt, int ID){
+void upPC(processTable* pt){
     pt->pc++;
 }
 
@@ -92,4 +95,46 @@ void excludeProcessTable(processTable* pt){
     free(pt->initialTime);
     free(pt->CPUTime);
     free(pt);
+}
+int searchID(int ID, processTable* pt){
+    for (int i = 0; i < pt->tableCapacity; ++i) {
+        if(pt->ID[i]==ID){
+            return i;
+        }
+    }
+    return -1;
+}
+
+void printProcessTable(processTable* pt) {
+    printf("Proximo ID Livre: %d\n", pt->idLv);
+    printf("Numero atual de processos: %d\n", pt->numProcess);
+    printf("Capacidade da tabela: %d\n", pt->tableCapacity);
+    printf(":ID:\t:PC:\t:Pai:\t:Prioridade:\t:Estado:\t:Inicio:\t:T de uso:");
+    for (int i = 0; i < pt->tableCapacity; ++i) {
+        if(pt->ampitySpace!=0){
+            printf("%d\t%d\t%d\t%d\t%s\t%d\t%d",pt->ID[i],pt->pc[i],pt->father[i],pt->prioritis[i],pt->states[i],*pt->initialTime[i],*pt->CPUTime[i]);
+            printMem(*pt->proc);
+        };
+    }
+}
+int nextID(processTable* pt){
+    pt->idLv++;
+    return (pt->idLv-1);
+}
+
+void copyProcess(processTable* pt,process* proc,timer t){
+    pt->numProcess++;
+    int i=searchampitySpaceInProcessTable(pt);
+    pt->ampitySpace[i]=1;
+    pt->proc[i]=proc;
+    pt->prioritis[i]=0;
+    pt->states[i]=strdup("PRONTO");
+    pt->father[i]=*pt->ex;
+    pt->initialTime[i]= t;
+    pt->CPUTime[i]=0;
+    pt->ID[i]= nextID(pt);
+    insertReady(pt->rd,i);
+}
+void rewid(processTable* pt){
+
 }

@@ -18,6 +18,6 @@ typedef struct CPU{
 }CPU;
 void initCPU(CPU* cpu);
 void freeCPU(CPU* cpu);
-void interpreter(CPU* cpu);
+int interpreter(CPU* cpu,int* blk,process* proce,char** arq);
 void changeProcess(CPU* cpu,process* proc, int pc, timer program_timer, timer executing_timer);
 #endif //SRC_CPU_H
