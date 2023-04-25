@@ -7,6 +7,7 @@
 
 void initComputer(computer* comp, char* arq){
     int tam;
+    initTime(&comp->clock);
     initCPU(&comp->cpu, arq);
     printf("Type the process Table Capacity: ");
     scanf("%d",&tam);
@@ -48,6 +49,9 @@ void processEscalonating(computer* comp){
     //Operação em tabela-sai de ready e vai para executando
     go_ready=*comp->proctb.ex;
     go_exec=nextReady(comp->proctb.rd);
+    if(go_exec==-1){
+        return;
+    }
     contextExchange(go_exec,comp->proctb.ex);
     removeReady(comp->proctb.rd,go_exec);
     //Operação em tabela-sai de executando e vai para pronto
@@ -98,8 +102,9 @@ void execute(computer* comp){
     comp->proctb.states[go_exec]="EXECUTANDO";
 }
 void processExecuting(computer* comp){
+        printf("\nPC: %d\n",comp->cpu.pc);
         //search for a proces while cpu is ampity
-        if (comp->proctb.ex == 0 || comp->proctb.ex == NULL||comp->cpu.proc->numLines==0) {
+        if (comp->proctb.ex == NULL||comp->cpu.proc->numLines==0) {
                 //terminate the computer if kill switch is equal one
                 if (comp->kill==1){
                     computerKill(comp);
@@ -108,10 +113,11 @@ void processExecuting(computer* comp){
                 execute(comp);
             //if cpu isn't ampity check the cpu time and escalonate
         } else {
-            if(comp->cpu.executing_timer>comp->cpu.program_timer){
+            if(comp->cpu.executing_timer>=comp->cpu.program_timer){
                 processEscalonating(comp);
             }
         }
+        printf("\nPC: %d\n",comp->cpu.pc);
         //Interpreta o processo aumenta o clock
         uperInterpreter(comp);
         clockUpPC(comp);
@@ -136,12 +142,13 @@ void processUnblock(computer* comp){
 }
 
 void clockUpPC(computer* comp){
-    timeUp(comp->clock);
-    timeUp(comp->cpu.executing_timer);
+    timeUp(&comp->clock);
+    timeUp(&comp->cpu.executing_timer);
     blockDownclock(comp->proctb.bk);
 }
 
 void processCP(computer* comp, process* proc){
+    proc= (struct process*) malloc( sizeof(struct process));
     copyProcess(&comp->proctb,proc, comp->clock);
 }
 void processRewind(computer* comp, char* arq){
@@ -151,9 +158,10 @@ void processRewind(computer* comp, char* arq){
 
 void uperInterpreter(computer* comp){
     int blk;
-    process* proc=NULL;
+    process* proc;
     char** arq;
     int cpuResp= interpreter(&comp->cpu, &blk,proc, arq);
+    comp->cpu.pc++;
     switch (cpuResp) {
         case 0:
             return;

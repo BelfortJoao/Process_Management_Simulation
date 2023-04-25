@@ -6,6 +6,7 @@
 #include "cpu.h"
 
 int interpreter(CPU* cpu,int* blk, process* proce, char** arq){
+
     char* token=  strtok(cpu->proc->prog[cpu->pc], " "); //Separando o input em Tokens
     char* arg1= strtok(NULL, " "); //Separando o input em Tokens
     char* arg2= strtok(NULL, " "); //Separando o input em Tokens
@@ -19,47 +20,38 @@ int interpreter(CPU* cpu,int* blk, process* proce, char** arq){
         case 'N':
             initMemory(cpu->proc,atoi(arg1));
             printf("Memory initialized with size %d\n",atoi(arg1));
-            cpu->pc++;
             return 0;
         case 'D':
             declareVar(cpu->proc,atoi(arg1));
             printf("Var %d declarated\n",atoi(arg1));
-            cpu->pc++;
             return 0;
         case 'V':
             changeVar(cpu->proc,atoi(arg1), atoi(arg2));
             printf("Memory pos %d changed to %d\n",atoi(arg1), atoi(arg2));
-            cpu->pc++;
             return 0;
         case 'A':
             addVar(cpu->proc,atoi(arg1), atoi(arg2));
             printf("Memory pos %d added in %d\n",atoi(arg1), atoi(arg2));
-            cpu->pc++;
             return 0;
         case 'S':
             subVar(cpu->proc,atoi(arg1), atoi(arg2));
             printf("Memory pos %d sub in -%d\n",atoi(arg1), atoi(arg2));
-            cpu->pc++;
             return 0;
         case 'B':
             *blk=atoi(arg1);
             printf("Processo bloqueado por %d tempo\n",*blk);
-            cpu->pc++;
             return 1;
         case 'T':
             printf("excluindo processo\n");
             excludeProcess(cpu->proc);
-            cpu->pc++;
             return 2;
         case 'F':
             printf("Copiando processo\n");
             proce=generateNewProcess(cpu->proc);
-            cpu->pc++;
             return 3;
         case 'R':
             printf("Lendo o arquivo %s\n",arg1);
             *arq=arg1;
-            cpu->pc++;
             return 4;
     }
 }
@@ -73,8 +65,8 @@ void initCPU(CPU* cpu, char* arq) {
     cpu->proc=(process*) malloc(sizeof (process));
     initProcess(cpu->proc, arq);
     cpu->pc = 0;
-    cpu->program_timer =(int*) 0;
-    cpu->executing_timer =(int*) 0;
+    cpu->program_timer =8;
+    cpu->executing_timer =0;
 }
 
 void freeCPU(CPU* cpu) {
