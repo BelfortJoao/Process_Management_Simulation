@@ -90,7 +90,7 @@ process* generateNewProcess(process* proc) {
     return newprocess;
 }
 void printMem(process* proc) {
-    printf("Memory:\n");
+    printf("\nMemory:\n");
     for (int i = 0; i < proc->lengthMem; i++) {
         printf("%d ", proc->mem[i]);
     }

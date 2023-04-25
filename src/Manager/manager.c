@@ -1,16 +1,18 @@
 //
 // Created by belfort on 4/23/23.
 //
-
+#include <limits.h>
 #include "manager.h"
 //Loop infinito
 
 void initComputer(computer* comp, char* arq){
-    int tam;
+    int tam=0;
     initTime(&comp->clock);
     initCPU(&comp->cpu, arq);
-    printf("Type the process Table Capacity: ");
-    scanf("%d",&tam);
+    while(tam<=0) {
+        printf("Type the process Table Capacity: ");
+        scanf("%d", &tam);
+    }
     inicializarTabelaDeProcessos(&comp->proctb,tam);
     addProcess(&comp->proctb,arq,-1,0);
     removeReady(comp->proctb.rd,0);
@@ -67,7 +69,7 @@ void processEscalonating(computer* comp){
 void processExterminate(computer* comp){
     int go_excl;
     int go_exec;
-    if(comp->proctb.ex == 0 || comp->proctb.ex == NULL){
+    if(comp->proctb.ex <= 0 || comp->proctb.ex == NULL){
         return;
     }
     //Operação em tabela-sai de ready e vai para executando
@@ -104,7 +106,7 @@ void execute(computer* comp){
 void processExecuting(computer* comp){
         printf("\nPC: %d\n",comp->cpu.pc);
         //search for a proces while cpu is ampity
-        if (comp->proctb.ex == NULL||comp->cpu.proc->numLines==0) {
+        if (comp->proctb.ex <=0||comp->proctb.ex == NULL||comp->cpu.proc->numLines==0) {
                 //terminate the computer if kill switch is equal one
                 if (comp->kill==1){
                     computerKill(comp);
@@ -149,6 +151,12 @@ void clockUpPC(computer* comp){
 
 void processCP(computer* comp, process* proc){
     proc= (struct process*) malloc( sizeof(struct process));
+    proc->numLines=comp->cpu.proc->numLines;
+    proc->lengthMem=comp->cpu.proc->lengthMem;
+    proc->prog = (char**) malloc(proc->numLines * sizeof(char*));
+    for (int i = 0; i < proc->numLines; i++) {
+        proc->prog[i] = (char*) malloc(CHAR_MAX * sizeof(char));
+    }
     copyProcess(&comp->proctb,proc, comp->clock);
 }
 void processRewind(computer* comp, char* arq){

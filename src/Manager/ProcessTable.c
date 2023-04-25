@@ -12,8 +12,8 @@ void inicializarTabelaDeProcessos(processTable* table, int initialCapacity) {
     table->father = (int*) malloc(initialCapacity * sizeof(int));
     table->prioritis = (int*) malloc(initialCapacity * sizeof(int));
     table->states = (char**) malloc(initialCapacity * sizeof(char*));
-    table->initialTime = (int**) malloc(initialCapacity * sizeof(int*));
-    table->CPUTime = (timer*) malloc(initialCapacity * sizeof(time));
+    table->initialTime = (int*) malloc(initialCapacity * sizeof(int));
+    table->CPUTime = (int*) malloc(initialCapacity * sizeof(int));
     table->ampitySpace=(int*) malloc(initialCapacity * sizeof(int));
     table->bk= malloc(sizeof (blockeds));
     table->rd= malloc(sizeof (Ready));
@@ -109,9 +109,8 @@ void printProcessTable(processTable* pt) {
     printf("Capacidade da tabela: %d\n", pt->tableCapacity);
     printf(":ID:\t:PC:\t:Pai:\t:Prioridade:\t:Estado:\t:Inicio:\t:T de uso:");
     for (int i = 0; i < pt->tableCapacity; ++i) {
-        if(pt->ampitySpace!=0){
-            printf("%d\t%d\t%d\t%d\t%s\t%d\t%d",pt->ID[i],pt->pc[i],pt->father[i],pt->prioritis[i],pt->states[i],pt->initialTime[i],pt->CPUTime[i]);
-            printMem(*pt->proc);
+        if(pt->ampitySpace[i]!=0){
+            printf("\n%d\t%d\t %d\t%d\t%s\t%d\t%d\n",pt->ID[i],pt->pc[i],pt->father[i],pt->prioritis[i],pt->states[i],pt->initialTime[i],pt->CPUTime[i]);
         };
     }
 }

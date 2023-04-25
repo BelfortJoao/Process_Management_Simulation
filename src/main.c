@@ -15,8 +15,9 @@ int main() {
     processExecuting(&comp);
     processExecuting(&comp);
     processExecuting(&comp);
-    processExecuting(&comp);
-    processExecuting(&comp);
     printProcessTable(&comp.proctb);
+    processExecuting(&comp);
+    processExecuting(&comp);
+
     return 0;
 }
