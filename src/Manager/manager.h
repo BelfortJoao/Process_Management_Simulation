@@ -15,7 +15,7 @@ typedef struct computer{
     int freeID; //Indica qualq é o proximo ID livre para se criar um novo processo
 }computer;
 
-void initComputer(computer* comp); //inicializa todo o computador
+void initComputer(computer* comp, char* arq); //inicializa todo o computador
 void processExecuting(computer* comp); //Aumenta o tempo em 1 unidade, e executa o CPUSup, escalona, diminui o tempo de bloqueio
 void processEscalonating(computer* comp); //U checa se o processo atual ja executou todo tempo que tem de cpu
 void clockUpPC(computer* comp);//U sobe o clock de todas as estruturas inferiores;

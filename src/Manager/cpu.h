@@ -16,7 +16,7 @@ typedef struct CPU{
     timer program_timer;
     timer executing_timer;
 }CPU;
-void initCPU(CPU* cpu);
+void initCPU(CPU* cpu, char* arq);
 void freeCPU(CPU* cpu);
 int interpreter(CPU* cpu,int* blk,process* proce,char** arq);
 void changeProcess(CPU* cpu,process* proc, int pc, timer program_timer, timer executing_timer);

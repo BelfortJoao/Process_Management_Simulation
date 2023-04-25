@@ -35,7 +35,6 @@ void initProcess(process* proc, char* name) {
     // conta o número de linhas no archive
     int numLines = 1;
     char c = getc(archive);
-    if (c == EOF){ printf("cu");}
     while (c != EOF) {
         if (c == '\n') {
             numLines++;
@@ -62,13 +61,10 @@ void initProcess(process* proc, char* name) {
 
 void excludeProcess(process* proc) {
     // desaloca o array de programa
-    for (int i = 0; i < proc->lengthMem; i++) {
+    for (int i = 0; i < proc->numLines; i++) {
         free(proc->prog[i]);
     }
     free(proc->prog);
-
-    // desaloca a memoria
-    free(proc->mem);
 
 }
 

@@ -3,11 +3,17 @@
 
 int main() {
     computer comp;
-    printf("E\n");
-    initComputer(&comp);
-    printf("E\n");
-    addProcess(&comp.proctb,"file.txt",-1,0);
-    printf("E\n");
-
+    initComputer(&comp,"/home/belfort/Documentos/GitHub/Process_Management_Simulation/src/file.txt");
+    processExecuting(&comp);
+    processExecuting(&comp);
+    processExecuting(&comp);
+    processExecuting(&comp);
+    processExecuting(&comp);
+    processExecuting(&comp);
+    processExecuting(&comp);
+    processExecuting(&comp);
+    processExecuting(&comp);
+    processExecuting(&comp);
+    processExecuting(&comp);
     return 0;
 }

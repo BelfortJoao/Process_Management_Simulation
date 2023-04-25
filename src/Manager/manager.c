@@ -5,12 +5,15 @@
 #include "manager.h"
 //Loop infinito
 
-void initComputer(computer* comp){
+void initComputer(computer* comp, char* arq){
     int tam;
-    initCPU(&comp->cpu);
+    initCPU(&comp->cpu, arq);
     printf("Type the process Table Capacity: ");
     scanf("%d",&tam);
     inicializarTabelaDeProcessos(&comp->proctb,tam);
+    addProcess(&comp->proctb,arq,-1,0);
+    removeReady(comp->proctb.rd,0);
+    contextExchange(0,comp->proctb.ex);
     comp->clock=0;
     comp->kill=0;
     comp->freeID=0;
@@ -64,7 +67,6 @@ void processExterminate(computer* comp){
         return;
     }
     //Operação em tabela-sai de ready e vai para executando
-    initCPU(&comp->cpu);
     go_excl=*comp->proctb.ex;
     go_exec=nextReady(comp->proctb.rd);
     contextExchange(go_exec,comp->proctb.ex);
@@ -97,7 +99,7 @@ void execute(computer* comp){
 }
 void processExecuting(computer* comp){
         //search for a proces while cpu is ampity
-        if (comp->proctb.ex == 0 || comp->proctb.ex == NULL) {
+        if (comp->proctb.ex == 0 || comp->proctb.ex == NULL||comp->cpu.proc->numLines==0) {
                 //terminate the computer if kill switch is equal one
                 if (comp->kill==1){
                     computerKill(comp);
@@ -106,7 +108,7 @@ void processExecuting(computer* comp){
                 execute(comp);
             //if cpu isn't ampity check the cpu time and escalonate
         } else {
-            if(comp->cpu.executing_timer>=comp->cpu.program_timer){
+            if(comp->cpu.executing_timer>comp->cpu.program_timer){
                 processEscalonating(comp);
             }
         }
@@ -163,7 +165,9 @@ void uperInterpreter(computer* comp){
             return;
         case 3://Crian um novo processo com base no atual do CPU
             processCP(comp,proc);
+            return;
         case 4://Recria o processo atual com base em um arquivo
             processRewind(comp, *arq);
+            return;
     }
 }

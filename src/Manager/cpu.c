@@ -2,7 +2,7 @@
 // Created by belfort on 4/22/23.
 //
 
-
+#define MAX 100
 #include "cpu.h"
 
 int interpreter(CPU* cpu,int* blk, process* proce, char** arq){
@@ -17,13 +17,11 @@ int interpreter(CPU* cpu,int* blk, process* proce, char** arq){
     }
     switch (token[0]) {
         case 'N':
-            printf("%s",arg1);
             initMemory(cpu->proc,atoi(arg1));
             printf("Memory initialized with size %d\n",atoi(arg1));
             cpu->pc++;
             return 0;
         case 'D':
-            token=  strtok(cpu->proc->prog[cpu->pc], " ");
             declareVar(cpu->proc,atoi(arg1));
             printf("Var %d declarated\n",atoi(arg1));
             cpu->pc++;
@@ -71,11 +69,12 @@ void changeProcess(CPU* cpu,process* proc, int pc, timer program_timer, timer ex
     cpu->executing_timer=executing_timer;
     cpu->program_timer=program_timer;
 };
-void initCPU(CPU* cpu) {
-    cpu->proc = NULL;
+void initCPU(CPU* cpu, char* arq) {
+    cpu->proc=(process*) malloc(sizeof (process));
+    initProcess(cpu->proc, arq);
     cpu->pc = 0;
-    cpu->program_timer = 0;
-    cpu->executing_timer = 0;
+    cpu->program_timer =(int*) 0;
+    cpu->executing_timer =(int*) 0;
 }
 
 void freeCPU(CPU* cpu) {
