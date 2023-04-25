@@ -25,6 +25,7 @@ void processBlock(computer* comp, int blockT); //(B n)Bloqueia o processo na CPU
 void processUnblock(computer* comp); //Faz o processo sair de Bloqueado para pronto
 void processRewind(computer* comp,char* arq); //(R arq) Le um arquivo e reinicia os status do processo atual da cpu o substituindo pelo arq
 void processExterminate(computer* comp); //T termina o processo simulado atual e passa o cpu para o proximo processo pronto
-void processCP(computer* comp, process* proc); //(F n) cria um novo processo em estado pronto,compiando o atual, e coloca seu pc na linha pc_atual+n
+void processCP(computer* comp, process* proc, int PcPlus); //(F n) cria um novo processo em estado pronto,compiando o atual, e coloca seu pc na linha pc_atual+n
 void execute(computer* comp);
+void attExec(computer* comp);
 #endif //SRC_MANAGER_H

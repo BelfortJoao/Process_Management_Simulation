@@ -149,7 +149,7 @@ void clockUpPC(computer* comp){
     blockDownclock(comp->proctb.bk);
 }
 
-void processCP(computer* comp, process* proc){
+void processCP(computer* comp, process* proc,int PcPlus){
     proc= (struct process*) malloc( sizeof(struct process));
     proc->numLines=comp->cpu.proc->numLines;
     proc->lengthMem=comp->cpu.proc->lengthMem;
@@ -161,19 +161,26 @@ void processCP(computer* comp, process* proc){
     for (int i = 0; i < proc->lengthMem; i++) {
         proc->mem[i]=comp->cpu.proc->mem[i];
     }
-    copyProcess(&comp->proctb,proc, comp->clock);
+    copyProcess(&comp->proctb,proc, comp->clock,PcPlus);
 }
 void processRewind(computer* comp, char* arq){
     excludeProcess(comp->proctb.proc[*comp->proctb.ex]);
     initProcess(comp->proctb.proc[*comp->proctb.ex], arq);
 }
+void attExec(computer* comp){
+    comp->proctb.pc[*comp->proctb.ex]=comp->cpu.pc;
+    comp->proctb.proc[*comp->proctb.ex]=comp->cpu.proc;
+    comp->proctb.CPUTime[*comp->proctb.ex]++;
+}
 
 void uperInterpreter(computer* comp){
     int blk;
+    int PcPlus;
     process* proc;
     char** arq;
-    int cpuResp= interpreter(&comp->cpu, &blk,proc, arq);
+    int cpuResp= interpreter(&comp->cpu, &blk,proc, arq,&PcPlus);
     comp->cpu.pc++;
+    attExec(comp);
     switch (cpuResp) {
         case 0:
             return;
@@ -184,7 +191,7 @@ void uperInterpreter(computer* comp){
             processExterminate(comp);
             return;
         case 3://Crian um novo processo com base no atual do CPU
-            processCP(comp,proc);
+            processCP(comp,proc,PcPlus);
             return;
         case 4://Recria o processo atual com base em um arquivo
             processRewind(comp, *arq);

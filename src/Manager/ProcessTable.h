@@ -33,7 +33,7 @@ void excludeProcessTable(processTable* pt);
 void excludeProcessInPT(int ID, processTable* pt);
 void addProcess(processTable* pt, char* arq, int father, timer clock);
 void rewid(processTable* pt);
-void copyProcess(processTable* pt,process* proc,timer t);
+void copyProcess(processTable* pt,process* proc,timer t,int PcPlus);
 int searchampitySpaceInProcessTable(processTable* pt);
 int searchID(int ID, processTable* pt);
 void printProcessTable(processTable* pt);

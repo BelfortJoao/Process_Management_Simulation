@@ -5,7 +5,7 @@
 #define MAX 100
 #include "cpu.h"
 
-int interpreter(CPU* cpu,int* blk, process* proce, char** arq){
+int interpreter(CPU* cpu,int* blk, process* proce, char** arq, int* PCPlus){
 
     char* token=  strtok(cpu->proc->prog[cpu->pc], " "); //Separando o input em Tokens
     char* arg1= strtok(NULL, " "); //Separando o input em Tokens
@@ -48,6 +48,7 @@ int interpreter(CPU* cpu,int* blk, process* proce, char** arq){
         case 'F':
             printf("Copiando processo\n");
             proce=generateNewProcess(cpu->proc);
+            *PCPlus=atoi(arg1);
             return 3;
         case 'R':
             printf("Lendo o arquivo %s\n",arg1);
