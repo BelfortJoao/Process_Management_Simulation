@@ -3,7 +3,7 @@
 
 int main() {
     computer comp;
-    initComputer(&comp,"/home/belfort/Documentos/GitHub/Process_Management_Simulation/src/file.txt");
+    initComputer(&comp,"file.txt");
     processExecuting(&comp);
     processExecuting(&comp);
     processExecuting(&comp);
