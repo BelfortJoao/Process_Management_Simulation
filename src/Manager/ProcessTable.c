@@ -123,8 +123,9 @@ void copyProcess(processTable* pt,process* proc,timer t){
     pt->numProcess++;
     int i=searchampitySpaceInProcessTable(pt);
     pt->ampitySpace[i]=1;
-    pt->proc[i]=proc;
+    pt->proc[i]->prog=proc->prog;
     pt->prioritis[i]=0;
+    pt->pc[i]=pt->pc[*pt->ex];
     pt->states[i]=strdup("PRONTO");
     pt->father[i]=*pt->ex;
     pt->initialTime[i]= t;

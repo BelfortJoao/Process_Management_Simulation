@@ -4,20 +4,10 @@
 int main() {
     computer comp;
     initComputer(&comp,"/home/belfort/Documentos/GitHub/Process_Management_Simulation/src/file.txt");
-    processExecuting(&comp);
-    processExecuting(&comp);
-    processExecuting(&comp);
-    processExecuting(&comp);
-    processExecuting(&comp);
-    processExecuting(&comp);
-    processExecuting(&comp);
-    processExecuting(&comp);
-    processExecuting(&comp);
-    processExecuting(&comp);
-    processExecuting(&comp);
-    printProcessTable(&comp.proctb);
-    processExecuting(&comp);
-    processExecuting(&comp);
+    for (int i = 0; i < 20; ++i) {
+        processExecuting(&comp);
+        printProcessTable(&comp.proctb);
+    }
 
     return 0;
 }
