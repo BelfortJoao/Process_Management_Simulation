@@ -1,5 +1,5 @@
 #include "executingstate.h"
 
-void contextExchange(int id, currOnExecution* ex){
+void contextExchange(int id, currOnExecution *ex) {
     *ex = id;
 }

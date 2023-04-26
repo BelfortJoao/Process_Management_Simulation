@@ -4,8 +4,8 @@
 
 typedef int Timer; //estrutura que mede o tempo
 
-void initTime(Timer* time);
+void initTime(Timer *time);
 
-void timeUp(Timer* time);
+void timeUp(Timer *time);
 
-void timeDown(Timer* time);
+void timeDown(Timer *time);

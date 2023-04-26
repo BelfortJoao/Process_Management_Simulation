@@ -4,4 +4,4 @@
 
 typedef int currOnExecution; //Guarda o processo que está atualmente rodando no CPU
 
-void contextExchange(int ID, currOnExecution* executingProcess);
+void contextExchange(int ID, currOnExecution *executingProcess);

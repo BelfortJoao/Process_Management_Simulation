@@ -6,12 +6,11 @@
 #include "readystate.h"
 
 
-
-void initReady(Ready* ready, int size) {
+void initReady(Ready *ready, int size) {
     // Allocate memory for the readyArray queues
-    ready->queues = (int**) malloc(4 * sizeof(int*));
+    ready->queues = (int **) malloc(4 * sizeof(int *));
     for (int i = 0; i < 4; i++) {
-        ready->queues[i] = (int*) malloc(size * sizeof(int));
+        ready->queues[i] = (int *) malloc(size * sizeof(int));
         for (int j = 0; j < size; j++) {
             ready->queues[i][j] = -1; // Initialize all elements to -1
         }
@@ -19,7 +18,7 @@ void initReady(Ready* ready, int size) {
     ready->size = size;
 }
 
-void freeReady(Ready* ready) {
+void freeReady(Ready *ready) {
     for (int i = 0; i < 4; i++) {
         free(ready->queues[i]);
     }
@@ -27,32 +26,34 @@ void freeReady(Ready* ready) {
     ready->queues = NULL;
     ready->size = 0;
 }
-int nextReady(Ready* ready){
+
+int nextReady(Ready *ready) {
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < ready->size; ++j) {
-            if(ready->queues[i][j] != -1){
+            if (ready->queues[i][j] != -1) {
                 return ready->queues[i][j];
             }
         }
     }
     return -1;
 }
-void insertReady(Ready* ready, int processId, int prior) {
+
+void insertReady(Ready *ready, int processId, int prior) {
     for (int k = 0; k < ready->size; ++k) {
         if (ready->queues[prior][k] == -1) {
             ready->queues[prior][k] = processId;
             return;
         }
-        }
+    }
     printf("lista de prontos Cheia.");
 }
 
-void removeReady(Ready* ready, int processId) {
+void removeReady(Ready *ready, int processId) {
     int i = 0;
     for (int j = 0; j < 4; ++j) {
         for (int k = 0; k < ready->size; ++k) {
-            if(ready->queues[j][k] == processId){
-                ready->queues[j][k]=-1;
+            if (ready->queues[j][k] == processId) {
+                ready->queues[j][k] = -1;
             }
         }
     }
@@ -60,9 +61,9 @@ void removeReady(Ready* ready, int processId) {
 
 //TA TUDO ERRADO AQUI CONCERTO AMANHÃ
 
-void moveFromPriorityToPriority(Ready* ready, int sourcePriority, int destinationPriority, int processId) {
-    int* sourceQueue = ready->queues[sourcePriority];
-    int* destinationQueue = ready->queues[destinationPriority];
+void moveFromPriorityToPriority(Ready *ready, int sourcePriority, int destinationPriority, int processId) {
+    int *sourceQueue = ready->queues[sourcePriority];
+    int *destinationQueue = ready->queues[destinationPriority];
 
     // Find the Process index in the source queue
     int processIndex = -1;

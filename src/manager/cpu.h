@@ -5,13 +5,17 @@
 #include "timer.h"
 #include "../process.h"
 
-typedef struct CPU{
-    Process* proc;
+typedef struct CPU {
+    Process *proc;
     int pc;
     Timer program_timer;
     Timer executing_timer;
 } CPU;
-void initCPU(CPU* cpu, char* arq);
-void freeCPU(CPU* cpu);
-int interpreter(CPU* cpu, int* blk, Process* proce, char** arq, int* PcPlus);
-void changeProcess(CPU* cpu, Process* proc, int pc, Timer program_timer, Timer executing_timer);
+
+void initCPU(CPU *cpu, char *arq);
+
+void freeCPU(CPU *cpu);
+
+int interpreter(CPU *cpu, int *blk, Process *proce, char **arq, int *PcPlus);
+
+void changeProcess(CPU *cpu, Process *proc, int pc, Timer program_timer, Timer executing_timer);
