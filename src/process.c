@@ -3,29 +3,29 @@
 //
 
 #include <limits.h>
-#include "Process.h"
+#include "process.h"
 // função para inicializar a memória de um processo com valores zero
-void initMemory(process* proc, int lengthMem) {
+void initMemory(Process* proc, int lengthMem) {
     proc->mem= (int*) calloc(lengthMem, sizeof(int)); // aloca o vetor de memória e o preenche com zeros
     proc->lengthMem=lengthMem;
 }
 
-void declareVar(process* proc, int position){
+void declareVar(Process* proc, int position){
     proc->mem[position]=0;
 }
 
-void changeVar(process* proc, int possition, int value){
+void changeVar(Process* proc, int possition, int value){
     proc->mem[possition]= value;
 }
 
-void addVar(process* proc, int possition, int value){
+void addVar(Process* proc, int possition, int value){
     proc->mem[possition]+= value;
 }
-void subVar(process* proc, int possition, int value){
+void subVar(Process* proc, int possition, int value){
     proc->mem[possition]-= value;
 }
 
-void initProcess(process* proc, char* name) {
+void initProcess(Process* proc, char* name) {
     FILE* archive= fopen(name, "r");
     if (archive == NULL) {
         printf("Erro ao abrir o archive.\n");
@@ -59,18 +59,17 @@ void initProcess(process* proc, char* name) {
     fclose(archive);
 }
 
-void excludeProcess(process* proc) {
+void excludeProcess(Process* proc) {
     // desaloca o array de programa
     for (int i = 0; i < proc->numLines; i++) {
         free(proc->prog[i]);
     }
-    free(proc->prog);
 
 }
 
-process* generateNewProcess(process* proc) {
+Process* generateNewProcess(Process* proc) {
     // aloca memória para o novo processo
-    struct process* newprocess = (struct process*) malloc(sizeof(struct process));
+    struct Process* newprocess = (struct Process*) malloc(sizeof(struct Process));
 
     // copia o array de programa do processo atual para o novo processo
     newprocess->numLines = proc->numLines;
@@ -89,7 +88,7 @@ process* generateNewProcess(process* proc) {
     // retorna o novo processo criado
     return newprocess;
 }
-void printMem(process* proc) {
+void printMem(Process* proc) {
     printf("\nMemory:\n");
     for (int i = 0; i < proc->lengthMem; i++) {
         printf("%d ", proc->mem[i]);
@@ -97,7 +96,7 @@ void printMem(process* proc) {
     printf("\n");
 }
 
-void printProg(process* proc) {
+void printProg(Process* proc) {
     printf("Program:\n");
     for (int i = 0; i < proc->numLines; i++) {
         printf("%s\n", proc->prog[i]);

@@ -3,6 +3,26 @@ project(src C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(src main.c Manager/timer.c Manager/timer.h Manager/cpu.c Manager/cpu.h Manager/executingState.c Manager/executingState.h Manager/blockedState.c Manager/blockedState.h Manager/ReadyState.c Manager/ReadyState.h Manager/ProcessTable.c Manager/ProcessTable.h Process.c Process.h Control/Controler.c Control/Controler.h Printer/Printer.c Printer/Printer.h Manager/manager.c Manager/manager.h)
+add_executable(src main.c
+        manager/timer.c
+        manager/timer.h
+        manager/cpu.c
+        manager/cpu.h
+        manager/executingstate.c
+        manager/executingstate.h
+        manager/blockedstate.c
+        manager/blockedstate.h
+        manager/readystate.c
+        manager/readystate.h
+        manager/processtable.c
+        manager/processtable.h
+        process.c
+        process.h
+        control/controller.c
+        control/controller.h
+        printer/printer.c
+        printer/printer.h
+        manager/manager.c
+        manager/manager.h)
 
 target_link_libraries(src m)

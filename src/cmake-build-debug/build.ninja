@@ -55,65 +55,65 @@ build CMakeFiles/src.dir/main.c.o: C_COMPILER__src_Debug /home/belfort/Documento
   OBJECT_DIR = CMakeFiles/src.dir
   OBJECT_FILE_DIR = CMakeFiles/src.dir
 
-build CMakeFiles/src.dir/Manager/timer.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Manager/timer.c || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Manager/timer.c.o.d
+build CMakeFiles/src.dir/manager/timer.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/manager/timer.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/manager/timer.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir/Manager
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/manager
 
-build CMakeFiles/src.dir/Manager/cpu.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Manager/cpu.c || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Manager/cpu.c.o.d
+build CMakeFiles/src.dir/manager/cpu.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/manager/cpu.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/manager/cpu.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir/Manager
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/manager
 
-build CMakeFiles/src.dir/Manager/executingState.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Manager/executingState.c || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Manager/executingState.c.o.d
+build CMakeFiles/src.dir/manager/executingstate.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/manager/executingstate.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/manager/executingstate.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir/Manager
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/manager
 
-build CMakeFiles/src.dir/Manager/blockedState.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Manager/blockedState.c || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Manager/blockedState.c.o.d
+build CMakeFiles/src.dir/manager/blockedstate.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/manager/blockedstate.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/manager/blockedstate.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir/Manager
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/manager
 
-build CMakeFiles/src.dir/Manager/ReadyState.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Manager/ReadyState.c || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Manager/ReadyState.c.o.d
+build CMakeFiles/src.dir/manager/readystate.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/manager/readystate.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/manager/readystate.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir/Manager
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/manager
 
-build CMakeFiles/src.dir/Manager/ProcessTable.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Manager/ProcessTable.c || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Manager/ProcessTable.c.o.d
+build CMakeFiles/src.dir/manager/processtable.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/manager/processtable.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/manager/processtable.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir/Manager
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/manager
 
-build CMakeFiles/src.dir/Process.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Process.c || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Process.c.o.d
+build CMakeFiles/src.dir/process.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/process.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/process.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles/src.dir
   OBJECT_FILE_DIR = CMakeFiles/src.dir
 
-build CMakeFiles/src.dir/Control/Controler.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Control/Controler.c || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Control/Controler.c.o.d
+build CMakeFiles/src.dir/control/controller.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/control/controller.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/control/controller.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir/Control
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/control
 
-build CMakeFiles/src.dir/Printer/Printer.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Printer/Printer.c || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Printer/Printer.c.o.d
+build CMakeFiles/src.dir/printer/printer.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/printer/printer.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/printer/printer.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir/Printer
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/printer
 
-build CMakeFiles/src.dir/Manager/manager.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/Manager/manager.c || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Manager/manager.c.o.d
+build CMakeFiles/src.dir/manager/manager.c.o: C_COMPILER__src_Debug /home/belfort/Documentos/GitHub/Process_Management_Simulation/src/manager/manager.c || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/manager/manager.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir/Manager
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/manager
 
 
 # =============================================================================
@@ -123,7 +123,7 @@ build CMakeFiles/src.dir/Manager/manager.c.o: C_COMPILER__src_Debug /home/belfor
 #############################################
 # Link the executable src
 
-build src: C_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.c.o CMakeFiles/src.dir/Manager/timer.c.o CMakeFiles/src.dir/Manager/cpu.c.o CMakeFiles/src.dir/Manager/executingState.c.o CMakeFiles/src.dir/Manager/blockedState.c.o CMakeFiles/src.dir/Manager/ReadyState.c.o CMakeFiles/src.dir/Manager/ProcessTable.c.o CMakeFiles/src.dir/Process.c.o CMakeFiles/src.dir/Control/Controler.c.o CMakeFiles/src.dir/Printer/Printer.c.o CMakeFiles/src.dir/Manager/manager.c.o
+build src: C_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.c.o CMakeFiles/src.dir/manager/timer.c.o CMakeFiles/src.dir/manager/cpu.c.o CMakeFiles/src.dir/manager/executingstate.c.o CMakeFiles/src.dir/manager/blockedstate.c.o CMakeFiles/src.dir/manager/readystate.c.o CMakeFiles/src.dir/manager/processtable.c.o CMakeFiles/src.dir/process.c.o CMakeFiles/src.dir/control/controller.c.o CMakeFiles/src.dir/printer/printer.c.o CMakeFiles/src.dir/manager/manager.c.o
   FLAGS = -g
   LINK_LIBRARIES = -lm
   OBJECT_DIR = CMakeFiles/src.dir

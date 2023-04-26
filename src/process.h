@@ -16,15 +16,15 @@ typedef struct process{
     program prog; //Programa que o processo deverá executar no CPU
     int numLines; //Numero de linhas que o programa guardado no processo contem
     int lengthMem; //Tamanho da memoria do processo
-}process;
-void initProcess(process* proc, char* name);
-void initMemory(process* proc, int lengthMem);
-void excludeProcess(process* proc);
-void declareVar(process* proc, int position);
-void changeVar(process* proc, int possition, int value);
-void addVar(process* proc, int possition, int value);
-void subVar(process* proc, int possition, int value);
-process* generateNewProcess(process* proc);
-void printMem(process* proc);
-void printProg(process* proc);
+}Process;
+void initProcess(Process* proc, char* name);
+void initMemory(Process* proc, int lengthMem);
+void excludeProcess(Process* proc);
+void declareVar(Process* proc, int position);
+void changeVar(Process* proc, int possition, int value);
+void addVar(Process* proc, int possition, int value);
+void subVar(Process* proc, int possition, int value);
+Process* generateNewProcess(Process* proc);
+void printMem(Process* proc);
+void printProg(Process* proc);
 #endif //SRC_PROCESS_H

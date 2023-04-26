@@ -1,11 +1,9 @@
-//
-// Created by belfort on 4/22/23.
-//
+#include <stdio.h>
+#include <stdlib.h>
 
-#define MAX 100
 #include "cpu.h"
 
-int interpreter(CPU* cpu,int* blk, process* proce, char** arq, int* PCPlus){
+int interpreter(CPU* cpu, int* blk, Process* proce, char** arq, int* PCPlus){
 
     char* token=  strtok(cpu->proc->prog[cpu->pc], " "); //Separando o input em Tokens
     char* arg1= strtok(NULL, " "); //Separando o input em Tokens
@@ -56,14 +54,14 @@ int interpreter(CPU* cpu,int* blk, process* proce, char** arq, int* PCPlus){
             return 4;
     }
 }
-void changeProcess(CPU* cpu,process* proc, int pc, timer program_timer, timer executing_timer){
+void changeProcess(CPU* cpu, Process* proc, int pc, Timer program_timer, Timer executing_timer){
     cpu->proc=proc;
     cpu->pc=pc;
     cpu->executing_timer=executing_timer;
     cpu->program_timer=program_timer;
 };
 void initCPU(CPU* cpu, char* arq) {
-    cpu->proc=(process*) malloc(sizeof (process));
+    cpu->proc=(Process*) malloc(sizeof (Process));
     initProcess(cpu->proc, arq);
     cpu->pc = 0;
     cpu->program_timer =8;
