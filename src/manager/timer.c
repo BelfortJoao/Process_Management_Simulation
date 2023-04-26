@@ -2,8 +2,8 @@
 #include "timer.h"
 
 void initTime(Timer* time) {
-    time = (int*)malloc(sizeof (int));
-    *time =-1;
+    time = (int *) malloc(sizeof(int));
+    *time = -1;
 }
 
 void timeUp(Timer* time) {

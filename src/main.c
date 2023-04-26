@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "control/controller.h"
 
 int main() {
