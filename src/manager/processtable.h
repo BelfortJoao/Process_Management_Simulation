@@ -1,7 +1,7 @@
 #ifndef SRC_PROCESSTABLE_H
 #define SRC_PROCESSTABLE_H
 
-#include "../process.h"
+#include "../process/process.h"
 #include "timer.h"
 #include "readystate.h"
 #include "blockedstate.h"

@@ -2,7 +2,7 @@
 #define SRC_CPU_H
 
 #include "timer.h"
-#include "../process.h"
+#include "../process/process.h"
 
 typedef struct CPU {
     Process *proc;

@@ -16,8 +16,8 @@ add_executable(src src/main.c
         src/manager/readystate.h
         src/manager/processtable.c
         src/manager/processtable.h
-        src/process.c
-        src/process.h
+        src/process/process.c
+        src/process/process.h
         src/control/controller.c
         src/control/controller.h
         src/printer/printer.c
