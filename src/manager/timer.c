@@ -1,6 +1,8 @@
+#include <malloc.h>
 #include "timer.h"
 
 void initTime(Timer* time) {
+    time = (int*)malloc(sizeof (int));
     *time =-1;
 }
 

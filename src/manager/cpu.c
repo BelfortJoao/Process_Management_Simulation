@@ -61,6 +61,7 @@ void changeProcess(CPU* cpu, Process* proc, int pc, Timer program_timer, Timer e
     cpu->program_timer=program_timer;
 };
 void initCPU(CPU* cpu, char* arq) {
+    cpu=malloc(sizeof(cpu));
     cpu->proc=(Process*) malloc(sizeof (Process));
     initProcess(cpu->proc, arq);
     cpu->pc = 0;

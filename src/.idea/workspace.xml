@@ -22,13 +22,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2b6c4279-e6c2-4237-8f68-2b558a5581c4" name="Changes" comment="Control e Print basico">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/control/controller.c" beforeDir="false" afterPath="$PROJECT_DIR$/control/controller.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/control/controller.h" beforeDir="false" afterPath="$PROJECT_DIR$/control/controller.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manager/cpu.c" beforeDir="false" afterPath="$PROJECT_DIR$/manager/cpu.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/manager/timer.c" beforeDir="false" afterPath="$PROJECT_DIR$/manager/timer.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manager/timer.h" beforeDir="false" afterPath="$PROJECT_DIR$/manager/timer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/printer/printer.c" beforeDir="false" afterPath="$PROJECT_DIR$/printer/printer.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/printer/printer.h" beforeDir="false" afterPath="$PROJECT_DIR$/printer/printer.h" afterDir="false" />
     </list>
     <list id="00d68194-b687-414d-b1bd-cf3cfc8f0f1e" name="Changes by matt" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -105,7 +100,7 @@
       <workItem from="1682433247320" duration="3599000" />
       <workItem from="1682449126984" duration="8861000" />
       <workItem from="1682510084468" duration="3427000" />
-      <workItem from="1682525949682" duration="4292000" />
+      <workItem from="1682525949682" duration="5108000" />
     </task>
     <task id="LOCAL-00001" summary="primeiro update">
       <created>1682195904693</created>
