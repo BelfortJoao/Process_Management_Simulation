@@ -1,6 +1,5 @@
 #ifndef SRC_BLOCKEDSTATE_H
 #define SRC_BLOCKEDSTATE_H
-#endif
 
 typedef struct {
     int *blockTime;
@@ -17,3 +16,5 @@ void insertBlockedId(BlockedIds *b, int pid, int blocktime);
 void removeBlockedId(BlockedIds *b, int pid);
 
 void blockDownClock(BlockedIds *b);
+
+#endif

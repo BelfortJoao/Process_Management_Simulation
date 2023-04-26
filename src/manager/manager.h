@@ -1,6 +1,5 @@
 #ifndef SRC_MANAGER_H
 #define SRC_MANAGER_H
-#endif
 
 #include "cpu.h"
 #include "processtable.h"
@@ -30,3 +29,5 @@ void processCP(Computer *comp, Process *proc,
 void execute(Computer *comp);
 
 void attExec(Computer *comp);
+
+#endif

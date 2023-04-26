@@ -1,6 +1,6 @@
-//
-// Created by belfort on 4/22/23.
-//
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "processtable.h"
 

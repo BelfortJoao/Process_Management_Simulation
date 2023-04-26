@@ -1,6 +1,5 @@
 #ifndef SRC_PROCESSTABLE_H
 #define SRC_PROCESSTABLE_H
-#endif
 
 #include "../process.h"
 #include "timer.h"
@@ -43,3 +42,5 @@ int searchID(int ID, ProcessTable *processTable);
 void printProcessTable(ProcessTable *processTable);
 
 int nextID(ProcessTable *processTable);
+
+#endif

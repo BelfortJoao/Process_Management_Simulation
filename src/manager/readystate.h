@@ -1,6 +1,5 @@
 #ifndef SRC_READYSTATE_H
 #define SRC_READYSTATE_H
-#endif
 
 typedef struct {
     int **queues; // An array of queues (arrays of integers)
@@ -16,3 +15,5 @@ void removeReady(Ready *ready, int processId);
 int nextReady(Ready *ready);
 
 void freeReady(Ready *ready);
+
+#endif

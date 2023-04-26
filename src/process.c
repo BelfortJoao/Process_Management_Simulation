@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
-#include <string.h>
+#include <string.h>s
 #include <limits.h>
 
 #include "process.h"
@@ -15,16 +15,16 @@ void declareVar(Process *proc, int position) {
     proc->mem[position] = 0;
 }
 
-void changeVar(Process *proc, int possition, int value) {
-    proc->mem[possition] = value;
+void changeVar(Process *proc, int position, int value) {
+    proc->mem[position] = value;
 }
 
-void addVar(Process *proc, int possition, int value) {
-    proc->mem[possition] += value;
+void addVar(Process *proc, int position, int value) {
+    proc->mem[position] += value;
 }
 
-void subVar(Process *proc, int possition, int value) {
-    proc->mem[possition] -= value;
+void subVar(Process *proc, int position, int value) {
+    proc->mem[position] -= value;
 }
 
 void initProcess(Process *proc, char *name) {

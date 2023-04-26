@@ -1,6 +1,5 @@
 #ifndef SRC_PRINTER_H
 #define SRC_PRINTER_H
-#endif
 
 typedef struct {
     int **responseTimes;
@@ -8,3 +7,5 @@ typedef struct {
 } Print;
 
 void printMedResponseTime(Print *print);
+
+#endif
