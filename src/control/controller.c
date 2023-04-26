@@ -4,7 +4,7 @@ void control(Control* cont){
     char resp;
     char arq[CHAR_MAX];
     printf("Arquivo de programa inicial: ");
-    fgets(arq, sizeof(arq), stdin);
+    arq="/home/belfort/Documentos/GitHub/Process_Management_Simulation/src/file.txt";
     initComputer(cont->comp,arq);
     while(1){
         printf("Comando: ");
