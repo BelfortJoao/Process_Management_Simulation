@@ -6,7 +6,7 @@
 void initProcessTable(ProcessTable* processTable, int initialCapacity) {
     processTable->tableSize = 0;
     processTable->tableCapacity = initialCapacity;
-    processTable->processArray = (struct Process**) malloc(initialCapacity * sizeof(struct Process*));
+    processTable->processArray = ( Process**) malloc(initialCapacity * sizeof( Process*));
     processTable->programCounterArray = (int*) malloc(initialCapacity * sizeof(int));
     processTable->idArray = (int*) malloc(initialCapacity * sizeof(int));
     processTable->parentProcessArray = (int*) malloc(initialCapacity * sizeof(int));
@@ -15,12 +15,12 @@ void initProcessTable(ProcessTable* processTable, int initialCapacity) {
     processTable->initialTimeArray = (int*) malloc(initialCapacity * sizeof(int));
     processTable->CPUTimeArray = (int*) malloc(initialCapacity * sizeof(int));
     processTable->emptyArray=(int*) malloc(initialCapacity * sizeof(int));
-    processTable->bk= malloc(sizeof (BlockedIds));
+    processTable->blockedArray= malloc(sizeof (BlockedIds));
     processTable->readyArray= malloc(sizeof (Ready));
     processTable->executingArray= malloc(sizeof(currOnExecution));
     processTable->nextFreeId=0;
     for (int i = 0; i < initialCapacity; i++) {
-        processTable->processArray[i] = (struct Process*) malloc(sizeof(struct Process));
+        processTable->processArray[i] = ( Process*) malloc(sizeof( Process));
         processTable->programCounterArray[i] = 0;
         processTable->priorityIdsArray[i] = -1;
         processTable->processStateArray[i] = "BLOQUEADO";
@@ -30,7 +30,7 @@ void initProcessTable(ProcessTable* processTable, int initialCapacity) {
         processTable->parentProcessArray[i] = -1;
     }
     contextExchange(-1, processTable->executingArray);
-    initBlockedIds(processTable->bk, initialCapacity);
+    initBlockedIds(processTable->blockedArray, initialCapacity);
     initReady(processTable->readyArray, initialCapacity);
 }
 int getProcessTableEmptySpace(ProcessTable* processTable){
@@ -68,7 +68,7 @@ void deleteProcessTableProcess(int ID, ProcessTable* processTable){
     processTable->parentProcessArray[ID]=-1;
     processTable->initialTimeArray[ID]= -1;
     processTable->CPUTimeArray[ID]=-1;
-    removeBlockedId(processTable->bk, ID);
+    removeBlockedId(processTable->blockedArray, ID);
 
 }
 
@@ -83,7 +83,7 @@ void deleteProcessTable(ProcessTable* processTable){
         }
     }
     freeReady(processTable->readyArray);
-    freeBlockedIds(processTable->bk);
+    freeBlockedIds(processTable->blockedArray);
     free(processTable->processArray);
     free(processTable->emptyArray);
     free(processTable->programCounterArray);

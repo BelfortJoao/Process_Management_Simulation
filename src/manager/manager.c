@@ -33,7 +33,7 @@ void blockProcess(Computer* comp, int blockT){
     contextExchange(go_exec,comp->processTable.executingArray);
     removeReady(comp->processTable.readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para block
-    insertBlockedId(comp->processTable.bk, go_block, blockT);
+    insertBlockedId(comp->processTable.blockedArray, go_block, blockT);
     //Operação real
     int i=searchID(go_exec,&comp->processTable);
     changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i], *comp->processTable.CPUTimeArray, 0);
@@ -135,9 +135,9 @@ void processExecuting(Computer* comp){
 void processUnblock(Computer* comp){
     int go_ready;
     for (int i = 0; i < comp->processTable.tableCapacity; ++i) {
-        if(comp->processTable.bk->blockTime[i] == 0){
-            go_ready=comp->processTable.bk->idArray[i];
-            removeBlockedId(comp->processTable.bk, go_ready);
+        if(comp->processTable.blockedArray->blockTime[i] == 0){
+            go_ready=comp->processTable.blockedArray->id[i];
+            removeBlockedId(comp->processTable.blockedArray, go_ready);
             insertReady(comp->processTable.readyArray, go_ready, comp->processTable.priorityIdsArray[searchID(go_ready, &comp->processTable)]);
             comp->processTable.processStateArray[searchID(go_ready, &comp->processTable)]="PRONTO";
         }
@@ -147,11 +147,11 @@ void processUnblock(Computer* comp){
 void clockUpPC(Computer* comp){
     timeUp(&comp->timer);
     timeUp(&comp->cpu.executing_timer);
-    blockDownClock(comp->processTable.bk);
+    blockDownClock(comp->processTable.blockedArray);
 }
 
 void processCP(Computer* comp, Process* proc, int PcPlus){
-    proc= (struct Process*) malloc(sizeof(struct Process));
+    proc= ( Process*) malloc(sizeof( Process));
     proc->numLines=comp->cpu.proc->numLines;
     proc->lengthMem=comp->cpu.proc->lengthMem;
     if (proc->prog ==NULL){

@@ -20,10 +20,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b6c4279-e6c2-4237-8f68-2b558a5581c4" name="Changes" comment="bla">
-      <change beforePath="$PROJECT_DIR$/../CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="2b6c4279-e6c2-4237-8f68-2b558a5581c4" name="Changes" comment="CMakeLists.txt">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manager/manager.c" beforeDir="false" afterPath="$PROJECT_DIR$/manager/manager.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manager/processtable.c" beforeDir="false" afterPath="$PROJECT_DIR$/manager/processtable.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/process.c" beforeDir="false" afterPath="$PROJECT_DIR$/process.c" afterDir="false" />
     </list>
     <list id="00d68194-b687-414d-b1bd-cf3cfc8f0f1e" name="Changes by matt" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -60,6 +61,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
@@ -72,29 +74,18 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="CMake Debug.src">
+  <component name="RunManager">
     <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="src" type="CMakeListConfigurationType" factoryName="CMakeListConfigurationFactory" temporary="true">
-      <method v="2" />
-    </configuration>
-    <configuration name="src" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="src" TARGET_NAME="src" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="src" RUN_TARGET_NAME="src">
+    <configuration name="src" type="CMakeRunConfiguration" factoryName="Application" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="src" TARGET_NAME="src" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="src" RUN_TARGET_NAME="src">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="CMake.Explicit.Target" elevated="true" predefinedTargetName="src" />
       </method>
     </configuration>
-    <list>
-      <item itemvalue="CMake Application.src" />
-      <item itemvalue="CMake Debug.src" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="CMake Debug.src" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -110,7 +101,7 @@
       <workItem from="1682433247320" duration="3599000" />
       <workItem from="1682449126984" duration="8861000" />
       <workItem from="1682510084468" duration="3427000" />
-      <workItem from="1682525949682" duration="789000" />
+      <workItem from="1682525949682" duration="1560000" />
     </task>
     <task id="LOCAL-00001" summary="primeiro update">
       <created>1682195904693</created>
@@ -140,7 +131,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682216990802</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="CMakeLists.txt">
+      <created>1682526799958</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1682526799958</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -152,7 +150,8 @@
     <MESSAGE value="primerias estruturas" />
     <MESSAGE value="processTble" />
     <MESSAGE value="bla" />
-    <option name="LAST_COMMIT_MESSAGE" value="bla" />
+    <MESSAGE value="CMakeLists.txt" />
+    <option name="LAST_COMMIT_MESSAGE" value="CMakeLists.txt" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
