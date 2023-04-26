@@ -3,7 +3,7 @@
 #include "blockedstate.h"
 
 void initBlockedIds(BlockedIds *b, int size) {
-    // Allocate memory for the blockedArray array
+    // Allocate Memory for the blockedArray array
     b->id = (int *) malloc(size * sizeof(int));
     b->blockTime = (int *) malloc(size * sizeof(int));
     for (int i = 0; i < size; i++) {

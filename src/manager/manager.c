@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <limits.h>
 #include <math.h>
 
@@ -162,18 +163,18 @@ void clockUpPC(Computer *comp) {
 void processCP(Computer *comp, Process *proc, int PcPlus) {
     proc = (Process *) malloc(sizeof(Process));
     proc->numLines = comp->cpu.proc->numLines;
-    proc->lengthMem = comp->cpu.proc->lengthMem;
-    if (proc->prog == NULL) {
-        proc->prog = (char **) malloc(proc->numLines * sizeof(char *));
+    proc->memorySize = comp->cpu.proc->memorySize;
+    if (proc->program == NULL) {
+        proc->program = (char **) malloc(proc->numLines * sizeof(char *));
     }
     for (int i = 0; i < proc->numLines; i++) {
-        if (proc->prog[i] == NULL) {
-            proc->prog[i] = (char *) malloc(CHAR_MAX * sizeof(char));
+        if (proc->program[i] == NULL) {
+            proc->program[i] = (char *) malloc(CHAR_MAX * sizeof(char));
         }
-        proc->prog[i] = comp->cpu.proc->prog[i];
+        proc->program[i] = comp->cpu.proc->program[i];
     }
-    for (int i = 0; i < proc->lengthMem; i++) {
-        proc->mem[i] = comp->cpu.proc->mem[i];
+    for (int i = 0; i < proc->memorySize; i++) {
+        proc->memory[i] = comp->cpu.proc->memory[i];
     }
     copyProcess(&comp->processTable, proc, comp->timer, PcPlus);
 }

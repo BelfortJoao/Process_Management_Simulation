@@ -7,7 +7,7 @@
 
 
 void initReady(Ready *ready, int size) {
-    // Allocate memory for the readyArray queues
+    // Allocate Memory for the readyArray queues
     ready->queues = (int **) malloc(4 * sizeof(int *));
     for (int i = 0; i < 4; i++) {
         ready->queues[i] = (int *) malloc(size * sizeof(int));

@@ -5,7 +5,7 @@
 
 int interpreter(CPU *cpu, int *blk, Process *proce, char **arq, int *PCPlus) {
 
-    char *token = strtok(cpu->proc->prog[cpu->pc], " "); //Separando o input em Tokens
+    char *token = strtok(cpu->proc->program[cpu->pc], " "); //Separando o input em Tokens
     char *arg1 = strtok(NULL, " "); //Separando o input em Tokens
     char *arg2 = strtok(NULL, " "); //Separando o input em Tokens
     if (arg1 == NULL) {
