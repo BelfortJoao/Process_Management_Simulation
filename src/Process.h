@@ -5,7 +5,6 @@
 #ifndef SRC_PROCESS_H
 #define SRC_PROCESS_H
 
-#include <bits/types/FILE.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>

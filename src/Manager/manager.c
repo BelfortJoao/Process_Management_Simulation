@@ -160,7 +160,8 @@ void processCP(computer* comp, process* proc,int PcPlus){
     }
     for (int i = 0; i < proc->numLines; i++) {
         if(proc->prog[i]==NULL){proc->prog[i] = (char*) malloc(CHAR_MAX * sizeof(char));
-            proc->prog[i]=comp->cpu.proc->prog[i];}
+            }
+        proc->prog[i]=comp->cpu.proc->prog[i];
     }
     for (int i = 0; i < proc->lengthMem; i++) {
         proc->mem[i]=comp->cpu.proc->mem[i];

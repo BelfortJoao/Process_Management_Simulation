@@ -123,16 +123,14 @@ void copyProcess(processTable* pt,process* proc,timer t, int PcPlus){
     pt->numProcess++;
     int i=searchampitySpaceInProcessTable(pt);
     pt->ampitySpace[i]=1;
-    pt->proc[i]->prog=proc->prog;
     pt->prioritis[i]=0;
     pt->pc[i]=pt->pc[*pt->ex]+PcPlus;
-    pt->states[i]=strdup("PRONTO");
+    pt->states[i]="PRONTO";
     pt->father[i]=*pt->ex;
     pt->initialTime[i]= t;
     pt->CPUTime[i]=0;
     pt->ID[i]= nextID(pt);
     insertReady(pt->rd,i,pt->prioritis[i]);
-    return;
 }
 void rewid(processTable* pt){
 
