@@ -1,7 +1,7 @@
 //
 // Created by belfort on 4/23/23.
 //
-#include <limits.h>
+#include <math.h>
 #include "manager.h"
 //Loop infinito
 
@@ -45,22 +45,25 @@ void processBlock(computer* comp, int blockT){
 void processEscalonating(computer* comp){
     int go_exec;
     int go_ready;
-    if(comp->proctb.ex == 0 || comp->proctb.ex == NULL){
-        return;
-    }
+    int time=2;
     //Operação em tabela-sai de ready e vai para executando
     go_ready=*comp->proctb.ex;
     go_exec=nextReady(comp->proctb.rd);
     if(go_exec==-1){
         return;
     }
+    comp->proctb.prioritis[*comp->proctb.ex]++;
     contextExchange(go_exec,comp->proctb.ex);
     removeReady(comp->proctb.rd,go_exec);
     //Operação em tabela-sai de executando e vai para pronto
-    insertReady(comp->proctb.rd,go_ready);
+    insertReady(comp->proctb.rd,go_ready,comp->proctb.prioritis[*comp->proctb.ex]);
     //Operação real
     int i=searchID(go_exec,&comp->proctb);
-    changeProcess(&comp->cpu,comp->proctb.proc[i],comp->proctb.pc[i],*comp->proctb.CPUTime,0);
+    if(2*(4-*comp->proctb.prioritis)>=2){
+        time =(int)pow(2,(4-*comp->proctb.prioritis)-1);
+    }
+    printf("\n\n\n\n%d\n\n\n\n",time);
+    changeProcess(&comp->cpu,comp->proctb.proc[i],comp->proctb.pc[i],time,0);
     comp->proctb.states[go_exec]="EXECUTANDO";
     comp->proctb.states[go_ready]="PRONTO";
 }
@@ -77,6 +80,8 @@ void processExterminate(computer* comp){
     go_exec=nextReady(comp->proctb.rd);
     contextExchange(go_exec,comp->proctb.ex);
     removeReady(comp->proctb.rd,go_exec);
+    //Sai de Ready e vai para ex
+
     //Operação real
     int i=searchID(go_exec,&comp->proctb);
     changeProcess(&comp->cpu,comp->proctb.proc[i],comp->proctb.pc[i],*comp->proctb.CPUTime,0);
@@ -104,7 +109,6 @@ void execute(computer* comp){
     comp->proctb.states[go_exec]="EXECUTANDO";
 }
 void processExecuting(computer* comp){
-        printf("\nPC: %d\n",comp->cpu.pc);
         //search for a proces while cpu is ampity
         if (comp->proctb.ex <=0||comp->proctb.ex == NULL||comp->cpu.proc->numLines==0) {
                 //terminate the computer if kill switch is equal one
@@ -112,14 +116,12 @@ void processExecuting(computer* comp){
                     computerKill(comp);
                     return;
                 }
-                execute(comp);
             //if cpu isn't ampity check the cpu time and escalonate
         } else {
             if(comp->cpu.executing_timer>=comp->cpu.program_timer){
                 processEscalonating(comp);
             }
         }
-        printf("\nPC: %d\n",comp->cpu.pc);
         //Interpreta o processo aumenta o clock
         uperInterpreter(comp);
         clockUpPC(comp);
@@ -137,7 +139,7 @@ void processUnblock(computer* comp){
         if(comp->proctb.bk->blocktime[i]==0){
             go_ready=comp->proctb.bk->Id[i];
             removeBlocked(comp->proctb.bk,go_ready);
-            insertReady(comp->proctb.rd,go_ready);
+            insertReady(comp->proctb.rd,go_ready,comp->proctb.prioritis[searchID(go_ready,&comp->proctb)]);
             comp->proctb.states[searchID(go_ready,&comp->proctb)]="PRONTO";
         }
     }
@@ -153,10 +155,12 @@ void processCP(computer* comp, process* proc,int PcPlus){
     proc= (struct process*) malloc( sizeof(struct process));
     proc->numLines=comp->cpu.proc->numLines;
     proc->lengthMem=comp->cpu.proc->lengthMem;
-    proc->prog = (char**) malloc(proc->numLines * sizeof(char*));
+    if (proc->prog ==NULL){
+        proc->prog = (char**) malloc(proc->numLines * sizeof(char*));
+    }
     for (int i = 0; i < proc->numLines; i++) {
-        proc->prog[i] = (char*) malloc(CHAR_MAX * sizeof(char));
-        proc->prog[i]=comp->cpu.proc->prog[i];
+        if(proc->prog[i]==NULL){proc->prog[i] = (char*) malloc(CHAR_MAX * sizeof(char));
+            proc->prog[i]=comp->cpu.proc->prog[i];}
     }
     for (int i = 0; i < proc->lengthMem; i++) {
         proc->mem[i]=comp->cpu.proc->mem[i];

@@ -7,6 +7,8 @@
 
 #include "cpu.h"
 #include "ProcessTable.h"
+#include <limits.h>
+#include <math.h>
 typedef struct computer{
     CPU cpu; //Representa o unico núcleo que tem no computador
     processTable proctb; //Tabela de processos do computador

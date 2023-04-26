@@ -125,6 +125,7 @@ build CMakeFiles/src.dir/Manager/manager.c.o: C_COMPILER__src_Debug /home/belfor
 
 build src: C_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.c.o CMakeFiles/src.dir/Manager/timer.c.o CMakeFiles/src.dir/Manager/cpu.c.o CMakeFiles/src.dir/Manager/executingState.c.o CMakeFiles/src.dir/Manager/blockedState.c.o CMakeFiles/src.dir/Manager/ReadyState.c.o CMakeFiles/src.dir/Manager/ProcessTable.c.o CMakeFiles/src.dir/Process.c.o CMakeFiles/src.dir/Control/Controler.c.o CMakeFiles/src.dir/Printer/Printer.c.o CMakeFiles/src.dir/Manager/manager.c.o
   FLAGS = -g
+  LINK_LIBRARIES = -lm
   OBJECT_DIR = CMakeFiles/src.dir
   POST_BUILD = :
   PRE_LINK = :

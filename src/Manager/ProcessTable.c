@@ -53,7 +53,7 @@ void addProcess(processTable* pt, char* arq, int father, timer clock){
     pt->initialTime[i]= clock;
     pt->CPUTime[i]=(timer)0;
     pt->ID[i]= nextID(pt);
-    insertReady(pt->rd,i);
+    insertReady(pt->rd,i,pt->prioritis[i]);
 }
 void excludeProcessInPT(int ID, processTable* pt){
     int i=searchID(ID,pt);
@@ -131,7 +131,7 @@ void copyProcess(processTable* pt,process* proc,timer t, int PcPlus){
     pt->initialTime[i]= t;
     pt->CPUTime[i]=0;
     pt->ID[i]= nextID(pt);
-    insertReady(pt->rd,i);
+    insertReady(pt->rd,i,pt->prioritis[i]);
     return;
 }
 void rewid(processTable* pt){

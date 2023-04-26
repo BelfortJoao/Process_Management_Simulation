@@ -37,14 +37,12 @@ int nextReady(Ready* r){
     }
     return -1;
 }
-void insertReady(Ready* r, int pid) {
-    int i = 0;
+void insertReady(Ready* r, int pid,int prior) {
     for (int k = 0; k < r->size; ++k) {
-        if (r->queues[0][i] == -1) {
-            r->queues[0][i] = pid;
+        if (r->queues[prior][k] == -1) {
+            r->queues[prior][k] = pid;
             return;
         }
-        i++;
         }
     printf("lista de prontos Cheia.");
 }
