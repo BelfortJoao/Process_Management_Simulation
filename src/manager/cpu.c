@@ -4,7 +4,7 @@
 
 #include "cpu.h"
 
-int interpreter(CPU *cpu, int *blk, Process *process, char **arq, int *PCPlus) {
+int interpreter(CPU *cpu, int *blk, char **arq, int *PCPlus) {
 
     char *token = strtok(cpu->proc->program[cpu->pc], " "); //Separando o input em Tokens
     char *arg1 = strtok(NULL, " "); //Separando o input em Tokens
@@ -46,7 +46,6 @@ int interpreter(CPU *cpu, int *blk, Process *process, char **arq, int *PCPlus) {
             return 2;
         case 'F':
             printf("Copiando processo\n");
-            process = generateNewProcess(cpu->proc);
             *PCPlus = atoi(arg1);
             return 3;
         case 'R':

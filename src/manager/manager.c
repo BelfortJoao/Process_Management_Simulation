@@ -110,7 +110,6 @@ void killComputer(Computer *comp) {
 
 void execute(Computer *comp) {
     int go_exec;
-    //OLAAAA
     //Operação sob a tabela Ready
     go_exec = nextReady(comp->processTable.readyArray);
     contextExchange(go_exec, comp->processTable.executingArray);
@@ -171,20 +170,8 @@ void clockUpPC(Computer *comp) {
 
 
 void processCP(Computer *comp, Process *proc, int PcPlus) {
-    proc->numLines = comp->cpu.proc->numLines;
-    proc->memorySize = comp->cpu.proc->memorySize;
-    proc->program = (char **) malloc(proc->numLines * sizeof(char *));
-    for (int i = 0; i < proc->numLines; i++) {
-        if (proc->program[i] == NULL) {
-            proc->program[i] = (char *) malloc(CHAR_MAX * sizeof(char));
-        }
-        proc->program[i] = comp->cpu.proc->program[i];
-    }
 
-    proc->memory = (int *) malloc(proc->memorySize * sizeof(int));
-    for (int i = 0; i < proc->memorySize; i++) {
-        proc->memory[i] = comp->cpu.proc->memory[i];
-    }
+    proc = generateNewProcess(comp->cpu.proc);
     copyProcess(&comp->processTable, proc, comp->timer, PcPlus);
 }
 
@@ -201,10 +188,11 @@ void attExec(Computer *comp) {
 
 void uperInterpreter(Computer *comp) {
     int blk;
-    int PcPlus;
     Process *proc;
+    int PcPlus;
     char **arq;
-    int cpuResp = interpreter(&comp->cpu, &blk, proc, arq, &PcPlus);
+    printf("PC: %d\n", comp->cpu.pc);
+    int cpuResp = interpreter(&comp->cpu, &blk, arq, &PcPlus);
     comp->cpu.pc++;
     attExec(comp);
     switch (cpuResp) {
