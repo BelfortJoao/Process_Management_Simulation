@@ -6,14 +6,20 @@
 #include "manager.h"
 
 void initComputer(Computer *comp, char *arq) {
+
     int tam = 0;
+
     initTime(&comp->timer);
     initCPU(&comp->cpu, arq);
+
     while (tam <= 0) {
         printf("Type the Process Table Capacity: ");
         scanf("%d", &tam);
     }
-    initProcessTable(&comp->processTable, tam);
+
+    initProcessTable(&(comp->processTable), tam);
+    printf("Process Table Capacity: %d\n", comp->processTable.tableCapacity);
+
     addProcessTableProcess(&comp->processTable, arq, -1, 0);
     removeReady(comp->processTable.readyArray, 0);
     contextExchange(0, comp->processTable.executingArray);
@@ -47,7 +53,7 @@ void blockProcess(Computer *comp, int blockT) {
 void scheduleProcess(Computer *comp) {
     int go_exec;
     int go_ready;
-    int time = 2;
+    int time = 1;
     //Operação em tabela-sai de readyArray e vai para executando
     go_ready = *comp->processTable.executingArray;
     go_exec = nextReady(comp->processTable.readyArray);
@@ -58,17 +64,20 @@ void scheduleProcess(Computer *comp) {
     contextExchange(go_exec, comp->processTable.executingArray);
     removeReady(comp->processTable.readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para pronto
-    insertReady(comp->processTable.readyArray, go_ready,
-                comp->processTable.priorityIdsArray[*comp->processTable.executingArray]);
-    //Operação real
     int i = searchID(go_exec, &comp->processTable);
-    if (2 * (4 - *comp->processTable.priorityIdsArray) >= 2) {
-        time = (int) pow(2, (4 - *comp->processTable.priorityIdsArray) - 1);
+    insertReady(comp->processTable.readyArray, go_ready,
+                comp->processTable.priorityIdsArray[i]);
+
+    printProcessTable(&comp->processTable);
+    //Operação real
+    if (pow(2,(4 - comp->processTable.priorityIdsArray[i]) -1) >= 1) {
+        time = (int) pow(2, (4 - comp->processTable.priorityIdsArray[i]) - 1);
     }
     printf("\n\n\n\n%d\n\n\n\n", time);
     changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i], time, 0);
     comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
     comp->processTable.processStateArray[go_ready] = "PRONTO";
+    printProcessTable(&comp->processTable);
 }
 
 //T termina o processo simulado atual e passa o cpu para o proximo processo pronto
@@ -126,6 +135,8 @@ void processExecuting(Computer *comp) {
         }
         //if cpu isn't ampity check the cpu time and escalonate
     } else {
+        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
+        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.program_timer);
         if (comp->cpu.executing_timer >= comp->cpu.program_timer) {
             scheduleProcess(comp);
         }
@@ -160,22 +171,12 @@ void clockUpPC(Computer *comp) {
     blockDownClock(comp->processTable.blockedArray);
 }
 
+
+
+
 void processCP(Computer *comp, Process *proc, int PcPlus) {
-    proc = (Process *) malloc(sizeof(Process));
-    proc->numLines = comp->cpu.proc->numLines;
-    proc->memorySize = comp->cpu.proc->memorySize;
-    if (proc->program == NULL) {
-        proc->program = (char **) malloc(proc->numLines * sizeof(char *));
-    }
-    for (int i = 0; i < proc->numLines; i++) {
-        if (proc->program[i] == NULL) {
-            proc->program[i] = (char *) malloc(CHAR_MAX * sizeof(char));
-        }
-        proc->program[i] = comp->cpu.proc->program[i];
-    }
-    for (int i = 0; i < proc->memorySize; i++) {
-        proc->memory[i] = comp->cpu.proc->memory[i];
-    }
+
+    proc = generateNewProcess(comp->cpu.proc);
     copyProcess(&comp->processTable, proc, comp->timer, PcPlus);
 }
 
@@ -192,10 +193,11 @@ void attExec(Computer *comp) {
 
 void uperInterpreter(Computer *comp) {
     int blk;
-    int PcPlus;
     Process *proc;
+    int PcPlus;
     char **arq;
-    int cpuResp = interpreter(&comp->cpu, &blk, proc, arq, &PcPlus);
+    printf("PC: %d\n", comp->cpu.pc);
+    int cpuResp = interpreter(&comp->cpu, &blk, arq, &PcPlus);
     comp->cpu.pc++;
     attExec(comp);
     switch (cpuResp) {

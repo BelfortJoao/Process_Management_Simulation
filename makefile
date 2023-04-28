@@ -1,5 +1,5 @@
 make:
-	gcc -o main src src/main.c \
+	gcc -o main src/main.c \
                         src/manager/timer.c \
                         src/manager/timer.h \
                         src/manager/cpu.c \
