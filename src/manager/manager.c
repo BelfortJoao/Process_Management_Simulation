@@ -6,14 +6,20 @@
 #include "manager.h"
 
 void initComputer(Computer *comp, char *arq) {
+
     int tam = 0;
+
     initTime(&comp->timer);
     initCPU(&comp->cpu, arq);
+
     while (tam <= 0) {
         printf("Type the Process Table Capacity: ");
         scanf("%d", &tam);
     }
-    initProcessTable(&comp->processTable, tam);
+
+    initProcessTable(&(comp->processTable), tam);
+    printf("Process Table Capacity: %d\n", comp->processTable.tableCapacity);
+
     addProcessTableProcess(&comp->processTable, arq, -1, 0);
     removeReady(comp->processTable.readyArray, 0);
     contextExchange(0, comp->processTable.executingArray);
@@ -104,6 +110,7 @@ void killComputer(Computer *comp) {
 
 void execute(Computer *comp) {
     int go_exec;
+    //OLAAAA
     //Operação sob a tabela Ready
     go_exec = nextReady(comp->processTable.readyArray);
     contextExchange(go_exec, comp->processTable.executingArray);
@@ -160,19 +167,21 @@ void clockUpPC(Computer *comp) {
     blockDownClock(comp->processTable.blockedArray);
 }
 
+
+
+
 void processCP(Computer *comp, Process *proc, int PcPlus) {
-    proc = (Process *) malloc(sizeof(Process));
     proc->numLines = comp->cpu.proc->numLines;
     proc->memorySize = comp->cpu.proc->memorySize;
-    if (proc->program == NULL) {
-        proc->program = (char **) malloc(proc->numLines * sizeof(char *));
-    }
+    proc->program = (char **) malloc(proc->numLines * sizeof(char *));
     for (int i = 0; i < proc->numLines; i++) {
         if (proc->program[i] == NULL) {
             proc->program[i] = (char *) malloc(CHAR_MAX * sizeof(char));
         }
         proc->program[i] = comp->cpu.proc->program[i];
     }
+
+    proc->memory = (int *) malloc(proc->memorySize * sizeof(int));
     for (int i = 0; i < proc->memorySize; i++) {
         proc->memory[i] = comp->cpu.proc->memory[i];
     }

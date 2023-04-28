@@ -5,8 +5,10 @@
 #include <ctype.h>
 
 void control(Control *cont) {
+
     char resp;
     char arq[CHAR_MAX];
+
     printf("Arquivo de programa inicial: ");
     fgets(arq, sizeof(arq), stdin);
     size_t len = strlen(arq);
@@ -15,18 +17,21 @@ void control(Control *cont) {
     }
     arq[len] = '\0';
     printf("%s\n", arq);
+
     initComputer(cont->comp, arq);
+
     while (1) {
         printf("Comando: ");
-        scanf("%c", &resp);
-        switch (resp) {
+        //scanf("%c", &resp);
+        /*switch (resp) {
             case 'M':
-                printMedResponseTime(cont->prin);
+                printMedResponseTime(cont->printer);
                 return;
             case 'U':
                 processExecuting(cont->comp);
             case 'I':
                 printProcessTable(&cont->comp->processTable);
-        }
+        }*/
+        processExecuting(cont->comp);
     }
 }

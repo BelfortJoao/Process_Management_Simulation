@@ -47,7 +47,6 @@ int getProcessTableEmptySpace(ProcessTable *processTable) {
 void addProcessTableProcess(ProcessTable *processTable, char *arq, int father, Timer clock) {
     processTable->tableSize++;
     int i = getProcessTableEmptySpace(processTable);
-    printf("%d", i);
     processTable->emptyArray[i] = 1;
     initProcess(processTable->processArray[i], arq);
     processTable->priorityIdsArray[i] = 0;

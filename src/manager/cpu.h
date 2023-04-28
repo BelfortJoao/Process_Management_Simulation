@@ -15,7 +15,7 @@ void initCPU(CPU *cpu, char *arq);
 
 void freeCPU(CPU *cpu);
 
-int interpreter(CPU *cpu, int *blk, Process *proce, char **arq, int *PcPlus);
+int interpreter(CPU *cpu, int *blk, Process *process, char **arq, int *PcPlus);
 
 void changeProcess(CPU *cpu, Process *proc, int pc, Timer program_timer, Timer executing_timer);
 

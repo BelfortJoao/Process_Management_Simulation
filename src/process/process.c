@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
-#include <string.h>s
+#include <string.h>
 #include <limits.h>
 
 #include "process.h"

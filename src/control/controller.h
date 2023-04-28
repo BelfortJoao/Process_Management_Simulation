@@ -6,7 +6,7 @@
 
 typedef struct control {
     Computer *comp;
-    Print *prin;
+    Print *printer;
 } Control;
 
 void control(Control *cont);
