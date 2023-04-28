@@ -56,10 +56,15 @@ int interpreter(CPU *cpu, int *blk, char **arq, int *PCPlus) {
 }
 
 void changeProcess(CPU *cpu, Process *proc, int pc, Timer program_timer, Timer executing_timer) {
-    cpu->proc = proc;
+    for (int i = 0; i < proc->numLines; i++) {
+        strcpy(cpu->proc->program[i], proc->program[i]);
+    }
+    for (int i = 0; i < proc->memorySize; i++) {
+        cpu->proc->memory[i] = proc->memory[i];
+    } //pode dar erro
     cpu->pc = pc;
-    cpu->executing_timer = executing_timer;
     cpu->program_timer = program_timer;
+    cpu->executing_timer = executing_timer;
 };
 
 void initCPU(CPU *cpu, char *arq) {

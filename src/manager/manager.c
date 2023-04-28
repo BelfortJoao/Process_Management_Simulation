@@ -53,7 +53,7 @@ void blockProcess(Computer *comp, int blockT) {
 void scheduleProcess(Computer *comp) {
     int go_exec;
     int go_ready;
-    int time = 2;
+    int time = 1;
     //Operação em tabela-sai de readyArray e vai para executando
     go_ready = *comp->processTable.executingArray;
     go_exec = nextReady(comp->processTable.readyArray);
@@ -64,17 +64,20 @@ void scheduleProcess(Computer *comp) {
     contextExchange(go_exec, comp->processTable.executingArray);
     removeReady(comp->processTable.readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para pronto
-    insertReady(comp->processTable.readyArray, go_ready,
-                comp->processTable.priorityIdsArray[*comp->processTable.executingArray]);
-    //Operação real
     int i = searchID(go_exec, &comp->processTable);
-    if (2 * (4 - *comp->processTable.priorityIdsArray) >= 2) {
-        time = (int) pow(2, (4 - *comp->processTable.priorityIdsArray) - 1);
+    insertReady(comp->processTable.readyArray, go_ready,
+                comp->processTable.priorityIdsArray[i]);
+
+    printProcessTable(&comp->processTable);
+    //Operação real
+    if (pow(2,(4 - comp->processTable.priorityIdsArray[i]) -1) >= 1) {
+        time = (int) pow(2, (4 - comp->processTable.priorityIdsArray[i]) - 1);
     }
     printf("\n\n\n\n%d\n\n\n\n", time);
     changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i], time, 0);
     comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
     comp->processTable.processStateArray[go_ready] = "PRONTO";
+    printProcessTable(&comp->processTable);
 }
 
 //T termina o processo simulado atual e passa o cpu para o proximo processo pronto
@@ -132,6 +135,8 @@ void processExecuting(Computer *comp) {
         }
         //if cpu isn't ampity check the cpu time and escalonate
     } else {
+        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
+        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.program_timer);
         if (comp->cpu.executing_timer >= comp->cpu.program_timer) {
             scheduleProcess(comp);
         }
