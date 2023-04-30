@@ -111,15 +111,20 @@ void printProcessTable(ProcessTable *processTable) {
     printf("Proximo idArray Livre: %d\n", processTable->nextFreeId);
     printf("Numero atual de processos: %d\n", processTable->tableSize);
     printf("Capacidade da tabela: %d\n", processTable->tableCapacity);
-    printf(":idArray:\t:PC:\t:Pai:\t:Prioridade:\t:Estado:\t:Inicio:\t:T de uso:");
+    printf("| %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s |\n", "idArray", "PC", "Pai", "Prioridade", "Estado", "Inicio", "T de uso");
+    printf("============================================================================================");
     for (int i = 0; i < processTable->tableCapacity; ++i) {
         if (processTable->emptyArray[i] != 0) {
-            printf("\n%d\t%d\t %d\t%d\t%s\t%d\t%d\n", processTable->idArray[i], processTable->programCounterArray[i],
+            if (i != 0) {
+            printf("\n|            |            |            |            |            |            |            |");
+            }
+            printf("\n| %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d |", processTable->idArray[i], processTable->programCounterArray[i],
                    processTable->parentProcessArray[i], processTable->priorityIdsArray[i],
                    processTable->processStateArray[i], processTable->initialTimeArray[i],
                    processTable->CPUTimeArray[i]);
         };
     }
+    printf("\n");
 }
 
 int nextID(ProcessTable *processTable) {
