@@ -59,6 +59,17 @@ void removeReady(Ready *ready, int processId) {
     }
 }
 
+void printState( Ready *ready) {
+    printf("Ready State:\n");
+    for (int i = 0; i < 4; ++i) {
+        printf("Prioridade %d: ", i);
+        for (int j = 0; j < ready->size; ++j) {
+            printf("%d ", ready->queues[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 //TA TUDO ERRADO AQUI CONCERTO AMANHÃ
 
 void moveFromPriorityToPriority(Ready *ready, int sourcePriority, int destinationPriority, int processId) {
