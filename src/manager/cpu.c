@@ -5,7 +5,6 @@
 #include "cpu.h"
 
 int interpreter(CPU *cpu, int *blk, char **arq, int *PCPlus) {
-
     char *token = strtok(cpu->proc->program[cpu->pc], " "); //Separando o input em Tokens
     char *arg1 = strtok(NULL, " "); //Separando o input em Tokens
     char *arg2 = strtok(NULL, " "); //Separando o input em Tokens
