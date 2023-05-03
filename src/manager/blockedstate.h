@@ -1,20 +1,21 @@
 #ifndef SRC_BLOCKEDSTATE_H
 #define SRC_BLOCKEDSTATE_H
 
-typedef struct {
+typedef struct
+{
     int *blockTime;
     int *id;
-} BlockedIds; // Processos que estão atualmente bloqueados
+} BlockedProcesses; // Processos que estão atualmente bloqueados
 
 
-void initBlockedIds(BlockedIds *b, int size);
+BlockedProcesses *initializeBlockedProcesses(int size);
 
-void freeBlockedIds(BlockedIds *b);
+void freeBlockedIds(BlockedProcesses *b);
 
-void insertBlockedId(BlockedIds *b, int pid, int blocktime);
+void insertBlockedId(BlockedProcesses *b, int pid, int blocktime);
 
-void removeBlockedId(BlockedIds *b, int pid);
+void removeBlockedId(BlockedProcesses *b, int pid);
 
-void blockDownClock(BlockedIds *b);
+void blockDownClock(BlockedProcesses *b);
 
 #endif

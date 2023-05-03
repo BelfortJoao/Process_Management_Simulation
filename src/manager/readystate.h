@@ -1,28 +1,20 @@
 #ifndef SRC_READYSTATE_H
 #define SRC_READYSTATE_H
 
+typedef struct
+{
+    int **queues; // An array of queues (arrays of integers)
+    int size; // The size of each queue
+} ReadyProcesses;
 
-typedef struct node {
-    int id;
-    struct node* next;
-} node;
+void initReady(ReadyProcesses *ready, int size);
 
-typedef struct {
-    node* front;
-    node* rear;
-} queue;
+void insertToReadyQueue(ReadyProcesses *ready, int processId, int prior);
 
-typedef struct {
-    int size_at;
-    int maxSize;
-    queue queues[4];
-} Ready;
+void removeFromReadyQueue(ReadyProcesses *ready, int processId);
 
-void initReady(Ready *ready, int maxSize);
-queue* createQueue();
-int insertReady(Ready *ready, int id, int prior);
-int removeReady(Ready *ready, int id);
-int nextReady(Ready *ready);
-void freeReady(Ready *ready);
+int nextReady(ReadyProcesses *ready);
+
+void freeReady(ReadyProcesses *ready);
 
 #endif
