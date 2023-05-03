@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
 #include <math.h>
 
 #include "manager.h"
@@ -21,6 +23,7 @@ void initComputer(Computer *comp, char *arq) {
     addProcessTableProcess(&comp->processTable, arq, -1, 0);
     removeReady(comp->processTable.readyArray, 0);
     contextExchange(0, comp->processTable.executingArray);
+    comp->processTable.processStateArray[0]="EXECUTANDO";
     comp->timer = 0;
     comp->kill = 0;
     comp->freeID = 0;
