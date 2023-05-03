@@ -11,6 +11,7 @@ void control(Control *cont) {
 
     printf("Arquivo de programa inicial: ");
     fgets(arq, sizeof(arq), stdin);
+    fflush(stdin);
     size_t len = strlen(arq);
     while (len > 0 && isspace(arq[len - 1])) {
         len--;
@@ -19,19 +20,31 @@ void control(Control *cont) {
     printf("%s\n", arq);
 
     initComputer(cont->comp, arq);
-
+    printf("Digite um comando(U, I ou M)");
     while (1) {
-        printf("Comando: ");
-        //scanf("%c", &resp);
-        /*switch (resp) {
-            case 'M':
-                printMedResponseTime(cont->printer);
-                return;
-            case 'U':
-                processExecuting(cont->comp);
-            case 'I':
-                printProcessTable(&cont->comp->processTable);
-        }*/
-        processExecuting(cont->comp);
+        if (resp == '\n'| resp == NULL)
+            printf("Comando: ");
+            resp=getchar();
+        if (resp != '\n') {
+            if (islower(resp))
+                resp = toupper(resp);
+
+            switch (resp) {
+                case 'M':
+                    printMedResponseTime(cont->printer);
+                    return;
+                case 'U':
+                    processExecuting(cont->comp);
+                    continue;
+                case 'I':
+                    printProcessTable(&cont->comp->processTable);
+                    continue;
+                default:
+                        printf("%c", resp);
+                        printf("Erro Comando não reconhecido\n");
+            }
+            printf("Comando: ");
+            resp=getchar();
+        }
     }
 }

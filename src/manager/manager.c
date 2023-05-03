@@ -118,6 +118,10 @@ void execute(Computer *comp) {
     int go_exec;
     //Operação sob a tabela Ready
     go_exec = nextReady(comp->processTable.readyArray);
+    if(go_exec==-1){
+        printf("There is nothing more to execute");
+        return;
+    }
     contextExchange(go_exec, comp->processTable.executingArray);
     removeReady(comp->processTable.readyArray, go_exec);
     //Operação Real
@@ -129,13 +133,14 @@ void execute(Computer *comp) {
 
 void processExecuting(Computer *comp) {
     //search for a proces while cpu is ampity
-    if (comp->processTable.executingArray <= 0 || comp->processTable.executingArray == NULL ||
+    if (comp->processTable.executingArray < 0 || comp->processTable.executingArray == NULL ||
         comp->cpu.proc->numLines == 0) {
         //terminate the Computer if kill switch is equal one
         if (comp->kill == 1) {
             killComputer(comp);
             return;
         }
+        execute(comp);
         //if cpu isn't ampity check the cpu time and escalonate
     } else {
         //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
