@@ -4,7 +4,8 @@
 
 #include "processtable.h"
 
-void initProcessTable(ProcessTable *processTable, int initialCapacity) {
+void initProcessTable(ProcessTable *processTable, int initialCapacity)
+{
     processTable->tableSize = 0;
     processTable->tableCapacity = initialCapacity;
     processTable->processArray = (Process **) malloc(initialCapacity * sizeof(Process *));
@@ -16,11 +17,12 @@ void initProcessTable(ProcessTable *processTable, int initialCapacity) {
     processTable->initialTimeArray = (int *) malloc(initialCapacity * sizeof(int));
     processTable->CPUTimeArray = (int *) malloc(initialCapacity * sizeof(int));
     processTable->emptyArray = (int *) malloc(initialCapacity * sizeof(int));
-    processTable->blockedArray = malloc(sizeof(BlockedIds));
-    processTable->readyArray = malloc(sizeof(Ready));
-    processTable->executingArray = malloc(sizeof(currOnExecution));
+    processTable->blockedArray = (BlockedProcesses *) malloc(sizeof(BlockedProcesses));
+    processTable->readyArray = (ReadyProcesses *) malloc(sizeof(ReadyProcesses));
+    processTable->executingArray = (RunningProcess *) malloc(sizeof(RunningProcess));
     processTable->nextFreeId = 0;
-    for (int i = 0; i < initialCapacity; i++) {
+    for (int i = 0; i < initialCapacity; i++)
+    {
         processTable->processArray[i] = (Process *) malloc(sizeof(Process));
         processTable->programCounterArray[i] = 0;
         processTable->priorityIdsArray[i] = -1;
@@ -31,20 +33,30 @@ void initProcessTable(ProcessTable *processTable, int initialCapacity) {
         processTable->parentProcessArray[i] = -1;
     }
     contextExchange(-1, processTable->executingArray);
-    initBlockedIds(processTable->blockedArray, initialCapacity);
+    processTable->blockedArray = initializeBlockedProcesses(initialCapacity);
+
+    if (processTable->blockedArray == NULL)
+    {
+        return;
+    }
+
     initReady(processTable->readyArray, initialCapacity);
 }
 
-int getProcessTableEmptySpace(ProcessTable *processTable) {
-    for (int i = 0; i < processTable->tableCapacity; ++i) {
-        if (processTable->emptyArray[i] == 0) {
+int getProcessTableEmptySpace(ProcessTable *processTable)
+{
+    for (int i = 0; i < processTable->tableCapacity; ++i)
+    {
+        if (processTable->emptyArray[i] == 0)
+        {
             return i;
         }
     }
     return -1;
 }
 
-void addProcessTableProcess(ProcessTable *processTable, char *arq, int father, Timer clock) {
+void addProcessTableProcess(ProcessTable *processTable, char *arq, int father, Timer clock)
+{
     processTable->tableSize++;
     int i = getProcessTableEmptySpace(processTable);
     processTable->emptyArray[i] = 1;
@@ -55,13 +67,14 @@ void addProcessTableProcess(ProcessTable *processTable, char *arq, int father, T
     processTable->initialTimeArray[i] = clock;
     processTable->CPUTimeArray[i] = (Timer) 0;
     processTable->idArray[i] = nextID(processTable);
-    insertReady(processTable->readyArray, i, processTable->priorityIdsArray[i]);
+    insertToReadyQueue(processTable->readyArray, i, processTable->priorityIdsArray[i]);
 }
 
-void deleteProcessTableProcess(int ID, ProcessTable *processTable) {
+void deleteProcessTableProcess(int ID, ProcessTable *processTable)
+{
     int i = searchID(ID, processTable);
     excludeProcess(processTable->processArray[i]);
-    removeReady(processTable->readyArray, i);
+    removeFromReadyQueue(processTable->readyArray, i);
     processTable->tableSize--;
     processTable->emptyArray[i] = 0;
     processTable->processArray = NULL;
@@ -75,13 +88,17 @@ void deleteProcessTableProcess(int ID, ProcessTable *processTable) {
 
 }
 
-void upPC(ProcessTable *pt) {
+void upPC(ProcessTable *pt)
+{
     pt->programCounterArray++;
 }
 
-void deleteProcessTable(ProcessTable *processTable) {
-    for (int i = 0; i < processTable->tableCapacity; ++i) {
-        if (processTable->processArray[i] != NULL) {
+void deleteProcessTable(ProcessTable *processTable)
+{
+    for (int i = 0; i < processTable->tableCapacity; ++i)
+    {
+        if (processTable->processArray[i] != NULL)
+        {
             excludeProcess(processTable->processArray[i]);
         }
     }
@@ -98,22 +115,28 @@ void deleteProcessTable(ProcessTable *processTable) {
     free(processTable);
 }
 
-int searchID(int ID, ProcessTable *processTable) {
-    for (int i = 0; i < processTable->tableCapacity; ++i) {
-        if (processTable->idArray[i] == ID) {
+int searchID(int ID, ProcessTable *processTable)
+{
+    for (int i = 0; i < processTable->tableCapacity; ++i)
+    {
+        if (processTable->idArray[i] == ID)
+        {
             return i;
         }
     }
     return -1;
 }
 
-void printProcessTable(ProcessTable *processTable) {
+void printProcessTable(ProcessTable *processTable)
+{
     printf("Proximo idArray Livre: %d\n", processTable->nextFreeId);
     printf("Numero atual de processos: %d\n", processTable->tableSize);
     printf("Capacidade da tabela: %d\n", processTable->tableCapacity);
     printf(":idArray:\t:PC:\t:Pai:\t:Prioridade:\t:Estado:\t:Inicio:\t:T de uso:");
-    for (int i = 0; i < processTable->tableCapacity; ++i) {
-        if (processTable->emptyArray[i] != 0) {
+    for (int i = 0; i < processTable->tableCapacity; ++i)
+    {
+        if (processTable->emptyArray[i] != 0)
+        {
             printf("\n%d\t%d\t %d\t%d\t%s\t%d\t%d\n", processTable->idArray[i], processTable->programCounterArray[i],
                    processTable->parentProcessArray[i], processTable->priorityIdsArray[i],
                    processTable->processStateArray[i], processTable->initialTimeArray[i],
@@ -122,12 +145,14 @@ void printProcessTable(ProcessTable *processTable) {
     }
 }
 
-int nextID(ProcessTable *processTable) {
+int nextID(ProcessTable *processTable)
+{
     processTable->nextFreeId++;
     return (processTable->nextFreeId - 1);
 }
 
-void copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus) {
+void copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus)
+{
     processTable->tableSize++;
     int i = getProcessTableEmptySpace(processTable);
     processTable->emptyArray[i] = 1;
@@ -138,9 +163,10 @@ void copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus)
     processTable->initialTimeArray[i] = t;
     processTable->CPUTimeArray[i] = 0;
     processTable->idArray[i] = nextID(processTable);
-    insertReady(processTable->readyArray, i, processTable->priorityIdsArray[i]);
+    insertToReadyQueue(processTable->readyArray, i, processTable->priorityIdsArray[i]);
 }
 
-void rewid(ProcessTable *processTable) {
+void rewid(ProcessTable *processTable)
+{
 
 }

@@ -1,4 +1,3 @@
-#include <malloc.h>
 #include "timer.h"
 
 void initTime(Timer *time) {

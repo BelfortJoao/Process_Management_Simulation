@@ -4,14 +4,15 @@
 typedef int *Memory;
 typedef char **Program;
 
-typedef struct {
+typedef struct
+{
     Memory memory; //Memoria individual que guarda as variaveis do processo
     Program program; //Programa que o processo deverá executar no CPU
     int numLines; //Numero de linhas que o programa guardado no processo contem
     int memorySize; //Tamanho da memoria do processo
 } Process;
 
-void initProcess(Process *process, char *name);
+void initProcess(Process *process, char *filename);
 
 void initMemory(Process *process, int lengthMem);
 

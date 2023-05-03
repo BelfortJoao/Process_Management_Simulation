@@ -18,11 +18,11 @@ add_executable(src src/main.c
         src/manager/processtable.h
         src/process/process.c
         src/process/process.h
-        src/control/controller.c
-        src/control/controller.h
+        src/control/control.c
+        src/control/control.h
         src/printer/printer.c
         src/printer/printer.h
-        src/manager/manager.c
-        src/manager/manager.h)
+        src/manager/processmanager.c
+        src/manager/processmanager.h)
 
 target_link_libraries(src m)

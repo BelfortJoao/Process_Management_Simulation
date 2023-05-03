@@ -7,7 +7,8 @@
 #include "blockedstate.h"
 #include "executingstate.h"
 
-typedef struct {
+typedef struct
+{
     int nextFreeId; // proximo idArray livre
     int tableSize; // número de processos na tabela
     int tableCapacity; // capacidade maxima da tabela
@@ -20,9 +21,9 @@ typedef struct {
     char **processStateArray; // vetor de estados para cada processo (string com valores "Executando", "Pronto", "Bloqueado")
     Timer *initialTimeArray; // vetor de tempos de início para cada processo
     Timer *CPUTimeArray; // vetor de tempos de CPU usados para cada processo
-    Ready *readyArray; //vetor de processos prontos
-    BlockedIds *blockedArray; //vetor de processos bloqueados
-    currOnExecution *executingArray;//processo em execução
+    ReadyProcesses *readyArray; //vetor de processos prontos
+    BlockedProcesses *blockedArray; //vetor de processos bloqueados
+    RunningProcess *executingArray;//processo em execução
 } ProcessTable;
 
 void initProcessTable(ProcessTable *processTable, int initialCapacity);

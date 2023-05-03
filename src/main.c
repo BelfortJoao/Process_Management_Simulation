@@ -1,10 +1,11 @@
-#include <malloc.h>
-#include "control/controller.h"
+#include <stddef.h>
 
-int main() {
-    Control *cont = malloc(sizeof(Control));
-    cont->comp = malloc(sizeof(Computer));
-    cont->printer = malloc(sizeof(Print));
-    control(cont);
+#include "control/control.h"
+
+int main()
+{
+    Control *control = initializeControl();
+    runControl(control);
+
     return 0;
 }

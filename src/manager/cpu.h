@@ -4,19 +4,20 @@
 #include "timer.h"
 #include "../process/process.h"
 
-typedef struct CPU {
-    Process *proc;
-    int pc;
-    Timer program_timer;
-    Timer executing_timer;
+typedef struct
+{
+    Process *runningProcess;
+    int programCounter;
+    Timer quantum;
+    Timer quantumUsed;
 } CPU;
 
-void initCPU(CPU *cpu, char *arq);
+void initCPU(CPU *cpu, char *file);
 
 void freeCPU(CPU *cpu);
 
 int interpreter(CPU *cpu, int *blk, char **arq, int *PcPlus);
 
-void changeProcess(CPU *cpu, Process *proc, int pc, Timer program_timer, Timer executing_timer);
+void changeProcess(CPU *cpu, Process *proc, int pc, Timer quantum, Timer quantumUsed);
 
 #endif
