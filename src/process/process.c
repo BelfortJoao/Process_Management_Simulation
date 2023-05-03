@@ -62,11 +62,11 @@ void initProcess(Process *process, char *name) {
 }
 
 void excludeProcess(Process *process) {
-    // desaloca o array de programa
     for (int i = 0; i < process->numLines; i++) {
         free(process->program[i]);
     }
-
+    free(process->program);
+    free(process->memory);
 }
 
 Process *generateNewProcess(Process *process) {

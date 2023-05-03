@@ -5,7 +5,6 @@
 #include "cpu.h"
 
 int interpreter(CPU *cpu, int *blk, char **arq, int *PCPlus) {
-
     char *token = strtok(cpu->proc->program[cpu->pc], " "); //Separando o input em Tokens
     char *arg1 = strtok(NULL, " "); //Separando o input em Tokens
     char *arg2 = strtok(NULL, " "); //Separando o input em Tokens
@@ -42,7 +41,6 @@ int interpreter(CPU *cpu, int *blk, char **arq, int *PCPlus) {
             return 1;
         case 'T':
             printf("excluindo processo\n");
-            excludeProcess(cpu->proc);
             return 2;
         case 'F':
             printf("Copiando processo\n");

@@ -23,6 +23,7 @@ void initComputer(Computer *comp, char *arq) {
     addProcessTableProcess(&comp->processTable, arq, -1, 0);
     removeReady(comp->processTable.readyArray, 0);
     contextExchange(0, comp->processTable.executingArray);
+    comp->processTable.processStateArray[0]="EXECUTANDO";
     comp->timer = 0;
     comp->kill = 0;
     comp->freeID = 0;
@@ -65,8 +66,11 @@ void scheduleProcess(Computer *comp) {
     removeReady(comp->processTable.readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para pronto
     int i = searchID(go_exec, &comp->processTable);
+    int j= searchID(go_ready, &comp->processTable);
+    printf("ID ARRAY: %d\n", comp->processTable.idArray[i]);
+    printf("PRIOr ID: %d\n", comp->processTable.priorityIdsArray[j]);
     insertReady(comp->processTable.readyArray, go_ready,
-                comp->processTable.priorityIdsArray[i]);
+                comp->processTable.priorityIdsArray[j]);
 
     printProcessTable(&comp->processTable);
     //Operação real
@@ -96,10 +100,14 @@ void endProcess(Computer *comp) {
 
     //Operação real
     int i = searchID(go_exec, &comp->processTable);
-    changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i],
-                  *comp->processTable.CPUTimeArray, 0);
-    comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
+    if(i!=-1){
+        changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i],
+                      *comp->processTable.CPUTimeArray, 0);
+        comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
+    }
     //exclui processo da tabela de processos
+    comp->processTable.executingArray=NULL;
+    comp->cpu.proc=NULL;
     deleteProcessTableProcess(go_excl, &comp->processTable);
 };
 
@@ -115,6 +123,10 @@ void execute(Computer *comp) {
     int go_exec;
     //Operação sob a tabela Ready
     go_exec = nextReady(comp->processTable.readyArray);
+    if(go_exec==-1 || comp->processTable.executingArray==NULL){
+        printf("There is nothing more to execute\n");
+        return;
+    }
     contextExchange(go_exec, comp->processTable.executingArray);
     removeReady(comp->processTable.readyArray, go_exec);
     //Operação Real
@@ -126,29 +138,31 @@ void execute(Computer *comp) {
 
 void processExecuting(Computer *comp) {
     //search for a proces while cpu is ampity
-    if (comp->processTable.executingArray <= 0 || comp->processTable.executingArray == NULL ||
-        comp->cpu.proc->numLines == 0) {
+    if (comp->processTable.executingArray < 0 || comp->processTable.executingArray == NULL || comp->cpu.proc==NULL) {
         //terminate the Computer if kill switch is equal one
+        execute(comp);
         if (comp->kill == 1) {
             killComputer(comp);
             return;
         }
         //if cpu isn't ampity check the cpu time and escalonate
     } else {
-        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
-        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.program_timer);
+        //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
+        //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.program_timer);
         if (comp->cpu.executing_timer >= comp->cpu.program_timer) {
             scheduleProcess(comp);
         }
-    }
-    //Interpreta o processo aumenta o timer
-    uperInterpreter(comp);
-    clockUpPC(comp);
-    processUnblock(comp);
-    //Check the kill switch
-    if (comp->kill == 1) {
-        killComputer(comp);
-        return;
+
+        //Interpreta o processo aumenta o timer
+        uperInterpreter(comp);
+        clockUpPC(comp);
+        processUnblock(comp);
+        printState(comp->processTable.readyArray);
+        //Check the kill switch
+        if (comp->kill == 1) {
+            killComputer(comp);
+            return;
+        }
     }
 }
 

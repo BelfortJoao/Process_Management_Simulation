@@ -16,4 +16,5 @@ int nextReady(Ready *ready);
 
 void freeReady(Ready *ready);
 
+void printState( Ready *ready);
 #endif
