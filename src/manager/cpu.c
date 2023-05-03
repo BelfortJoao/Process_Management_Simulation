@@ -41,7 +41,6 @@ int interpreter(CPU *cpu, int *blk, char **arq, int *PCPlus) {
             return 1;
         case 'T':
             printf("excluindo processo\n");
-            excludeProcess(cpu->proc);
             return 2;
         case 'F':
             printf("Copiando processo\n");
