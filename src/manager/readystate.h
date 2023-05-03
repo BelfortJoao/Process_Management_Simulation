@@ -17,5 +17,6 @@ int nextReady(ReadyProcesses *ready);
 
 void freeReady(ReadyProcesses *ready);
 
-void printState( Ready *ready);
+void printState(ReadyProcesses *ready);
+
 #endif

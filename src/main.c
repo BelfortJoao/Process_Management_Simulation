@@ -1,11 +1,10 @@
 ///home/belfort/Documentos/GitHub/Process_Management_Simulation/files/file.txt
 #include <malloc.h>
-#include "control/controller.h"
+#include "control/control.h"
 
-int main() {
-    Control *cont = malloc(sizeof(Control));
-    cont->comp = malloc(sizeof(Computer));
-    cont->printer = malloc(sizeof(Print));
-    control(cont);
+int main()
+{
+    Control *control = initializeControl();
+    runControl(control);
     return 0;
 }
