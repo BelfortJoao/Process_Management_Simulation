@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <malloc.h>
 #include <string.h>
 #include <limits.h>
 
@@ -90,11 +90,12 @@ void initProcess(Process *process, char *filename)
 
 void excludeProcess(Process *process)
 {
-    // desaloca o array de programa
     for (int i = 0; i < process->numLines; i++)
     {
         free(process->program[i]);
     }
+    free(process->program);
+    free(process->memory);
 }
 
 Process *generateNewProcess(Process *process)
