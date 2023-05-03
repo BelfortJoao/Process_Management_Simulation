@@ -1,50 +1,25 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
 #include <math.h>
 
-#include "processmanager.h"
+#include "manager.h"
 
-ProcessManager *initializeProcessManager()
-{
-    return (ProcessManager *) malloc(sizeof(ProcessManager));
-}
+void initComputer(Computer *comp, char *arq) {
 
-/*
- *  Clears stdin to avoid problems with the "scanf()" function.
- */
-void cleanStdin(void)
-{
-    int c = getchar();
-
-    while (c != '\n' && c != EOF)
-    {
-        c = getchar();
-    }
-}
-
-void initComputer(ProcessManager *comp, char *file)
-{
-    int size = 0;
+    int tam = 0;
 
     initTime(&comp->timer);
-    initCPU(&comp->cpu, file);
+    initCPU(&comp->cpu, arq);
 
-    while (size <= 0)
-    {
+    while (tam <= 0) {
         printf("Type the Process Table Capacity: ");
-        if (!scanf("%d", &size))
-        {
-            printf("Invalid capacity for the table.\n");
-            cleanStdin();
-        }
+        scanf("%d", &tam);
     }
 
-    initProcessTable(&(comp->processTable), size);
+    initProcessTable(&(comp->processTable), tam);
     printf("Process Table Capacity: %d\n", comp->processTable.tableCapacity);
 
-    addProcessTableProcess(&comp->processTable, file, -1, 0);
-    removeFromReadyQueue(comp->processTable.readyArray, 0);
+    addProcessTableProcess(&comp->processTable, arq, -1, 0);
+    removeReady(comp->processTable.readyArray, 0);
     contextExchange(0, comp->processTable.executingArray);
     comp->timer = 0;
     comp->kill = 0;
@@ -52,23 +27,19 @@ void initComputer(ProcessManager *comp, char *file)
 }
 
 //(B n)Bloqueia o processo na CPU em N unidades de tempo
-void blockProcess(ProcessManager *comp, int quantumBlock)
-{
+void blockProcess(Computer *comp, int blockT) {
     int go_exec;
     int go_block;
-
-    if (comp->processTable.executingArray == 0 || comp->processTable.executingArray == NULL)
-    {
+    if (comp->processTable.executingArray == 0 || comp->processTable.executingArray == NULL) {
         return;
     }
-
     //Operação em tabela-sai de readyArray e vai para executando
     go_block = *comp->processTable.executingArray;
     go_exec = nextReady(comp->processTable.readyArray);
     contextExchange(go_exec, comp->processTable.executingArray);
-    removeFromReadyQueue(comp->processTable.readyArray, go_exec);
+    removeReady(comp->processTable.readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para block
-    insertBlockedId(comp->processTable.blockedArray, go_block, quantumBlock);
+    insertBlockedId(comp->processTable.blockedArray, go_block, blockT);
     //Operação real
     int i = searchID(go_exec, &comp->processTable);
     changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i],
@@ -77,31 +48,30 @@ void blockProcess(ProcessManager *comp, int quantumBlock)
     comp->processTable.processStateArray[go_block] = "BLOQUEADO";
 }
 
-void scheduleProcess(ProcessManager *comp)
-{
+void scheduleProcess(Computer *comp) {
     int go_exec;
     int go_ready;
     int time = 1;
-
     //Operação em tabela-sai de readyArray e vai para executando
     go_ready = *comp->processTable.executingArray;
     go_exec = nextReady(comp->processTable.readyArray);
-    if (go_exec == -1)
-    {
+    if (go_exec == -1) {
         return;
     }
     comp->processTable.priorityIdsArray[*comp->processTable.executingArray]++;
     contextExchange(go_exec, comp->processTable.executingArray);
-    removeFromReadyQueue(comp->processTable.readyArray, go_exec);
+    removeReady(comp->processTable.readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para pronto
     int i = searchID(go_exec, &comp->processTable);
-    insertToReadyQueue(comp->processTable.readyArray, go_ready,
-                       comp->processTable.priorityIdsArray[i]);
+    int j= searchID(go_ready, &comp->processTable);
+    printf("ID ARRAY: %d\n", comp->processTable.idArray[i]);
+    printf("PRIOr ID: %d\n", comp->processTable.priorityIdsArray[j]);
+    insertReady(comp->processTable.readyArray, go_ready,
+                comp->processTable.priorityIdsArray[j]);
 
     printProcessTable(&comp->processTable);
     //Operação real
-    if (pow(2, (4 - comp->processTable.priorityIdsArray[i]) - 1) >= 1)
-    {
+    if (pow(2,(4 - comp->processTable.priorityIdsArray[i]) -1) >= 1) {
         time = (int) pow(2, (4 - comp->processTable.priorityIdsArray[i]) - 1);
     }
     printf("\n\n\n\n%d\n\n\n\n", time);
@@ -112,32 +82,33 @@ void scheduleProcess(ProcessManager *comp)
 }
 
 //T termina o processo simulado atual e passa o cpu para o proximo processo pronto
-void endProcess(ProcessManager *comp)
-{
+void endProcess(Computer *comp) {
     int go_excl;
     int go_exec;
-    if (comp->processTable.executingArray <= 0 || comp->processTable.executingArray == NULL)
-    {
+    if (comp->processTable.executingArray <= 0 || comp->processTable.executingArray == NULL) {
         return;
     }
     //Operação em tabela-sai de readyArray e vai para executando
     go_excl = *comp->processTable.executingArray;
     go_exec = nextReady(comp->processTable.readyArray);
     contextExchange(go_exec, comp->processTable.executingArray);
-    removeFromReadyQueue(comp->processTable.readyArray, go_exec);
-    //Sai de ReadyProcesses e vai para executingArray
+    removeReady(comp->processTable.readyArray, go_exec);
+    //Sai de Ready e vai para executingArray
 
     //Operação real
     int i = searchID(go_exec, &comp->processTable);
-    changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i],
-                  *comp->processTable.CPUTimeArray, 0);
-    comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
+    if(i!=-1){
+        changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i],
+                      *comp->processTable.CPUTimeArray, 0);
+        comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
+    }
     //exclui processo da tabela de processos
+    comp->processTable.executingArray=NULL;
+    comp->cpu.proc=NULL;
     deleteProcessTableProcess(go_excl, &comp->processTable);
 };
 
-void killComputer(ProcessManager *comp)
-{
+void killComputer(Computer *comp) {
     freeCPU(&comp->cpu);
     deleteProcessTable(&comp->processTable);
     comp->timer = 0;
@@ -145,13 +116,16 @@ void killComputer(ProcessManager *comp)
     comp->freeID = 0;
 }
 
-void execute(ProcessManager *comp)
-{
+void execute(Computer *comp) {
     int go_exec;
-    //Operação sob a tabela ReadyProcesses
+    //Operação sob a tabela Ready
     go_exec = nextReady(comp->processTable.readyArray);
+    if(go_exec==-1 || comp->processTable.executingArray==NULL){
+        printf("There is nothing more to execute\n");
+        return;
+    }
     contextExchange(go_exec, comp->processTable.executingArray);
-    removeFromReadyQueue(comp->processTable.readyArray, go_exec);
+    removeReady(comp->processTable.readyArray, go_exec);
     //Operação Real
     int i = searchID(go_exec, &comp->processTable);
     changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i],
@@ -159,97 +133,85 @@ void execute(ProcessManager *comp)
     comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
 }
 
-void processExecuting(ProcessManager *comp)
-{
+void processExecuting(Computer *comp) {
     //search for a proces while cpu is ampity
-    if (comp->processTable.executingArray <= 0 || comp->processTable.executingArray == NULL ||
-        comp->cpu.runningProcess->numLines == 0)
-    {
-        //terminate the ProcessManager if kill switch is equal one
-        if (comp->kill == 1)
-        {
+    if (comp->processTable.executingArray < 0 || comp->processTable.executingArray == NULL || comp->cpu.proc==NULL) {
+        //terminate the Computer if kill switch is equal one
+        execute(comp);
+        if (comp->kill == 1) {
             killComputer(comp);
             return;
         }
         //if cpu isn't ampity check the cpu time and escalonate
-    }
-    else
-    {
-        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.quantumUsed);
-        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.quantum);
-        if (comp->cpu.quantumUsed >= comp->cpu.quantum)
-        {
+    } else {
+        //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
+        //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.program_timer);
+        if (comp->cpu.executing_timer >= comp->cpu.program_timer) {
             scheduleProcess(comp);
         }
-    }
-    //Interpreta o processo aumenta o timer
-    uperInterpreter(comp);
-    clockUpPC(comp);
-    processUnblock(comp);
-    //Check the kill switch
-    if (comp->kill == 1)
-    {
-        killComputer(comp);
-        return;
+
+        //Interpreta o processo aumenta o timer
+        uperInterpreter(comp);
+        clockUpPC(comp);
+        processUnblock(comp);
+        printState(comp->processTable.readyArray);
+        //Check the kill switch
+        if (comp->kill == 1) {
+            killComputer(comp);
+            return;
+        }
     }
 }
 
-void processUnblock(ProcessManager *comp)
-{
+void processUnblock(Computer *comp) {
     int go_ready;
-    for (int i = 0; i < comp->processTable.tableCapacity; ++i)
-    {
-        if (comp->processTable.blockedArray->blockTime[i] == 0)
-        {
+    for (int i = 0; i < comp->processTable.tableCapacity; ++i) {
+        if (comp->processTable.blockedArray->blockTime[i] == 0) {
             go_ready = comp->processTable.blockedArray->id[i];
             removeBlockedId(comp->processTable.blockedArray, go_ready);
-            insertToReadyQueue(comp->processTable.readyArray, go_ready,
-                               comp->processTable.priorityIdsArray[searchID(go_ready, &comp->processTable)]);
+            insertReady(comp->processTable.readyArray, go_ready,
+                        comp->processTable.priorityIdsArray[searchID(go_ready, &comp->processTable)]);
             comp->processTable.processStateArray[searchID(go_ready, &comp->processTable)] = "PRONTO";
         }
     }
 }
 
-void clockUpPC(ProcessManager *comp)
-{
+void clockUpPC(Computer *comp) {
     timeUp(&comp->timer);
-    timeUp(&comp->cpu.quantumUsed);
+    timeUp(&comp->cpu.executing_timer);
     blockDownClock(comp->processTable.blockedArray);
 }
 
 
-void processCP(ProcessManager *comp, Process *proc, int PcPlus)
-{
 
-    proc = generateNewProcess(comp->cpu.runningProcess);
+
+void processCP(Computer *comp, Process *proc, int PcPlus) {
+
+    proc = generateNewProcess(comp->cpu.proc);
     copyProcess(&comp->processTable, proc, comp->timer, PcPlus);
 }
 
-void processRewind(ProcessManager *comp, char *arq)
-{
+void processRewind(Computer *comp, char *arq) {
     excludeProcess(comp->processTable.processArray[*comp->processTable.executingArray]);
     initProcess(comp->processTable.processArray[*comp->processTable.executingArray], arq);
 }
 
-void attExec(ProcessManager *comp)
-{
-    comp->processTable.programCounterArray[*comp->processTable.executingArray] = comp->cpu.programCounter;
-    comp->processTable.processArray[*comp->processTable.executingArray] = comp->cpu.runningProcess;
+void attExec(Computer *comp) {
+    comp->processTable.programCounterArray[*comp->processTable.executingArray] = comp->cpu.pc;
+    comp->processTable.processArray[*comp->processTable.executingArray] = comp->cpu.proc;
     comp->processTable.CPUTimeArray[*comp->processTable.executingArray]++;
 }
 
-void uperInterpreter(ProcessManager *comp)
-{
+void uperInterpreter(Computer *comp) {
     int blk;
     Process *proc;
     int PcPlus;
     char **arq;
-    printf("PC: %d\n", comp->cpu.programCounter);
+    printf("PC: %d\n", comp->cpu.pc);
     int cpuResp = interpreter(&comp->cpu, &blk, arq, &PcPlus);
-    comp->cpu.programCounter++;
+    comp->cpu.pc++;
     attExec(comp);
-    switch (cpuResp)
-    {
+    switch (cpuResp) {
         case 0:
             return;
         case 1://Bloqueia esse processo simulado por n unidades de tempo.

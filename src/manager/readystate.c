@@ -51,6 +51,17 @@ void insertToReadyQueue(ReadyProcesses *ready, int processId, int prior)
         if (ready->queues[prior][k] == -1)
         {
             ready->queues[prior][k] = processId;
+            //bubble sort na lista de prontos
+            for (int i = 0; i < ready->size; ++i) {
+                for (int j = 0; j < ready->size - 1; ++j) {
+                    if (ready->queues[prior][j] > ready->queues[prior][j + 1] && ready->queues[prior][j + 1] != -1) {
+                        int aux = ready->queues[prior][j];
+                        ready->queues[prior][j] = ready->queues[prior][j + 1];
+                        ready->queues[prior][j + 1] = aux;
+                    }
+                }
+            }
+
             return;
         }
     }
@@ -68,6 +79,17 @@ void removeFromReadyQueue(ReadyProcesses *ready, int processId)
                 ready->queues[i][j] = -1;
             }
         }
+    }
+}
+
+void printState( Ready *ready) {
+    printf("Ready State:\n");
+    for (int i = 0; i < 4; ++i) {
+        printf("Prioridade %d: ", i);
+        for (int j = 0; j < ready->size; ++j) {
+            printf("%d ", ready->queues[i][j]);
+        }
+        printf("\n");
     }
 }
 
