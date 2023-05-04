@@ -31,6 +31,8 @@ Blocked *initializeBlocked(int size)
         return NULL;
     }
 
+    blockedProcesses->size = size;
+
     for (int i = 0; i < size; i++)
     {
         blockedProcesses->ids[i] = -1; // Initialize all elements to -1
@@ -43,10 +45,12 @@ Blocked *initializeBlocked(int size)
 void insertBlockedId(Blocked *blocked, int processId, int blockTime)
 {
     int i = 0;
+
     while (blocked->ids[i] != -1)
     {
         i++;
     }
+
     blocked->ids[i] = processId;
     blocked->blockTimes[i] = blockTime;
 }
@@ -54,13 +58,15 @@ void insertBlockedId(Blocked *blocked, int processId, int blockTime)
 void removeBlockedId(Blocked *blocked, int processId)
 {
     int i = 0;
-    while (blocked->ids[i] != processId && i < sizeof(blocked->ids))
+
+    while (blocked->ids[i] != processId && i < blocked->size)
     {
         i++;
     }
+
     if (blocked->ids[i] == processId)
     {
-        while (blocked->ids[i] != -1 && i + 1 < sizeof(blocked->ids))
+        while (blocked->ids[i] != -1 && i + 1 < blocked->size)
         {
             blocked->ids[i] = blocked->ids[i + 1];
             blocked->blockTimes[i] = blocked->blockTimes[i + 1];
@@ -71,7 +77,7 @@ void removeBlockedId(Blocked *blocked, int processId)
 
 void blockDownClock(Blocked *blocked)
 {
-    for (int i = 0; i < sizeof(blocked->ids); ++i)
+    for (int i = 0; i < blocked->size; ++i)
     {
         if (blocked->ids[i] != -1)
         {

@@ -11,6 +11,8 @@ Ready *initializeReady(int size);
 
 void insertToReadyQueue(Ready *ready, int processId, int prior);
 
+void sortReady(Ready *ready);
+
 void removeFromReadyQueue(Ready *ready, int processId);
 
 int nextReady(Ready *ready);

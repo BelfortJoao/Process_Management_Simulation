@@ -62,11 +62,10 @@ Process *initializeProcessFromFile(char *filename)
         return NULL;
     }
 
-    int numLines = getNumberOfLinesInFile(file);
+    process->numLines = getNumberOfLinesInFile(file);
+    process->program = (char **) malloc(process->numLines * sizeof(char *));
 
-    process->program = (char **) malloc(numLines * sizeof(char *));
-
-    for (int i = 0; i < numLines; i++)
+    for (int i = 0; i < process->numLines; i++)
     {
         process->program[i] = (char *) malloc(CHAR_MAX);
 
