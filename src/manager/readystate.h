@@ -7,7 +7,7 @@ typedef struct
     int size; // The size of each queue
 } ReadyProcesses;
 
-void initReady(ReadyProcesses *ready, int size);
+ReadyProcesses *initializeReadyProcesses(int size);
 
 void insertToReadyQueue(ReadyProcesses *ready, int processId, int prior);
 

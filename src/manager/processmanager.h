@@ -6,18 +6,18 @@
 
 typedef struct
 {
-    CPU cpu; //Representa o unico núcleo que tem no computador
-    ProcessTable processTable; //Tabela de processos do computador
-    Timer timer; //Tempo que o computador está ativo
+    CPU *cpu; //Representa o unico núcleo que tem no computador
+    ProcessTable *processTable; //Tabela de processos do computador
+    Timer *timer; //Tempo que o computador está ativo
     int kill; //Indica se deve terminar o computador
     int freeID; //Indica qualq é o proximo idArray livre para se criar um novo processo
 } ProcessManager;
 
 ProcessManager *initializeProcessManager();
 
-void initComputer(ProcessManager *comp, char *file); //inicializa todo o computador
+ProcessManager *initializeProcessManagerFromFile(char *filename); //inicializa todo o computador
 void processExecuting(
-        ProcessManager *comp); //Aumenta o tempo em 1 unidade, e executa o CPUSup, escalona, diminui o tempo de bloqueio
+        ProcessManager *processManager); //Aumenta o tempo em 1 unidade, e executa o CPUSup, escalona, diminui o tempo de bloqueio
 void scheduleProcess(ProcessManager *comp); //U checa se o processo atual ja executou todo tempo que tem de cpu
 void clockUpPC(ProcessManager *comp);//U sobe o timer de todas as estruturas inferiores;
 void killComputer(ProcessManager *comp); //M Termina todo o progama e libera a memoria das estruturas

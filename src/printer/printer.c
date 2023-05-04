@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../error/error.h"
 
 #include "printer.h"
 
@@ -9,6 +10,7 @@ Printer *initializePrinter(int size)
 
     if (printer == NULL)
     {
+        printf(ALLOCATION_ERROR, "printer");
         return NULL;
     }
 
@@ -19,5 +21,5 @@ Printer *initializePrinter(int size)
 
 void printAverageResponseTime(Printer *printer)
 {
-    printf("EU NÃO SEI O TEMPO MEDIO DE RESPOSTA POHA");
+    printf("TODO: Average response time. Good luck Alan.");
 }

@@ -12,7 +12,7 @@ BlockedProcesses *initializeBlockedProcesses(int size);
 
 void freeBlockedIds(BlockedProcesses *b);
 
-void insertBlockedId(BlockedProcesses *b, int pid, int blocktime);
+void insertBlockedId(BlockedProcesses *b, int pid, int blockTime);
 
 void removeBlockedId(BlockedProcesses *b, int pid);
 

@@ -2,7 +2,10 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdbool.h>
 #include <limits.h>
+#include "../input/input.h"
+#include "../error/error.h"
 
 #include "control.h"
 
@@ -14,57 +17,69 @@ Control *initializeControl()
 
     if (!control)
     {
+        printf(ALLOCATION_ERROR, "control");
         return NULL;
     }
 
-    control->processManager = initializeProcessManager();
+    // I think this is useless.
+//    control->processManager = initializeProcessManager();
+//
+//    if (!control->processManager)
+//    {
+//        return NULL;
+//    }
+
     control->printer = initializePrinter(PRINTER_DEFAULT_SIZE);
+
+    if (!control->printer)
+    {
+        return NULL;
+    }
 
     return control;
 }
 
 void runControl(Control *control)
 {
-    char resp = ' ';
     char file[CHAR_MAX];
 
     printf("Type the name of the file (under '/files/'): ");
     scanf("%s", file);
 
-    initComputer(control->processManager, file);
+    control->processManager = initializeProcessManagerFromFile(file);
 
-    printf("Digite um comando(U, I ou M)");
-    while (1)
+    if (!control->processManager)
     {
-        if (resp == '\n')
-        {
-            printf("Comando: ");
-        }
-        resp = getchar();
-        if (resp != '\n')
-        {
-            if (islower(resp))
-            {
-                resp = toupper(resp);
-            }
+        return;
+    }
 
-            switch (resp)
-            {
-                case 'M':
-                    printAverageResponseTime(control->printer);
-                    return;
-                case 'U':
-                    processExecuting(control->processManager);
-                    continue;
-                case 'I':
-                    printProcessTable(&control->processManager->processTable);
-                    continue;
-                default:
-                    printf("%c", resp);
-                    printf("Erro Comando não reconhecido\n");
-            }
-            printf("Comando: ");
-            resp = getchar();
+    while (true)
+    {
+        char command = ' ';
+
+        printf("Type a command (U, I or M): ");
+        cleanStdin();
+
+        if (!scanf("%c", &command))
+        {
+            printf("INVALID INPUT\n");
+            cleanStdin();
+            continue;
+        }
+
+        switch (toupper(command))
+        {
+            case 'M':
+                printAverageResponseTime(control->printer);
+                return;
+            case 'U':
+                processExecuting(control->processManager);
+                continue;
+            case 'I':
+                printProcessTable(control->processManager->processTable);
+                continue;
+            default:
+                printf(INVALID_COMMAND, command);
         }
     }
 }

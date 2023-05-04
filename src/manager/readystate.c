@@ -1,32 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../error/error.h"
+
 #include "readystate.h"
 
-
-void initReady(ReadyProcesses *ready, int size)
+ReadyProcesses *initializeReadyProcesses(int size)
 {
+    ReadyProcesses *readyProcesses = (ReadyProcesses *) malloc(sizeof(ReadyProcesses));
+
+    if (!readyProcesses)
+    {
+        printf(ALLOCATION_ERROR, "ready processes");
+        return NULL;
+    }
+
     // Allocate Memory for the readyArray queues
-    ready->queues = (int **) malloc(4 * sizeof(int *));
+    readyProcesses->queues = (int **) malloc(4 * sizeof(int *));
+
+    if (!readyProcesses->queues)
+    {
+        printf(ALLOCATION_ERROR, "ready process queues");
+        return NULL;
+    }
+
     for (int i = 0; i < 4; i++)
     {
-        ready->queues[i] = (int *) malloc(size * sizeof(int));
+        readyProcesses->queues[i] = (int *) malloc(size * sizeof(int));
+
         for (int j = 0; j < size; j++)
         {
-            ready->queues[i][j] = -1; // Initialize all elements to -1
+            readyProcesses->queues[i][j] = -1; // Initialize all elements to -1
         }
     }
-    ready->size = size;
-}
 
-void freeReady(ReadyProcesses *ready)
-{
-    for (int i = 0; i < 4; i++)
-    {
-        free(ready->queues[i]);
-    }
-    free(ready->queues);
-    ready->queues = NULL;
-    ready->size = 0;
+    readyProcesses->size = size;
+
+    return readyProcesses;
 }
 
 int nextReady(ReadyProcesses *ready)
@@ -41,6 +50,7 @@ int nextReady(ReadyProcesses *ready)
             }
         }
     }
+
     return -1;
 }
 
@@ -68,7 +78,8 @@ void insertToReadyQueue(ReadyProcesses *ready, int processId, int prior)
             return;
         }
     }
-    printf("lista de prontos Cheia.");
+
+    printf("Ready queue full.");
 }
 
 void removeFromReadyQueue(ReadyProcesses *ready, int processId)
@@ -90,11 +101,13 @@ void printState(ReadyProcesses *ready)
     printf("Ready State:\n");
     for (int i = 0; i < 4; ++i)
     {
-        printf("Prioridade %d: ", i);
+        printf("Priority %d: ", i);
+
         for (int j = 0; j < ready->size; ++j)
         {
             printf("%d ", ready->queues[i][j]);
         }
+
         printf("\n");
     }
 }
@@ -129,4 +142,16 @@ void changePriority(ReadyProcesses *ready, int sourcePriority, int destinationPr
         // Add it to the destination queue
         processId;
     }
+}
+
+void freeReady(ReadyProcesses *ready)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        free(ready->queues[i]);
+    }
+
+    free(ready->queues);
+    ready->queues = NULL;
+    ready->size = 0;
 }

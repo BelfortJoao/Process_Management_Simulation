@@ -12,24 +12,26 @@ typedef struct
     int memorySize; //Tamanho da memoria do processo
 } Process;
 
-void initProcess(Process *process, char *filename);
+Process *initializeProcess();
 
-void initMemory(Process *process, int lengthMem);
+Process *initializeProcessFromFile(char *filename);
 
-void excludeProcess(Process *process);
+void initializeProcessMemory(Process *process, int memorySize);
 
-void declareVar(Process *process, int position);
+Process *generateProcessCopy(Process *processToCopy);
 
-void changeVar(Process *process, int position, int value);
+void clearProcessMemory(Process *process, int position);
 
-void addVar(Process *process, int position, int value);
+void changeValueInProcessMemory(Process *process, int position, int value);
 
-void subVar(Process *process, int position, int value);
+void increaseValueInProcessMemory(Process *process, int position, int value);
 
-Process *generateNewProcess(Process *process);
+void reduceValueInProcessMemory(Process *process, int position, int value);
 
-void printMem(Process *process);
+void freeProcess(Process *process);
 
-void printProg(Process *process);
+void printProcessMemoryInfo(Process *process);
+
+void printProcessInfo(Process *process);
 
 #endif

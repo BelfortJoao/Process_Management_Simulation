@@ -17,28 +17,28 @@ typedef struct
     Process **processArray; // vetor de ponteiros para processos
     int *programCounterArray; // vetor de contadores de programa para cada processo
     int *parentProcessArray; //vetor de processos pais de cada processo
-    int *priorityIdsArray; // vetor de prioridades para cada processo (valores entre 0 e 3)
+    int *priorityIdArray; // vetor de prioridades para cada processo (valores entre 0 e 3)
     char **processStateArray; // vetor de estados para cada processo (string com valores "Executando", "Pronto", "Bloqueado")
-    Timer *initialTimeArray; // vetor de tempos de início para cada processo
-    Timer *CPUTimeArray; // vetor de tempos de CPU usados para cada processo
+    Timer **initialTimerArray; // vetor de tempos de início para cada processo
+    Timer **CPUTimerArray; // vetor de tempos de CPU usados para cada processo
     ReadyProcesses *readyArray; //vetor de processos prontos
     BlockedProcesses *blockedArray; //vetor de processos bloqueados
     RunningProcess *executingArray;//processo em execução
 } ProcessTable;
 
-void initProcessTable(ProcessTable *processTable, int initialCapacity);
+ProcessTable *initializeProcessTable(int initialCapacity);
 
 void deleteProcessTable(ProcessTable *processTable);
 
-void deleteProcessTableProcess(int ID, ProcessTable *processTable);
+void deleteProcessTableProcess(int id, ProcessTable *processTable);
 
-void addProcessTableProcess(ProcessTable *processTable, char *arq, int father, Timer clock);
+void addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcess, Timer *clock);
 
-void copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus);
+void copyProcess(ProcessTable *processTable, Process *proc, Timer *timer, int PcPlus);
 
 int getProcessTableEmptySpace(ProcessTable *processTable);
 
-int searchID(int ID, ProcessTable *processTable);
+int searchByIdInProcessTable(int id, ProcessTable *processTable);
 
 void printProcessTable(ProcessTable *processTable);
 

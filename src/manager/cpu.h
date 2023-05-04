@@ -8,16 +8,16 @@ typedef struct
 {
     Process *runningProcess;
     int programCounter;
-    Timer quantum;
-    Timer quantumUsed;
+    Timer *quantum;
+    Timer *quantumUsed;
 } CPU;
 
-void initCPU(CPU *cpu, char *file);
+CPU *initializeCPU(char *filename);
+
+int interpreter(CPU *cpu, int *blk, char **file, int *PcPlus);
+
+void changeProcess(CPU *cpu, Process *process, int programCounter, Timer quantum, Timer quantumUsed);
 
 void freeCPU(CPU *cpu);
-
-int interpreter(CPU *cpu, int *blk, char **arq, int *PcPlus);
-
-void changeProcess(CPU *cpu, Process *proc, int pc, Timer quantum, Timer quantumUsed);
 
 #endif
