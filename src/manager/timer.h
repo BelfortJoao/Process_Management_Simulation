@@ -3,7 +3,7 @@
 
 typedef int Timer; //estrutura que mede o tempo
 
-void initTime(Timer *time);
+Timer *initializeTimer();
 
 void timeUp(Timer *time);
 

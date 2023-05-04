@@ -1,38 +1,25 @@
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 #include <limits.h>
+#include "../error/error.h"
 
 #include "process.h"
 
 #define FILES_FOLDER "../files/"
-#define ERROR_FILE "Couldn't open the file at '%s'"
 
-// função para inicializar a memória de um processo com valores zero
-void initMemory(Process *process, int lengthMem)
+Process *initializeProcess()
 {
-    process->memory = (int *) calloc(lengthMem, sizeof(int)); // aloca o vetor de memória e o preenche com zeros
-    process->memorySize = lengthMem;
-}
+    Process *process = (Process *) malloc(sizeof(Process));
 
-void declareVar(Process *process, int position)
-{
-    process->memory[position] = 0;
-}
+    if (!process)
+    {
+        printf(ALLOCATION_ERROR, "process");
+        return NULL;
+    }
 
-void changeVar(Process *process, int position, int value)
-{
-    process->memory[position] = value;
-}
-
-void addVar(Process *process, int position, int value)
-{
-    process->memory[position] += value;
-}
-
-void subVar(Process *process, int position, int value)
-{
-    process->memory[position] -= value;
+    return process;
 }
 
 int getNumberOfLinesInFile(FILE *file)
@@ -53,8 +40,15 @@ int getNumberOfLinesInFile(FILE *file)
     return numLines;
 }
 
-void initProcess(Process *process, char *filename)
+Process *initializeProcessFromFile(char *filename)
 {
+    Process *process = initializeProcess();
+
+    if (process == NULL)
+    {
+        return NULL;
+    }
+
     char filePath[strlen(FILES_FOLDER) + strlen(filename) + 1];
 
     strcpy(filePath, FILES_FOLDER);
@@ -65,14 +59,11 @@ void initProcess(Process *process, char *filename)
     if (!file)
     {
         printf(ERROR_FILE, filePath);
-        return;
+        return NULL;
     }
-
-    printf("Abrindo arquivo\n");
 
     int numLines = getNumberOfLinesInFile(file);
 
-    // Aloca o array dinamicamente
     process->program = (char **) malloc(numLines * sizeof(char *));
 
     for (int i = 0; i < numLines; i++)
@@ -86,58 +77,90 @@ void initProcess(Process *process, char *filename)
     }
 
     fclose(file);
+
+    return process;
 }
 
-void excludeProcess(Process *process)
+Process *generateProcessCopy(Process *processToCopy)
+{
+    Process *newProcess = initializeProcess();
+
+    newProcess->numLines = processToCopy->numLines;
+    newProcess->program = (char **) malloc(newProcess->numLines * sizeof(char *));
+
+    for (int i = 0; i < newProcess->numLines; i++)
+    {
+        newProcess->program[i] = strdup(processToCopy->program[i]);
+    }
+
+    newProcess->memorySize = processToCopy->memorySize;
+    newProcess->memory = (int *) malloc(newProcess->numLines * sizeof(int));
+
+    for (int i = 0; i < newProcess->memorySize; i++)
+    {
+        newProcess->memory[i] = processToCopy->memory[i];
+    }
+
+    return newProcess;
+}
+
+void initializeProcessMemory(Process *process, int memorySize)
+{
+    process->memory = (int *) calloc(memorySize, sizeof(int));
+    process->memorySize = memorySize;
+}
+
+void clearProcessMemory(Process *process, int position)
+{
+    process->memory[position] = 0;
+}
+
+void changeValueInProcessMemory(Process *process, int position, int value)
+{
+    process->memory[position] = value;
+}
+
+void increaseValueInProcessMemory(Process *process, int position, int value)
+{
+    process->memory[position] += value;
+}
+
+void reduceValueInProcessMemory(Process *process, int position, int value)
+{
+    process->memory[position] -= value;
+}
+
+void printProcessMemoryInfo(Process *process)
+{
+    printf("\nMemory:\n");
+
+    for (int i = 0; i < process->memorySize; i++)
+    {
+        printf("%d ", process->memory[i]);
+    }
+
+    printf("\n");
+}
+
+void printProcessInfo(Process *process)
+{
+    printf("\nProgram:\n");
+
+    for (int i = 0; i < process->numLines; i++)
+    {
+        printf("%s\n", process->program[i]);
+    }
+
+    printf("\n");
+}
+
+void freeProcess(Process *process)
 {
     for (int i = 0; i < process->numLines; i++)
     {
         free(process->program[i]);
     }
+
     free(process->program);
     free(process->memory);
-}
-
-Process *generateNewProcess(Process *process)
-{
-    // aloca memória para o novo processo
-    Process *newprocess = (Process *) malloc(sizeof(Process));
-
-    // copia o array de programa do processo atual para o novo processo
-    newprocess->numLines = process->numLines;
-    newprocess->program = (char **) malloc(newprocess->numLines * sizeof(char *));
-    for (int i = 0; i < newprocess->numLines; i++)
-    {
-        newprocess->program[i] = strdup(process->program[i]);
-    }
-
-    // copia o vetor de memória do processo atual para o novo processo
-    newprocess->memorySize = process->memorySize;
-    newprocess->memory = (int *) malloc(newprocess->numLines * sizeof(int));
-    for (int i = 0; i < newprocess->memorySize; i++)
-    {
-        newprocess->memory[i] = process->memory[i];
-    }
-
-    // retorna o novo processo criado
-    return newprocess;
-}
-
-void printMem(Process *process)
-{
-    printf("\nMemory:\n");
-    for (int i = 0; i < process->memorySize; i++)
-    {
-        printf("%d ", process->memory[i]);
-    }
-    printf("\n");
-}
-
-void printProg(Process *process)
-{
-    printf("Program:\n");
-    for (int i = 0; i < process->numLines; i++)
-    {
-        printf("%s\n", process->program[i]);
-    }
 }
