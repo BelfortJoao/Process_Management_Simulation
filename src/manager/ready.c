@@ -40,9 +40,9 @@ Ready *initializeReady(int size)
 
 int nextReady(Ready *ready)
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
-        for (int j = 0; j < ready->size; ++j)
+        for (int j = 0; j < ready->size; j++)
         {
             if (ready->queues[i][j] != -1)
             {
@@ -58,11 +58,11 @@ void insertToReadyQueue(Ready *ready, int processId, int prior)
 {
     sortReady(ready);
 
-    for (int k = 0; k < ready->size; ++k)
+    for (int i = 0; i < ready->size; i++)
     {
-        if (ready->queues[prior][k] == -1)
+        if (ready->queues[prior][i] == -1)
         {
-            ready->queues[prior][k] = processId;
+            ready->queues[prior][i] = processId;
             return;
         }
     }
@@ -105,17 +105,19 @@ void removeFromReadyQueue(Ready *ready, int processId)
                 ready->queues[i][j] = -1;
             }
         }
+
+        sortReady(ready);
     }
 }
 
 void printState(Ready *ready)
 {
     printf("Ready State:\n");
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
         printf("Priority %d: ", i);
 
-        for (int j = 0; j < ready->size; ++j)
+        for (int j = 0; j < ready->size; j++)
         {
             printf("%d ", ready->queues[i][j]);
         }

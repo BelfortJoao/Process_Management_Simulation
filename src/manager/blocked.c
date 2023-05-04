@@ -42,6 +42,7 @@ Blocked *initializeBlocked(int size)
     return blockedProcesses;
 }
 
+//Return status
 void insertBlockedId(Blocked *blocked, int processId, int blockTime)
 {
     int i = 0;
