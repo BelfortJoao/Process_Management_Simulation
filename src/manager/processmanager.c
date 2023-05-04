@@ -31,13 +31,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
 
     int size = 0;
 
-    processManager->timer = initializeTimer();
-
-    if (!processManager->timer)
-    {
-        return NULL;
-    }
-
+    initializeTimer(&processManager->timer);
     processManager->cpu = initializeCPU(filename);
 
     if (!processManager->cpu)
@@ -88,7 +82,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
     int i = searchByIdInProcessTable(go_exec, processManager->processTable);
     changeProcess(processManager->cpu, processManager->processTable->processArray[i],
                   processManager->processTable->programCounterArray[i],
-                  **processManager->processTable->CPUTimerArray, 0);
+                  *processManager->processTable->CPUTimerArray, 0);
     processManager->processTable->processStateArray[go_exec] = RUNNING;
     processManager->processTable->processStateArray[go_block] = BLOCKED;
 }
@@ -160,7 +154,7 @@ void endProcess(ProcessManager *processManager)
     {
         changeProcess(processManager->cpu, processManager->processTable->processArray[i],
                       processManager->processTable->programCounterArray[i],
-                      **processManager->processTable->CPUTimerArray, 0);
+                      *processManager->processTable->CPUTimerArray, 0);
         processManager->processTable->processStateArray[go_exec] = RUNNING;
     }
     //exclui processo da tabela de processos
@@ -194,15 +188,15 @@ void execute(ProcessManager *processManager)
     int i = searchByIdInProcessTable(go_exec, processManager->processTable);
     changeProcess(processManager->cpu, processManager->processTable->processArray[i],
                   processManager->processTable->programCounterArray[i],
-                  **processManager->processTable->CPUTimerArray, 0);
+                  *processManager->processTable->CPUTimerArray, 0);
     processManager->processTable->processStateArray[go_exec] = RUNNING;
 }
 
 void processExecuting(ProcessManager *processManager)
 {
     //search for a proces while cpu is ampity
-    if (processManager->processTable->executingArray < 0 || !processManager->processTable->executingArray ||
-        !processManager->cpu->runningProcess)
+    if (processManager->processTable->executingArray < 0 || processManager->processTable->executingArray == NULL ||
+        processManager->cpu->runningProcess == NULL)
     {
         //terminate the Computer if kill switch is equal one
         execute(processManager);
@@ -215,9 +209,9 @@ void processExecuting(ProcessManager *processManager)
     }
     else
     {
-        printf("\n\n\n\n%d\n\n\n\n", *processManager->cpu->quantum);
-        printf("\n\n\n\n%d\n\n\n\n", *processManager->cpu->quantumUsed);
-        if (processManager->cpu->quantum >= processManager->cpu->quantumUsed)
+        printf("\n\n\n\n%d\n\n\n\n", processManager->cpu->executing_timer);
+        printf("\n\n\n\n%d\n\n\n\n", processManager->cpu->program_timer);
+        if (processManager->cpu->executing_timer >= processManager->cpu->program_timer)
         {
             scheduleProcess(processManager);
         }
@@ -256,8 +250,8 @@ void processUnblock(ProcessManager *processManager)
 
 void clockUpPC(ProcessManager *processManager)
 {
-    timeUp(processManager->timer);
-    timeUp(processManager->cpu->quantum);
+    timeUp(&processManager->timer);
+    timeUp(&processManager->cpu->executing_timer);
     blockDownClock(processManager->processTable->blockedArray);
 }
 

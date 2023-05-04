@@ -8,7 +8,7 @@ typedef struct
 {
     CPU *cpu; //Representa o unico núcleo que tem no computador
     ProcessTable *processTable; //Tabela de processos do computador
-    Timer *timer; //Tempo que o computador está ativo
+    Timer timer; //Tempo que o computador está ativo
     int kill; //Indica se deve terminar o computador
     int freeID; //Indica qualq é o proximo idArray livre para se criar um novo processo
 } ProcessManager;

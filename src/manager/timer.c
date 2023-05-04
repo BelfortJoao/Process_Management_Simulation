@@ -4,19 +4,9 @@
 
 #include "timer.h"
 
-Timer *initializeTimer()
+void initializeTimer(Timer *timer)
 {
-    Timer *timer = (Timer *) malloc(sizeof(Timer));
-
-    if (!timer)
-    {
-        printf(ALLOCATION_ERROR, "process table");
-        return NULL;
-    }
-
     *timer = 0;
-
-    return timer;
 }
 
 void timeUp(Timer *time)
