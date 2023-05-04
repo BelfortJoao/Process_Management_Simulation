@@ -3,9 +3,9 @@
 
 #include "../process/process.h"
 #include "timer.h"
-#include "readystate.h"
-#include "blockedstate.h"
-#include "executingstate.h"
+#include "ready.h"
+#include "blocked.h"
+#include "running.h"
 
 typedef struct
 {
@@ -21,9 +21,9 @@ typedef struct
     char **processStateArray; // vetor de estados para cada processo (string com valores "Executando", "Pronto", "Bloqueado")
     Timer **initialTimerArray; // vetor de tempos de início para cada processo
     Timer **CPUTimerArray; // vetor de tempos de CPU usados para cada processo
-    ReadyProcesses *readyArray; //vetor de processos prontos
-    BlockedProcesses *blockedArray; //vetor de processos bloqueados
-    RunningProcess *executingArray;//processo em execução
+    Ready *readyArray; //vetor de processos prontos
+    Blocked *blockedArray; //vetor de processos bloqueados
+    Running *executingArray;//processo em execução
 } ProcessTable;
 
 ProcessTable *initializeProcessTable(int initialCapacity);
@@ -32,7 +32,7 @@ void deleteProcessTable(ProcessTable *processTable);
 
 void deleteProcessTableProcess(int id, ProcessTable *processTable);
 
-void addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcess, Timer *clock);
+void addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcess, int clock);
 
 void copyProcess(ProcessTable *processTable, Process *proc, Timer *timer, int PcPlus);
 

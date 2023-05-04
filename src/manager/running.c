@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include "../error/error.h"
 
-#include "executingstate.h"
+#include "running.h"
 
-RunningProcess *initializeRunningProcess()
+Running *initializeRunningProcess()
 {
-    RunningProcess *runningProcess = (RunningProcess *) malloc(sizeof(RunningProcess));
+    Running *runningProcess = (Running *) malloc(sizeof(Running));
 
     if (!runningProcess)
     {
@@ -17,7 +17,7 @@ RunningProcess *initializeRunningProcess()
     return runningProcess;
 }
 
-void contextExchange(int id, RunningProcess *runningProcess)
+void contextExchange(int id, Running *runningProcess)
 {
     *runningProcess = id;
 }

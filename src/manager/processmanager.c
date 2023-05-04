@@ -61,7 +61,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
     addProcessTableProcess(processManager->processTable, filename, -1, 0);
     removeFromReadyQueue(processManager->processTable->readyArray, 0);
     contextExchange(0, processManager->processTable->executingArray);
-    processManager->processTable->processStateArray[0] = "EXECUTANDO";
+    processManager->processTable->processStateArray[0] = RUNNING;
     processManager->kill = 0;
     processManager->freeID = 0;
 
@@ -88,8 +88,8 @@ void blockProcess(ProcessManager *comp, int blockT)
     int i = searchByIdInProcessTable(go_exec, comp->processTable);
     changeProcess(comp->cpu, comp->processTable->processArray[i], comp->processTable->programCounterArray[i],
                   **comp->processTable->CPUTimerArray, 0);
-    comp->processTable->processStateArray[go_exec] = "EXECUTANDO";
-    comp->processTable->processStateArray[go_block] = "BLOQUEADO";
+    comp->processTable->processStateArray[go_exec] = RUNNING;
+    comp->processTable->processStateArray[go_block] = BLOCKED;
 }
 
 void scheduleProcess(ProcessManager *comp)
@@ -123,8 +123,8 @@ void scheduleProcess(ProcessManager *comp)
     }
     printf("\n\n\n\n%d\n\n\n\n", time);
     changeProcess(comp->cpu, comp->processTable->processArray[i], comp->processTable->programCounterArray[i], time, 0);
-    comp->processTable->processStateArray[go_exec] = "EXECUTANDO";
-    comp->processTable->processStateArray[go_ready] = "PRONTO";
+    comp->processTable->processStateArray[go_exec] = RUNNING;
+    comp->processTable->processStateArray[go_ready] = READY;
     printProcessTable(comp->processTable);
 }
 
@@ -150,7 +150,7 @@ void endProcess(ProcessManager *comp)
     {
         changeProcess(comp->cpu, comp->processTable->processArray[i], comp->processTable->programCounterArray[i],
                       **comp->processTable->CPUTimerArray, 0);
-        comp->processTable->processStateArray[go_exec] = "EXECUTANDO";
+        comp->processTable->processStateArray[go_exec] = RUNNING;
     }
     //exclui processo da tabela de processos
     comp->processTable->executingArray = NULL;
@@ -184,7 +184,7 @@ void execute(ProcessManager *comp)
     changeProcess(comp->cpu, comp->processTable->processArray[i],
                   comp->processTable->programCounterArray[i],
                   **comp->processTable->CPUTimerArray, 0);
-    comp->processTable->processStateArray[go_exec] = "EXECUTANDO";
+    comp->processTable->processStateArray[go_exec] = RUNNING;
 }
 
 void processExecuting(ProcessManager *processManager)
@@ -230,14 +230,14 @@ void processUnblock(ProcessManager *comp)
     int go_ready;
     for (int i = 0; i < comp->processTable->tableCapacity; ++i)
     {
-        if (comp->processTable->blockedArray->blockTime[i] == 0)
+        if (comp->processTable->blockedArray->blockTimes[i] == 0)
         {
-            go_ready = comp->processTable->blockedArray->id[i];
+            go_ready = comp->processTable->blockedArray->ids[i];
             removeBlockedId(comp->processTable->blockedArray, go_ready);
             insertToReadyQueue(comp->processTable->readyArray, go_ready,
                                comp->processTable->priorityIdArray[searchByIdInProcessTable(go_ready,
                                                                                             comp->processTable)]);
-            comp->processTable->processStateArray[searchByIdInProcessTable(go_ready, comp->processTable)] = "PRONTO";
+            comp->processTable->processStateArray[searchByIdInProcessTable(go_ready, comp->processTable)] = READY;
         }
     }
 }
@@ -250,11 +250,11 @@ void clockUpPC(ProcessManager *comp)
 }
 
 
-void processCP(ProcessManager *comp, Process *proc, int PcPlus)
+void processCP(ProcessManager *processManager, Process *process, int PcPlus)
 {
 
-    proc = generateProcessCopy(comp->cpu->runningProcess);
-    copyProcess(comp->processTable, proc, comp->timer, PcPlus);
+    process = generateProcessCopy(processManager->cpu->runningProcess);
+    copyProcess(processManager->processTable, process, processManager->timer, PcPlus);
 }
 
 void processRewind(ProcessManager *comp, char *arq)

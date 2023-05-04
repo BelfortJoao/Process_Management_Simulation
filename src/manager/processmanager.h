@@ -28,7 +28,7 @@ void processRewind(ProcessManager *comp,
                    char *arq); //(R arq) Le um arquivo e reinicia os status do processo atual da cpu o substituindo pelo arq
 void
 endProcess(ProcessManager *comp); //T termina o processo simulado atual e passa o cpu para o proximo processo pronto
-void processCP(ProcessManager *comp, Process *proc,
+void processCP(ProcessManager *processManager, Process *process,
                int PcPlus); //(F n) cria um novo processo em estado pronto,compiando o atual, e coloca seu programCounterArray na linha pc_atual+n
 void execute(ProcessManager *comp);
 
