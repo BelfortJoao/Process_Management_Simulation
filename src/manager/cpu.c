@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "processtable.h"
 #include "cpu.h"
 
 int interpreter(CPU *cpu, int *blk, char **arq, int *PCPlus) {
