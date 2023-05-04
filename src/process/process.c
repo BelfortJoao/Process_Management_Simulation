@@ -72,7 +72,7 @@ Process *initializeProcessFromFile(char *filename)
 
         if (!fscanf(file, "%[^\n]\n", process->program[i]))
         {
-            printf("Couldn't read line at position %d.", i);
+            printf("\nCouldn't read line at position %d.\n", i);
         }
     }
 
