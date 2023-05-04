@@ -5,8 +5,6 @@
 
 #include "processtable.h"
 
-typedef Timer *pInt;
-
 ProcessTable *initializeProcessTable(int initialCapacity)
 {
     ProcessTable *processTable = (ProcessTable *) malloc(sizeof(ProcessTable));
@@ -39,7 +37,7 @@ ProcessTable *initializeProcessTable(int initialCapacity)
 
     if (!processTable->idArray)
     {
-        printf(ALLOCATION_ERROR, "process table id array");
+        printf(ALLOCATION_ERROR, "process table ids array");
         return NULL;
     }
 
@@ -55,7 +53,7 @@ ProcessTable *initializeProcessTable(int initialCapacity)
 
     if (!processTable->priorityIdArray)
     {
-        printf(ALLOCATION_ERROR, "process table priority id array");
+        printf(ALLOCATION_ERROR, "process table priority ids array");
         return NULL;
     }
 
@@ -96,21 +94,21 @@ ProcessTable *initializeProcessTable(int initialCapacity)
         processTable->processArray[i] = initializeProcess();
         processTable->programCounterArray[i] = 0;
         processTable->priorityIdArray[i] = -1;
-        processTable->processStateArray[i] = "BLOQUEADO";
+        processTable->processStateArray[i] = BLOCKED;
         processTable->emptyArray[i] = 0;
         processTable->initialTimerArray[i] = initializeTimer();
         processTable->CPUTimerArray[i] = initializeTimer();
         processTable->parentProcessArray[i] = -1;
     }
 
-    processTable->blockedArray = initializeBlockedProcesses(initialCapacity);
+    processTable->blockedArray = initializeBlocked(initialCapacity);
 
     if (!processTable->blockedArray)
     {
         return NULL;
     }
 
-    processTable->readyArray = initializeReadyProcesses(initialCapacity);
+    processTable->readyArray = initializeReady(initialCapacity);
 
     if (!processTable->readyArray)
     {
@@ -143,14 +141,14 @@ int getProcessTableEmptySpace(ProcessTable *processTable)
     return -1;
 }
 
-void addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcess, Timer *clock)
+void addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcess, int clock)
 {
     int emptyPosition = getProcessTableEmptySpace(processTable);
 
     processTable->emptyArray[emptyPosition] = 1;
     processTable->processArray[emptyPosition] = initializeProcessFromFile(filename);
     processTable->priorityIdArray[emptyPosition] = 0;
-    processTable->processStateArray[emptyPosition] = strdup("PRONTO");
+    processTable->processStateArray[emptyPosition] = strdup(READY);
     processTable->parentProcessArray[emptyPosition] = parentProcess;
     *processTable->initialTimerArray[emptyPosition] = clock;
     *processTable->CPUTimerArray[emptyPosition] = 0;
@@ -173,7 +171,7 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
     processTable->processArray = NULL;
     processTable->priorityIdArray[foundId] = -1;
     processTable->programCounterArray[id] = 0;
-    processTable->processStateArray[id] = "BLOQUEADO";
+    processTable->processStateArray[id] = BLOCKED;
     processTable->parentProcessArray[id] = -1;
     *processTable->initialTimerArray[id] = -1;
     *processTable->CPUTimerArray[id] = -1;
@@ -194,7 +192,7 @@ void deleteProcessTable(ProcessTable *processTable)
     }
 
     freeReady(processTable->readyArray);
-    freeBlockedIds(processTable->blockedArray);
+    freeBlocked(processTable->blockedArray);
     free(processTable->processArray);
     free(processTable->emptyArray);
     free(processTable->programCounterArray);
@@ -259,7 +257,7 @@ void copyProcess(ProcessTable *processTable, Process *proc, Timer *timer, int Pc
     processTable->priorityIdArray[emptySpace] = 0;
     processTable->programCounterArray[emptySpace] =
             processTable->programCounterArray[*processTable->executingArray] + PcPlus;
-    processTable->processStateArray[emptySpace] = "PRONTO";
+    processTable->processStateArray[emptySpace] = READY;
     processTable->parentProcessArray[emptySpace] = *processTable->executingArray;
     processTable->initialTimerArray[emptySpace] = timer;
     *processTable->CPUTimerArray[emptySpace] = 0;

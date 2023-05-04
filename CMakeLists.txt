@@ -8,12 +8,12 @@ add_executable(src src/main.c
         src/manager/timer.h
         src/manager/cpu.c
         src/manager/cpu.h
-        src/manager/executingstate.c
-        src/manager/executingstate.h
-        src/manager/blockedstate.c
-        src/manager/blockedstate.h
-        src/manager/readystate.c
-        src/manager/readystate.h
+        src/manager/running.c
+        src/manager/running.h
+        src/manager/blocked.c
+        src/manager/blocked.h
+        src/manager/ready.c
+        src/manager/ready.h
         src/manager/processtable.c
         src/manager/processtable.h
         src/process/process.c

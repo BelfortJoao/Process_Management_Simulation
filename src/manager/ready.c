@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include "../error/error.h"
 
-#include "readystate.h"
+#include "ready.h"
 
-ReadyProcesses *initializeReadyProcesses(int size)
+Ready *initializeReady(int size)
 {
-    ReadyProcesses *readyProcesses = (ReadyProcesses *) malloc(sizeof(ReadyProcesses));
+    Ready *readyProcesses = (Ready *) malloc(sizeof(Ready));
 
     if (!readyProcesses)
     {
@@ -38,7 +38,7 @@ ReadyProcesses *initializeReadyProcesses(int size)
     return readyProcesses;
 }
 
-int nextReady(ReadyProcesses *ready)
+int nextReady(Ready *ready)
 {
     for (int i = 0; i < 4; ++i)
     {
@@ -54,7 +54,7 @@ int nextReady(ReadyProcesses *ready)
     return -1;
 }
 
-void insertToReadyQueue(ReadyProcesses *ready, int processId, int prior)
+void insertToReadyQueue(Ready *ready, int processId, int prior)
 {
     for (int k = 0; k < ready->size; ++k)
     {
@@ -82,7 +82,7 @@ void insertToReadyQueue(ReadyProcesses *ready, int processId, int prior)
     printf("Ready queue full.");
 }
 
-void removeFromReadyQueue(ReadyProcesses *ready, int processId)
+void removeFromReadyQueue(Ready *ready, int processId)
 {
     for (int i = 0; i < 4; i++)
     {
@@ -96,7 +96,7 @@ void removeFromReadyQueue(ReadyProcesses *ready, int processId)
     }
 }
 
-void printState(ReadyProcesses *ready)
+void printState(Ready *ready)
 {
     printf("Ready State:\n");
     for (int i = 0; i < 4; ++i)
@@ -114,7 +114,7 @@ void printState(ReadyProcesses *ready)
 
 //TA TUDO ERRADO AQUI CONCERTO AMANHÃ
 
-void changePriority(ReadyProcesses *ready, int sourcePriority, int destinationPriority, int processId)
+void changePriority(Ready *ready, int sourcePriority, int destinationPriority, int processId)
 {
     int *sourceQueue = ready->queues[sourcePriority];
     int *destinationQueue = ready->queues[destinationPriority];
@@ -144,7 +144,7 @@ void changePriority(ReadyProcesses *ready, int sourcePriority, int destinationPr
     }
 }
 
-void freeReady(ReadyProcesses *ready)
+void freeReady(Ready *ready)
 {
     for (int i = 0; i < 4; i++)
     {
