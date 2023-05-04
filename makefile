@@ -8,7 +8,7 @@ make:
                         src/manager/executingstate.h \
                         src/manager/blockedstate.c \
                         src/manager/blockedstate.h \
-                        src/manager/readystate.c \
+                        src/manager/TESTEFILA.c \
                         src/manager/readystate.h \
                         src/manager/processtable.c \
                         src/manager/processtable.h \

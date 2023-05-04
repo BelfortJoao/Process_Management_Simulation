@@ -12,7 +12,7 @@ add_executable(src src/main.c
         src/manager/executingstate.h
         src/manager/blockedstate.c
         src/manager/blockedstate.h
-        src/manager/readystate.c
+        src/manager/TESTEFILA.c
         src/manager/readystate.h
         src/manager/processtable.c
         src/manager/processtable.h
@@ -23,6 +23,7 @@ add_executable(src src/main.c
         src/printer/printer.c
         src/printer/printer.h
         src/manager/manager.c
-        src/manager/manager.h)
+        src/manager/manager.h
+        )
 
 target_link_libraries(src m)
