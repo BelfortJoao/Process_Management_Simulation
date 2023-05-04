@@ -39,11 +39,10 @@ int nextReady(Ready *ready) {
 }
 
 void insertReady(Ready *ready, int processId, int prior) {
-    //sortReady(ready);
+    sortReady(ready);
     for (int k = 0; k < ready->size; ++k) {
         if (ready->queues[prior][k] == -1) {
             ready->queues[prior][k] = processId;
-            sortReady(ready);
             return;
         }
     }
@@ -77,6 +76,7 @@ void removeReady(Ready *ready, int processId) {
                 ready->queues[j][k] = -1;
             }
         }
+        sortReady(ready);
     }
 }
 

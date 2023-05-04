@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
 #include <math.h>
 
 #include "manager.h"
@@ -61,7 +59,9 @@ void scheduleProcess(Computer *comp) {
     if (go_exec == -1) {
         return;
     }
-    comp->processTable.priorityIdsArray[*comp->processTable.executingArray]++;
+    if(comp->processTable.priorityIdsArray[*comp->processTable.executingArray]<3){
+        comp->processTable.priorityIdsArray[*comp->processTable.executingArray]++;
+    }
     contextExchange(go_exec, comp->processTable.executingArray);
     removeReady(comp->processTable.readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para pronto
