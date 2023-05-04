@@ -19,8 +19,8 @@ typedef struct
     int *parentProcessArray; //vetor de processos pais de cada processo
     int *priorityIdArray; // vetor de prioridades para cada processo (valores entre 0 e 3)
     char **processStateArray; // vetor de estados para cada processo (string com valores "Executando", "Pronto", "Bloqueado")
-    Timer **initialTimerArray; // vetor de tempos de início para cada processo
-    Timer **CPUTimerArray; // vetor de tempos de CPU usados para cada processo
+    Timer *initialTimerArray; // vetor de tempos de início para cada processo
+    Timer *CPUTimerArray; // vetor de tempos de CPU usados para cada processo
     Ready *readyArray; //vetor de processos prontos
     Blocked *blockedArray; //vetor de processos bloqueados
     Running *executingArray;//processo em execução
@@ -34,7 +34,7 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable);
 
 void addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcess, int clock);
 
-void copyProcess(ProcessTable *processTable, Process *proc, Timer *timer, int PcPlus);
+void copyProcess(ProcessTable *processTable, Process *proc, Timer timer, int PcPlus);
 
 int getProcessTableEmptySpace(ProcessTable *processTable);
 

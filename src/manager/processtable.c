@@ -65,7 +65,7 @@ ProcessTable *initializeProcessTable(int initialCapacity)
         return NULL;
     }
 
-    processTable->initialTimerArray = (Timer **) malloc(initialCapacity * sizeof(Timer *));
+    processTable->initialTimerArray = (Timer *) malloc(initialCapacity * sizeof(Timer));
 
     if (!processTable->initialTimerArray)
     {
@@ -73,7 +73,7 @@ ProcessTable *initializeProcessTable(int initialCapacity)
         return NULL;
     }
 
-    processTable->CPUTimerArray = (Timer **) malloc(initialCapacity * sizeof(Timer *));
+    processTable->CPUTimerArray = (Timer *) malloc(initialCapacity * sizeof(Timer));
 
     if (!processTable->CPUTimerArray)
     {
@@ -96,8 +96,8 @@ ProcessTable *initializeProcessTable(int initialCapacity)
         processTable->priorityIdArray[i] = -1;
         processTable->processStateArray[i] = BLOCKED;
         processTable->emptyArray[i] = 0;
-        processTable->initialTimerArray[i] = initializeTimer();
-        processTable->CPUTimerArray[i] = initializeTimer();
+        initializeTimer(&processTable->initialTimerArray[i]);
+        initializeTimer(&processTable->CPUTimerArray[i]);
         processTable->parentProcessArray[i] = -1;
     }
 
@@ -152,8 +152,8 @@ void addProcessTableProcess(ProcessTable *processTable, char *filename, int pare
     processTable->priorityIdArray[emptyPosition] = 0;
     processTable->processStateArray[emptyPosition] = strdup(READY);
     processTable->parentProcessArray[emptyPosition] = parentProcess;
-    *processTable->initialTimerArray[emptyPosition] = clock;
-    *processTable->CPUTimerArray[emptyPosition] = 0;
+    processTable->initialTimerArray[emptyPosition] = clock;
+    processTable->CPUTimerArray[emptyPosition] = 0;
     processTable->idArray[emptyPosition] = nextID(processTable);
 
     insertToReadyQueue(processTable->readyArray,
@@ -175,8 +175,8 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
     processTable->programCounterArray[id] = 0;
     processTable->processStateArray[id] = strdup(BLOCKED);
     processTable->parentProcessArray[id] = -1;
-    *processTable->initialTimerArray[id] = -1;
-    *processTable->CPUTimerArray[id] = -1;
+    processTable->initialTimerArray[id] = -1;
+    processTable->CPUTimerArray[id] = -1;
 
     removeBlockedId(processTable->blockedArray, id);
 }
@@ -236,8 +236,8 @@ void printProcessTable(ProcessTable *processTable)
             printf("\n| %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d |", processTable->idArray[i],
                    processTable->programCounterArray[i],
                    processTable->parentProcessArray[i], processTable->priorityIdArray[i],
-                   processTable->processStateArray[i], *processTable->initialTimerArray[i],
-                   *processTable->CPUTimerArray[i]);
+                   processTable->processStateArray[i], processTable->initialTimerArray[i],
+                   processTable->CPUTimerArray[i]);
         }
     }
 
@@ -250,7 +250,7 @@ int nextID(ProcessTable *processTable)
     return processTable->nextFreeId - 1;
 }
 
-void copyProcess(ProcessTable *processTable, Process *proc, Timer *timer, int PcPlus)
+void copyProcess(ProcessTable *processTable, Process *proc, Timer timer, int PcPlus)
 {
     processTable->tableSize++;
     int emptySpace = getProcessTableEmptySpace(processTable);
@@ -261,7 +261,7 @@ void copyProcess(ProcessTable *processTable, Process *proc, Timer *timer, int Pc
     processTable->processStateArray[emptySpace] = strdup(READY);
     processTable->parentProcessArray[emptySpace] = *processTable->executingArray;
     processTable->initialTimerArray[emptySpace] = timer;
-    *processTable->CPUTimerArray[emptySpace] = 0;
+    processTable->CPUTimerArray[emptySpace] = 0;
     processTable->idArray[emptySpace] = nextID(processTable);
     insertToReadyQueue(processTable->readyArray, emptySpace, processTable->priorityIdArray[emptySpace]);
 }

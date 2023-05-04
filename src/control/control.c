@@ -21,13 +21,12 @@ Control *initializeControl()
         return NULL;
     }
 
-    // I think this is useless.
-//    control->processManager = initializeProcessManager();
-//
-//    if (!control->processManager)
-//    {
-//        return NULL;
-//    }
+    control->processManager = initializeProcessManager();
+
+    if (!control->processManager)
+    {
+        return NULL;
+    }
 
     control->printer = initializePrinter(PRINTER_DEFAULT_SIZE);
 
