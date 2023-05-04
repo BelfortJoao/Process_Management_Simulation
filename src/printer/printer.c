@@ -21,5 +21,5 @@ Printer *initializePrinter(int size)
 
 void printAverageResponseTime(Printer *printer)
 {
-    printf("TODO: Average response time. Good luck Alan.");
+    printf("\nTODO: Average response time. Good luck Alan.\n");
 }

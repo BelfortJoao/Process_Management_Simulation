@@ -2,8 +2,5 @@
 
 int main()
 {
-    Control *control = initializeControl();
-    runControl(control);
-
-    return 0;
+    return runControl(initializeControl());
 }
