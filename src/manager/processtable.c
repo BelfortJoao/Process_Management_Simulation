@@ -138,6 +138,7 @@ int getProcessTableEmptySpace(ProcessTable *processTable)
             return i;
         }
     }
+
     return -1;
 }
 
@@ -183,7 +184,7 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
 
 void deleteProcessTable(ProcessTable *processTable)
 {
-    for (int i = 0; i < processTable->tableCapacity; ++i)
+    for (int i = 0; i < processTable->tableCapacity; i++)
     {
         if (processTable->processArray[i] != NULL)
         {

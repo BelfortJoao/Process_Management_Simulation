@@ -5,6 +5,7 @@ typedef struct
 {
     int *blockTimes;
     int *ids;
+    int size;
 } Blocked; // Processos que estão atualmente bloqueados
 
 

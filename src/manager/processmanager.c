@@ -69,122 +69,125 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
 }
 
 //(B n)Bloqueia o processo na CPU em N unidades de tempo
-void blockProcess(ProcessManager *comp, int blockT)
+void blockProcess(ProcessManager *processManager, int blockTime)
 {
     int go_exec;
     int go_block;
-    if (comp->processTable->executingArray == 0 || comp->processTable->executingArray == NULL)
+    if (processManager->processTable->executingArray == 0 || processManager->processTable->executingArray == NULL)
     {
         return;
     }
     //Operação em tabela-sai de readyArray e vai para executando
-    go_block = *comp->processTable->executingArray;
-    go_exec = nextReady(comp->processTable->readyArray);
-    contextExchange(go_exec, comp->processTable->executingArray);
-    removeFromReadyQueue(comp->processTable->readyArray, go_exec);
+    go_block = *processManager->processTable->executingArray;
+    go_exec = nextReady(processManager->processTable->readyArray);
+    contextExchange(go_exec, processManager->processTable->executingArray);
+    removeFromReadyQueue(processManager->processTable->readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para block
-    insertBlockedId(comp->processTable->blockedArray, go_block, blockT);
+    insertBlockedId(processManager->processTable->blockedArray, go_block, blockTime);
     //Operação real
-    int i = searchByIdInProcessTable(go_exec, comp->processTable);
-    changeProcess(comp->cpu, comp->processTable->processArray[i], comp->processTable->programCounterArray[i],
-                  **comp->processTable->CPUTimerArray, 0);
-    comp->processTable->processStateArray[go_exec] = RUNNING;
-    comp->processTable->processStateArray[go_block] = BLOCKED;
+    int i = searchByIdInProcessTable(go_exec, processManager->processTable);
+    changeProcess(processManager->cpu, processManager->processTable->processArray[i],
+                  processManager->processTable->programCounterArray[i],
+                  **processManager->processTable->CPUTimerArray, 0);
+    processManager->processTable->processStateArray[go_exec] = RUNNING;
+    processManager->processTable->processStateArray[go_block] = BLOCKED;
 }
 
-void scheduleProcess(ProcessManager *comp)
+void scheduleProcess(ProcessManager *processManager)
 {
     int go_exec;
     int go_ready;
     int time = 1;
     //Operação em tabela-sai de readyArray e vai para executando
-    go_ready = *comp->processTable->executingArray;
-    go_exec = nextReady(comp->processTable->readyArray);
+    go_ready = *processManager->processTable->executingArray;
+    go_exec = nextReady(processManager->processTable->readyArray);
     if (go_exec == -1)
     {
         return;
     }
-    comp->processTable->priorityIdArray[*comp->processTable->executingArray]++;
-    contextExchange(go_exec, comp->processTable->executingArray);
-    removeFromReadyQueue(comp->processTable->readyArray, go_exec);
+    processManager->processTable->priorityIdArray[*processManager->processTable->executingArray]++;
+    contextExchange(go_exec, processManager->processTable->executingArray);
+    removeFromReadyQueue(processManager->processTable->readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para pronto
-    int i = searchByIdInProcessTable(go_exec, comp->processTable);
-    int j = searchByIdInProcessTable(go_ready, comp->processTable);
-    printf("ID ARRAY: %d\n", comp->processTable->idArray[i]);
-    printf("PRIOr ID: %d\n", comp->processTable->priorityIdArray[j]);
-    insertToReadyQueue(comp->processTable->readyArray, go_ready,
-                       comp->processTable->priorityIdArray[j]);
+    int i = searchByIdInProcessTable(go_exec, processManager->processTable);
+    int j = searchByIdInProcessTable(go_ready, processManager->processTable);
+    printf("ID ARRAY: %d\n", processManager->processTable->idArray[i]);
+    printf("PRIOr ID: %d\n", processManager->processTable->priorityIdArray[j]);
+    insertToReadyQueue(processManager->processTable->readyArray, go_ready,
+                       processManager->processTable->priorityIdArray[j]);
 
-    printProcessTable(comp->processTable);
+    printProcessTable(processManager->processTable);
     //Operação real
-    if (pow(2, (4 - comp->processTable->priorityIdArray[i]) - 1) >= 1)
+    if (pow(2, (4 - processManager->processTable->priorityIdArray[i]) - 1) >= 1)
     {
-        time = (int) pow(2, (4 - comp->processTable->priorityIdArray[i]) - 1);
+        time = (int) pow(2, (4 - processManager->processTable->priorityIdArray[i]) - 1);
     }
     printf("\n\n\n\n%d\n\n\n\n", time);
-    changeProcess(comp->cpu, comp->processTable->processArray[i], comp->processTable->programCounterArray[i], time, 0);
-    comp->processTable->processStateArray[go_exec] = RUNNING;
-    comp->processTable->processStateArray[go_ready] = READY;
-    printProcessTable(comp->processTable);
+    changeProcess(processManager->cpu, processManager->processTable->processArray[i],
+                  processManager->processTable->programCounterArray[i], time, 0);
+    processManager->processTable->processStateArray[go_exec] = RUNNING;
+    processManager->processTable->processStateArray[go_ready] = READY;
+    printProcessTable(processManager->processTable);
 }
 
 //T termina o processo simulado atual e passa o cpu para o proximo processo pronto
-void endProcess(ProcessManager *comp)
+void endProcess(ProcessManager *processManager)
 {
     int go_excl;
     int go_exec;
-    if (comp->processTable->executingArray <= 0 || comp->processTable->executingArray == NULL)
+    if (processManager->processTable->executingArray <= 0 || processManager->processTable->executingArray == NULL)
     {
         return;
     }
     //Operação em tabela-sai de readyArray e vai para executando
-    go_excl = *comp->processTable->executingArray;
-    go_exec = nextReady(comp->processTable->readyArray);
-    contextExchange(go_exec, comp->processTable->executingArray);
-    removeFromReadyQueue(comp->processTable->readyArray, go_exec);
+    go_excl = *processManager->processTable->executingArray;
+    go_exec = nextReady(processManager->processTable->readyArray);
+    contextExchange(go_exec, processManager->processTable->executingArray);
+    removeFromReadyQueue(processManager->processTable->readyArray, go_exec);
     //Sai de Ready e vai para executingArray
 
     //Operação real
-    int i = searchByIdInProcessTable(go_exec, comp->processTable);
+    int i = searchByIdInProcessTable(go_exec, processManager->processTable);
     if (i != -1)
     {
-        changeProcess(comp->cpu, comp->processTable->processArray[i], comp->processTable->programCounterArray[i],
-                      **comp->processTable->CPUTimerArray, 0);
-        comp->processTable->processStateArray[go_exec] = RUNNING;
+        changeProcess(processManager->cpu, processManager->processTable->processArray[i],
+                      processManager->processTable->programCounterArray[i],
+                      **processManager->processTable->CPUTimerArray, 0);
+        processManager->processTable->processStateArray[go_exec] = RUNNING;
     }
     //exclui processo da tabela de processos
-    comp->processTable->executingArray = NULL;
-    comp->cpu->runningProcess = NULL;
-    deleteProcessTableProcess(go_excl, comp->processTable);
+    processManager->processTable->executingArray = NULL;
+    processManager->cpu->runningProcess = NULL;
+    deleteProcessTableProcess(go_excl, processManager->processTable);
 }
 
-void killComputer(ProcessManager *comp)
+void killComputer(ProcessManager *processManager)
 {
-    freeCPU(comp->cpu);
-    deleteProcessTable(comp->processTable);
-    comp->timer = 0;
-    comp->kill = 1;
-    comp->freeID = 0;
+    freeCPU(processManager->cpu);
+    deleteProcessTable(processManager->processTable);
+    processManager->timer = 0;
+    processManager->kill = 1;
+    processManager->freeID = 0;
 }
 
-void execute(ProcessManager *comp)
+void execute(ProcessManager *processManager)
 {
     int go_exec;
     //Operação sob a tabela Ready
-    go_exec = nextReady(comp->processTable->readyArray);
-    if (go_exec == -1 || comp->processTable->executingArray == NULL)
+    go_exec = nextReady(processManager->processTable->readyArray);
+    if (go_exec == -1 || processManager->processTable->executingArray == NULL)
     {
         printf("There is nothing more to execute\n");
         return;
     }
-    contextExchange(go_exec, comp->processTable->executingArray);
-    removeFromReadyQueue(comp->processTable->readyArray, go_exec);
+    contextExchange(go_exec, processManager->processTable->executingArray);
+    removeFromReadyQueue(processManager->processTable->readyArray, go_exec);
     //Operação Real
-    int i = searchByIdInProcessTable(go_exec, comp->processTable);
-    changeProcess(comp->cpu, comp->processTable->processArray[i],
-                  comp->processTable->programCounterArray[i],
-                  **comp->processTable->CPUTimerArray, 0);
-    comp->processTable->processStateArray[go_exec] = RUNNING;
+    int i = searchByIdInProcessTable(go_exec, processManager->processTable);
+    changeProcess(processManager->cpu, processManager->processTable->processArray[i],
+                  processManager->processTable->programCounterArray[i],
+                  **processManager->processTable->CPUTimerArray, 0);
+    processManager->processTable->processStateArray[go_exec] = RUNNING;
 }
 
 void processExecuting(ProcessManager *processManager)
@@ -225,28 +228,29 @@ void processExecuting(ProcessManager *processManager)
     }
 }
 
-void processUnblock(ProcessManager *comp)
+void processUnblock(ProcessManager *processManager)
 {
     int go_ready;
-    for (int i = 0; i < comp->processTable->tableCapacity; ++i)
+    for (int i = 0; i < processManager->processTable->tableCapacity; ++i)
     {
-        if (comp->processTable->blockedArray->blockTimes[i] == 0)
+        if (processManager->processTable->blockedArray->blockTimes[i] == 0)
         {
-            go_ready = comp->processTable->blockedArray->ids[i];
-            removeBlockedId(comp->processTable->blockedArray, go_ready);
-            insertToReadyQueue(comp->processTable->readyArray, go_ready,
-                               comp->processTable->priorityIdArray[searchByIdInProcessTable(go_ready,
-                                                                                            comp->processTable)]);
-            comp->processTable->processStateArray[searchByIdInProcessTable(go_ready, comp->processTable)] = READY;
+            go_ready = processManager->processTable->blockedArray->ids[i];
+            removeBlockedId(processManager->processTable->blockedArray, go_ready);
+            insertToReadyQueue(processManager->processTable->readyArray, go_ready,
+                               processManager->processTable->priorityIdArray[searchByIdInProcessTable(go_ready,
+                                                                                                      processManager->processTable)]);
+            processManager->processTable->processStateArray[searchByIdInProcessTable(go_ready,
+                                                                                     processManager->processTable)] = READY;
         }
     }
 }
 
-void clockUpPC(ProcessManager *comp)
+void clockUpPC(ProcessManager *processManager)
 {
-    timeUp(comp->timer);
-    timeUp(comp->cpu->quantum);
-    blockDownClock(comp->processTable->blockedArray);
+    timeUp(processManager->timer);
+    timeUp(processManager->cpu->quantum);
+    blockDownClock(processManager->processTable->blockedArray);
 }
 
 
@@ -257,44 +261,45 @@ void processCP(ProcessManager *processManager, Process *process, int PcPlus)
     copyProcess(processManager->processTable, process, processManager->timer, PcPlus);
 }
 
-void processRewind(ProcessManager *comp, char *arq)
+void processRewind(ProcessManager *processManager, char *filename)
 {
-    freeProcess(comp->processTable->processArray[*comp->processTable->executingArray]);
-    comp->processTable->processArray[*comp->processTable->executingArray] = initializeProcessFromFile(arq);
+    freeProcess(processManager->processTable->processArray[*processManager->processTable->executingArray]);
+    processManager->processTable->processArray[*processManager->processTable->executingArray] = initializeProcessFromFile(
+            filename);
 }
 
-void attExec(ProcessManager *comp)
+void attExec(ProcessManager *processManager)
 {
-    comp->processTable->programCounterArray[*comp->processTable->executingArray] = comp->cpu->programCounter;
-    comp->processTable->processArray[*comp->processTable->executingArray] = comp->cpu->runningProcess;
-    comp->processTable->CPUTimerArray[*comp->processTable->executingArray]++;
+    processManager->processTable->programCounterArray[*processManager->processTable->executingArray] = processManager->cpu->programCounter;
+    processManager->processTable->processArray[*processManager->processTable->executingArray] = processManager->cpu->runningProcess;
+    processManager->processTable->CPUTimerArray[*processManager->processTable->executingArray]++;
 }
 
-void uperInterpreter(ProcessManager *comp)
+void uperInterpreter(ProcessManager *processManager)
 {
     int blk;
     Process *process;
     int PcPlus;
     char **file;
-    printf("PC: %d\n", comp->cpu->programCounter);
-    int cpuResp = interpreter(comp->cpu, &blk, file, &PcPlus);
-    comp->cpu->programCounter++;
-    attExec(comp);
+    printf("PC: %d\n", processManager->cpu->programCounter);
+    int cpuResp = interpreter(processManager->cpu, &blk, file, &PcPlus);
+    processManager->cpu->programCounter++;
+    attExec(processManager);
     switch (cpuResp)
     {
         case 0:
             return;
         case 1://Bloqueia esse processo simulado por n unidades de tempo->
-            blockProcess(comp, blk);
+            blockProcess(processManager, blk);
             return;
         case 2://Acaba com o processo atual e coloca outro no lugar
-            endProcess(comp);
+            endProcess(processManager);
             return;
         case 3://Crian um novo processo com base no atual do CPU
-            processCP(comp, process, PcPlus);
+            processCP(processManager, process, PcPlus);
             return;
         case 4://Recria o processo atual com base em um arquivo
-            processRewind(comp, *file);
+            processRewind(processManager, *file);
             return;
         default:
             return;
