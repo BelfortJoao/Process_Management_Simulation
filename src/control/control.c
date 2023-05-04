@@ -39,7 +39,7 @@ Control *initializeControl()
     return control;
 }
 
-void runControl(Control *control)
+int runControl(Control *control)
 {
     char file[CHAR_MAX];
 
@@ -50,7 +50,7 @@ void runControl(Control *control)
 
     if (!control->processManager)
     {
-        return;
+        return -1;
     }
 
     while (true)
@@ -71,7 +71,7 @@ void runControl(Control *control)
         {
             case 'M':
                 printAverageResponseTime(control->printer);
-                return;
+                return 0;
             case 'U':
                 processExecuting(control->processManager);
                 continue;

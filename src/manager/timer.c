@@ -28,3 +28,11 @@ void timeDown(Timer *time)
 {
     *time -= 1;
 }
+
+void freeTimer(Timer *timer)
+{
+    if (timer)
+    {
+        free(timer);
+    }
+}

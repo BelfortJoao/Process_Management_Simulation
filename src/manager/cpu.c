@@ -142,6 +142,6 @@ void freeCPU(CPU *cpu)
 {
     cpu->runningProcess = NULL;
     cpu->programCounter = 0;
-    cpu->quantum = 0;
-    cpu->quantumUsed = 0;
+    *cpu->quantum = 0;
+    *cpu->quantumUsed = 0;
 }

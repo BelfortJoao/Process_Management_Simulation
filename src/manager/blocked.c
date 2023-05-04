@@ -74,7 +74,10 @@ void blockDownClock(Blocked *blocked)
     for (int i = 0; i < sizeof(blocked->ids); ++i)
     {
         if (blocked->ids[i] != -1)
-        { blocked->blockTimes[i]--; }
+        {
+            blocked->blockTimes[i]--;
+        }
+
     }
 }
 

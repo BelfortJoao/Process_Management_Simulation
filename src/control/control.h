@@ -12,6 +12,6 @@ typedef struct
 
 Control *initializeControl();
 
-void runControl(Control *control);
+int runControl(Control *control);
 
 #endif
