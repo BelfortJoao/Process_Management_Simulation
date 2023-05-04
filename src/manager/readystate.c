@@ -39,24 +39,33 @@ int nextReady(Ready *ready) {
 }
 
 void insertReady(Ready *ready, int processId, int prior) {
+    sortReady(ready);
     for (int k = 0; k < ready->size; ++k) {
         if (ready->queues[prior][k] == -1) {
             ready->queues[prior][k] = processId;
-            //bubble sort na lista de prontos
-            for (int i = 0; i < ready->size; ++i) {
-                for (int j = 0; j < ready->size - 1; ++j) {
-                    if (ready->queues[prior][j] > ready->queues[prior][j + 1] && ready->queues[prior][j + 1] != -1) {
-                        int aux = ready->queues[prior][j];
-                        ready->queues[prior][j] = ready->queues[prior][j + 1];
-                        ready->queues[prior][j + 1] = aux;
-                    }
-                }
-            }
-
             return;
         }
     }
     printf("lista de prontos Cheia.");
+}
+
+void sortReady(Ready *ready) {
+    for (int i = 0; i < 4; ++i) {
+        int *queue = ready->queues[i];
+        int j = 0;
+        while (queue[j] != -1) {
+            int k = j + 1;
+            while (queue[k] != -1) {
+                if (queue[j] > queue[k]) {
+                    int aux = queue[j];
+                    queue[j] = queue[k];
+                    queue[k] = aux;
+                }
+                k++;
+            }
+            j++;
+        }
+    }
 }
 
 void removeReady(Ready *ready, int processId) {
@@ -67,6 +76,7 @@ void removeReady(Ready *ready, int processId) {
                 ready->queues[j][k] = -1;
             }
         }
+        sortReady(ready);
     }
 }
 

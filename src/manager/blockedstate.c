@@ -10,12 +10,6 @@ void initBlockedIds(BlockedIds *b, int size) {
         (b->id)[i] = -1; // Initialize all elements to -1
         (b->blockTime)[i] = -1; // Initialize all elements to -1
     }
-
-    //print all elements
-    for (int i = 0; i < size; i++) {
-        printf("%d ", (b->id)[i]);
-    }
-
 }
 
 void freeBlockedIds(BlockedIds *b) {

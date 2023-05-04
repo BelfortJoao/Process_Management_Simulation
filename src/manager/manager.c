@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
 #include <math.h>
 
 #include "manager.h"
@@ -61,16 +59,21 @@ void scheduleProcess(Computer *comp) {
     if (go_exec == -1) {
         return;
     }
-    comp->processTable.priorityIdsArray[*comp->processTable.executingArray]++;
+    if(comp->processTable.priorityIdsArray[*comp->processTable.executingArray]<3){
+        comp->processTable.priorityIdsArray[*comp->processTable.executingArray]++;
+    }
     contextExchange(go_exec, comp->processTable.executingArray);
     removeReady(comp->processTable.readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para pronto
     int i = searchID(go_exec, &comp->processTable);
     int j= searchID(go_ready, &comp->processTable);
     printf("ID ARRAY: %d\n", comp->processTable.idArray[i]);
-    printf("PRIOr ID: %d\n", comp->processTable.priorityIdsArray[j]);
+    printf("PRIOR ID: %d\n", comp->processTable.priorityIdsArray[j]);
+    printf("EU TO AQUIIIIIIIIIIIIIIIIII\n");
+    printProcessTable(&comp->processTable);
     insertReady(comp->processTable.readyArray, go_ready,
                 comp->processTable.priorityIdsArray[j]);
+    //sortReady(comp->processTable.readyArray);
 
     printProcessTable(&comp->processTable);
     //Operação real
@@ -147,8 +150,8 @@ void processExecuting(Computer *comp) {
         }
         //if cpu isn't ampity check the cpu time and escalonate
     } else {
-        //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
-        //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.program_timer);
+        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
+        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.program_timer);
         if (comp->cpu.executing_timer >= comp->cpu.program_timer) {
             scheduleProcess(comp);
         }

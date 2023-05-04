@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "processtable.h"
 #include "cpu.h"
 
 int interpreter(CPU *cpu, int *blk, char **arq, int *PCPlus) {
-    char *token = strtok(cpu->proc->program[cpu->pc], " "); //Separando o input em Tokens
-    char *arg1 = strtok(NULL, " "); //Separando o input em Tokens
-    char *arg2 = strtok(NULL, " "); //Separando o input em Tokens
+    char *input = strdup(cpu->proc->program[cpu->pc]); //Faz uma cópia da string de entrada para evitar alterá-la
+    char *token = strsep(&input, " "); //Separando o input em Tokens
+    char *arg1 = strsep(&input, " "); //Separando o input em Tokens
+    char *arg2 = strsep(&input, " "); //Separando o input em Tokens
     if (arg1 == NULL) {
         printf("argumento 1 nulo\n");
     }
@@ -18,39 +20,50 @@ int interpreter(CPU *cpu, int *blk, char **arq, int *PCPlus) {
         case 'N':
             initMemory(cpu->proc, atoi(arg1));
             printf("Memory initialized with size %d\n", atoi(arg1));
+            free(input); //Libera a memória alocada por strdup()
             return 0;
         case 'D':
             declareVar(cpu->proc, atoi(arg1));
             printf("Var %d declarated\n", atoi(arg1));
+            free(input); //Libera a memória alocada por strdup()
             return 0;
         case 'V':
             changeVar(cpu->proc, atoi(arg1), atoi(arg2));
             printf("Memory pos %d changed to %d\n", atoi(arg1), atoi(arg2));
+            free(input); //Libera a memória alocada por strdup()
             return 0;
         case 'A':
             addVar(cpu->proc, atoi(arg1), atoi(arg2));
             printf("Memory pos %d added in %d\n", atoi(arg1), atoi(arg2));
+            free(input); //Libera a memória alocada por strdup()
             return 0;
         case 'S':
             subVar(cpu->proc, atoi(arg1), atoi(arg2));
             printf("Memory pos %d sub in -%d\n", atoi(arg1), atoi(arg2));
+            free(input); //Libera a memória alocada por strdup()
             return 0;
         case 'B':
             *blk = atoi(arg1);
             printf("Processo bloqueado por %d tempo\n", *blk);
+            free(input); //Libera a memória alocada por strdup()
             return 1;
         case 'T':
             printf("excluindo processo\n");
+            free(input); //Libera a memória alocada por strdup()
             return 2;
         case 'F':
             printf("Copiando processo\n");
             *PCPlus = atoi(arg1);
+            free(input); //Libera a memória alocada por strdup()
             return 3;
         case 'R':
             printf("Lendo o arquivo %s\n", arg1);
             *arq = arg1;
+            free(input); //Libera a memória alocada por strdup()
             return 4;
     }
+    free(input); //Libera a memória alocada por strdup()
+    return -1;
 }
 
 void changeProcess(CPU *cpu, Process *proc, int pc, Timer program_timer, Timer executing_timer) {
