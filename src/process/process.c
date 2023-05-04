@@ -69,7 +69,7 @@ Process *initializeProcessFromFile(char *filename)
     {
         process->program[i] = (char *) malloc(CHAR_MAX);
 
-        if (!fscanf(file, "%[^\n]\n", process->program[i]))
+        if (!fscanf(file, "%[^\r\n]\n", process->program[i]))
         {
             printf("\nCouldn't read line at position %d.\n", i);
         }

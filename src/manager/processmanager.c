@@ -105,16 +105,22 @@ void scheduleProcess(ProcessManager *processManager)
     {
         return;
     }
-    processManager->processTable->priorityIdArray[*processManager->processTable->executingArray]++;
+    if (processManager->processTable->priorityIdArray[*processManager->processTable->executingArray] < 3)
+    {
+        processManager->processTable->priorityIdArray[*processManager->processTable->executingArray]++;
+    }
     contextExchange(go_exec, processManager->processTable->executingArray);
     removeFromReadyQueue(processManager->processTable->readyArray, go_exec);
     //Operação em tabela-sai de executando e vai para pronto
     int i = searchByIdInProcessTable(go_exec, processManager->processTable);
     int j = searchByIdInProcessTable(go_ready, processManager->processTable);
     printf("ID ARRAY: %d\n", processManager->processTable->idArray[i]);
-    printf("PRIOr ID: %d\n", processManager->processTable->priorityIdArray[j]);
+    printf("PRIOR ID: %d\n", processManager->processTable->priorityIdArray[j]);
+    printf("EU TO AQUIIIIIIIIIIIIIIIIII\n");
+    printProcessTable(processManager->processTable);
     insertToReadyQueue(processManager->processTable->readyArray, go_ready,
                        processManager->processTable->priorityIdArray[j]);
+    //sortReady(processManager->processTable.readyArray);
 
     printProcessTable(processManager->processTable);
     //Operação real
@@ -124,7 +130,9 @@ void scheduleProcess(ProcessManager *processManager)
     }
     printf("\n\n\n\n%d\n\n\n\n", time);
     changeProcess(processManager->cpu, processManager->processTable->processArray[i],
-                  processManager->processTable->programCounterArray[i], time, 0);
+                  processManager->processTable->programCounterArray[i],
+                  time,
+                  0);
     processManager->processTable->processStateArray[go_exec] = RUNNING;
     processManager->processTable->processStateArray[go_ready] = READY;
     printProcessTable(processManager->processTable);
@@ -177,7 +185,7 @@ void execute(ProcessManager *processManager)
     go_exec = nextReady(processManager->processTable->readyArray);
     if (go_exec == -1 || processManager->processTable->executingArray == NULL)
     {
-        printf("There is nothing more to execute\n");
+        printf("\nThere is nothing more to execute.\n");
         return;
     }
     contextExchange(go_exec, processManager->processTable->executingArray);
@@ -207,8 +215,8 @@ void processExecuting(ProcessManager *processManager)
     }
     else
     {
-        //printf("\n\n\n\n%d\n\n\n\n", processManager->cpu->executing_timer);
-        //printf("\n\n\n\n%d\n\n\n\n", processManager->cpu->program_timer);
+        printf("\n\n\n\n%d\n\n\n\n", *processManager->cpu->quantum);
+        printf("\n\n\n\n%d\n\n\n\n", *processManager->cpu->quantumUsed);
         if (processManager->cpu->quantum >= processManager->cpu->quantumUsed)
         {
             scheduleProcess(processManager);
@@ -231,7 +239,7 @@ void processExecuting(ProcessManager *processManager)
 void processUnblock(ProcessManager *processManager)
 {
     int go_ready;
-    for (int i = 0; i < processManager->processTable->tableCapacity; ++i)
+    for (int i = 0; i < processManager->processTable->tableCapacity; i++)
     {
         if (processManager->processTable->blockedArray->blockTimes[i] == 0)
         {
@@ -278,28 +286,28 @@ void attExec(ProcessManager *processManager)
 void uperInterpreter(ProcessManager *processManager)
 {
     int blk;
-    Process *process;
+    Process *proc;
     int PcPlus;
-    char **file;
+    char **arq;
     printf("PC: %d\n", processManager->cpu->programCounter);
-    int cpuResp = interpreter(processManager->cpu, &blk, file, &PcPlus);
+    int cpuResp = interpreter(processManager->cpu, &blk, arq, &PcPlus);
     processManager->cpu->programCounter++;
     attExec(processManager);
     switch (cpuResp)
     {
         case 0:
             return;
-        case 1://Bloqueia esse processo simulado por n unidades de tempo->
+        case 1://Bloqueia esse processo simulado por n unidades de tempo.
             blockProcess(processManager, blk);
             return;
         case 2://Acaba com o processo atual e coloca outro no lugar
             endProcess(processManager);
             return;
         case 3://Crian um novo processo com base no atual do CPU
-            processCP(processManager, process, PcPlus);
+            processCP(processManager, proc, PcPlus);
             return;
         case 4://Recria o processo atual com base em um arquivo
-            processRewind(processManager, *file);
+            processRewind(processManager, *arq);
             return;
         default:
             return;

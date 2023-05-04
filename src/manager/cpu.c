@@ -106,7 +106,7 @@ int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus)
             return 1;
         case 'T':
             printf("Deleting process.\n");
-            freeProcess(cpu->runningProcess);
+//            freeProcess(cpu->runningProcess);
             return 2;
         case 'F':
             printf("Copying a process.\n");
