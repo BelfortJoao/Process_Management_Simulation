@@ -11,12 +11,12 @@ void initComputer(Computer *comp, char *arq) {
     initCPU(&comp->cpu, arq);
 
     while (tam <= 0) {
-        printf("Type the Process Table Capacity: ");
+        printf("Digite a capacidade da Tabela de Processos: ");
         scanf("%d", &tam);
     }
 
     initProcessTable(&(comp->processTable), tam);
-    printf("Process Table Capacity: %d\n", comp->processTable.tableCapacity);
+    printf("Capacidade da Tabela de Processos: %d\n", comp->processTable.tableCapacity);
 
     addProcessTableProcess(&comp->processTable, arq, -1, 0);
     removeReady(comp->processTable.readyArray, 0);
@@ -69,7 +69,6 @@ void scheduleProcess(Computer *comp) {
     int j= searchID(go_ready, &comp->processTable);
     printf("ID ARRAY: %d\n", comp->processTable.idArray[i]);
     printf("PRIOR ID: %d\n", comp->processTable.priorityIdsArray[j]);
-    printf("EU TO AQUIIIIIIIIIIIIIIIIII\n");
     printProcessTable(&comp->processTable);
     insertReady(comp->processTable.readyArray, go_ready,
                 comp->processTable.priorityIdsArray[j]);
@@ -80,7 +79,7 @@ void scheduleProcess(Computer *comp) {
     if (pow(2,(4 - comp->processTable.priorityIdsArray[i]) -1) >= 1) {
         time = (int) pow(2, (4 - comp->processTable.priorityIdsArray[i]) - 1);
     }
-    printf("\n\n\n\n%d\n\n\n\n", time);
+    //printf("\n\n\n\n%d\n\n\n\n", time);
     changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i], time, 0);
     comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
     comp->processTable.processStateArray[go_ready] = "PRONTO";
@@ -127,7 +126,7 @@ void execute(Computer *comp) {
     //Operação sob a tabela Ready
     go_exec = nextReady(comp->processTable.readyArray);
     if(go_exec==-1 || comp->processTable.executingArray==NULL){
-        printf("There is nothing more to execute\n");
+        printf("Não ha mais nada para executar\n");
         return;
     }
     contextExchange(go_exec, comp->processTable.executingArray);
@@ -148,10 +147,10 @@ void processExecuting(Computer *comp) {
             killComputer(comp);
             return;
         }
-        //if cpu isn't ampity check the cpu time and escalonate
+        //if cpu isn't empty check the cpu time and escalonate
     } else {
-        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
-        printf("\n\n\n\n%d\n\n\n\n", comp->cpu.program_timer);
+        //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
+        //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.program_timer);
         if (comp->cpu.executing_timer >= comp->cpu.program_timer) {
             scheduleProcess(comp);
         }

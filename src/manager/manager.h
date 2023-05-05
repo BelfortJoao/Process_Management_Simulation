@@ -3,6 +3,7 @@
 
 #include "cpu.h"
 #include "processtable.h"
+#include "../printer/printer.h"
 
 typedef struct {
     CPU cpu; //Representa o unico núcleo que tem no computador

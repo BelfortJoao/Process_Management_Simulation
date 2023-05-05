@@ -3,6 +3,8 @@
 
 #include "timer.h"
 #include "../process/process.h"
+#include "processtable.h"
+#include "../printer/printer.h"
 
 typedef struct CPU {
     Process *proc;

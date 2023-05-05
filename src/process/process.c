@@ -30,7 +30,7 @@ void subVar(Process *process, int position, int value) {
 void initProcess(Process *process, char *name) {
     FILE *archive = fopen(name, "r");
     if (archive == NULL) {
-        printf("Erro ao abrir o archive.\n");
+        printf("Erro ao abrir o arquivo.\n");
         return;
     }
     printf("Abrindo arquivo\n");
@@ -92,7 +92,7 @@ Process *generateNewProcess(Process *process) {
 }
 
 void printMem(Process *process) {
-    printf("\nMemory:\n");
+    printf("\nMemória:\n");
     for (int i = 0; i < process->memorySize; i++) {
         printf("%d ", process->memory[i]);
     }
@@ -100,7 +100,7 @@ void printMem(Process *process) {
 }
 
 void printProg(Process *process) {
-    printf("Program:\n");
+    printf("Programa:\n");
     for (int i = 0; i < process->numLines; i++) {
         printf("%s\n", process->program[i]);
     }

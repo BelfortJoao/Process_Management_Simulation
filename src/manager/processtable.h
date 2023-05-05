@@ -39,8 +39,6 @@ int getProcessTableEmptySpace(ProcessTable *processTable);
 
 int searchID(int ID, ProcessTable *processTable);
 
-void printProcessTable(ProcessTable *processTable);
-
 int nextID(ProcessTable *processTable);
 
 #endif
