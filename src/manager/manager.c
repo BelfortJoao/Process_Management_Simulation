@@ -90,27 +90,32 @@ void scheduleProcess(Computer *comp) {
 void endProcess(Computer *comp) {
     int go_excl;
     int go_exec;
-    if (comp->processTable.executingArray <= 0 || comp->processTable.executingArray == NULL) {
+    if (comp->processTable.executingArray < 0 || comp->processTable.executingArray == NULL) {
         return;
     }
     //Operação em tabela-sai de readyArray e vai para executando
     go_excl = *comp->processTable.executingArray;
     go_exec = nextReady(comp->processTable.readyArray);
-    contextExchange(go_exec, comp->processTable.executingArray);
-    removeReady(comp->processTable.readyArray, go_exec);
-    //Sai de Ready e vai para executingArray
+    if (go_exec != -1) {
+        contextExchange(go_exec, comp->processTable.executingArray);
+        removeReady(comp->processTable.readyArray, go_exec);
 
     //Operação real
-    int i = searchID(go_exec, &comp->processTable);
-    if(i!=-1){
-        changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i],
-                      *comp->processTable.CPUTimeArray, 0);
-        comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
+        int i = searchID(go_exec, &comp->processTable);
+        if(i!=-1){
+            changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i],
+                          *comp->processTable.CPUTimeArray, 0);
+            comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
+        }
+
+    }
+    else {
+        comp->processTable.executingArray = NULL;
+        comp->cpu.proc = NULL;
     }
     //exclui processo da tabela de processos
-    comp->processTable.executingArray=NULL;
-    comp->cpu.proc=NULL;
     deleteProcessTableProcess(go_excl, &comp->processTable);
+    printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 };
 
 void killComputer(Computer *comp) {
@@ -149,8 +154,6 @@ void processExecuting(Computer *comp) {
         }
         //if cpu isn't empty check the cpu time and escalonate
     } else {
-        //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.executing_timer);
-        //printf("\n\n\n\n%d\n\n\n\n", comp->cpu.program_timer);
         if (comp->cpu.executing_timer >= comp->cpu.program_timer) {
             scheduleProcess(comp);
         }
@@ -212,7 +215,6 @@ void uperInterpreter(Computer *comp) {
     Process *proc;
     int PcPlus;
     char **arq;
-    printf("PC: %d\n", comp->cpu.pc);
     int cpuResp = interpreter(&comp->cpu, &blk, arq, &PcPlus);
     comp->cpu.pc++;
     attExec(comp);

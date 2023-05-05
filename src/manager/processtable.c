@@ -60,18 +60,18 @@ void addProcessTableProcess(ProcessTable *processTable, char *arq, int father, T
 
 void deleteProcessTableProcess(int ID, ProcessTable *processTable) {
     int i = searchID(ID, processTable);
-    excludeProcess(processTable->processArray[i]);
-    removeReady(processTable->readyArray, i);
+    //excludeProcess(processTable->processArray[i]);
+
     processTable->tableSize--;
     processTable->emptyArray[i] = 0;
-    processTable->processArray = NULL;
+    processTable->processArray[i] = NULL;
     processTable->priorityIdsArray[i] = -1;
     processTable->programCounterArray[ID] = 0;
     processTable->processStateArray[ID] = "BLOQUEADO";
     processTable->parentProcessArray[ID] = -1;
     processTable->initialTimeArray[ID] = -1;
     processTable->CPUTimeArray[ID] = -1;
-    removeBlockedId(processTable->blockedArray, ID);
+
 
 }
 
@@ -113,6 +113,7 @@ int nextID(ProcessTable *processTable) {
 }
 
 void copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus) {
+    printf("O0000000000000000000000000000000000000 PC PLUS E ISSO AQUI: %d\n", PcPlus );
     processTable->tableSize++;
     int i = getProcessTableEmptySpace(processTable);
     processTable->emptyArray[i] = 1;
