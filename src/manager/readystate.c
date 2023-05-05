@@ -6,113 +6,107 @@
 #include "readystate.h"
 
 
-void initReady(Ready *ready, int size) {
-    // Allocate Memory for the readyArray queues
-    ready->queues = (int **) malloc(4 * sizeof(int *));
+void initReady(Ready *ready, int maxSize){
+    ready->size_at = 0;
+    ready->maxSize= maxSize;
     for (int i = 0; i < 4; i++) {
-        ready->queues[i] = (int *) malloc(size * sizeof(int));
-        for (int j = 0; j < size; j++) {
-            ready->queues[i][j] = -1; // Initialize all elements to -1
+        ready->queues[i] = *createQueue(); // Inicializa as filas FIFO com tamanho zero e ponteiros para NULL
+    }
+
+}
+
+queue* createQueue() {
+    queue* q = (queue*) malloc(sizeof(queue));
+    q->front = NULL;
+    q->rear = NULL;
+    return q;
+}
+
+void insertReady(Ready *ready, int id, int prior) {
+    if (prior > 3){
+        prior = 3;
+        return;
+    }
+    if (ready->size_at == ready->maxSize) {
+        printf("Fila cheia\n");
+        return;
+    }
+    node* newNode = (node*) malloc(sizeof(node));
+    newNode->id = id;
+    newNode->next = NULL;
+    if (ready->queues[prior].rear == NULL) {
+        ready->queues[prior].front = newNode;
+        ready->queues[prior].rear = newNode;
+    } else {
+        ready->queues[prior].rear->next = newNode;
+        ready->queues[prior].rear = newNode;
+    }
+    ready->size_at++;
+}
+
+void removeReady(Ready *ready, int id) {
+    for (int i = 0; i < 4; i++) {
+        node* aux = ready->queues[i].front;
+        node* prev = NULL;
+        while (aux != NULL) {
+            if (aux->id == id) {
+                if (prev == NULL) {
+                    ready->queues[i].front = aux->next;
+                } else {
+                    prev->next = aux->next;
+                }
+                if (aux->next == NULL) {
+                    ready->queues[i].rear = prev;
+                }
+                free(aux);
+                ready->size_at--;
+                return;
+            }
+            prev = aux;
+            aux = aux->next;
         }
     }
-    ready->size = size;
+    printf("Processo não encontrado\n");
+}
+
+int nextReady(Ready *ready) {
+    for (int i = 0; i < 4; i++) {
+        if (ready->queues[i].front != NULL) {
+            int id = ready->queues[i].front->id;
+            return id;
+        }
+    }
+    printf("Fila vazia\n");
+    return -1;
+}
+
+void printState(Ready* rs) {
+    printf("+-----------------+\n");
+    printf("| Estado da fila: |\n");
+    printf("+-----------------+\n");
+    for (int i = 0; i < 4; i++) {
+        printf("| Fila %d: ", i);
+        if (rs->queues[i].front == NULL) {
+            printf("Vazia");
+        } else {
+            node* atual = rs->queues[i].front;
+            while (atual != NULL) {
+                printf("%d ", atual->id);
+                atual = atual->next;
+            }
+        }
+        printf("\n");
+    }
+    printf("+-----------------+\n");
 }
 
 void freeReady(Ready *ready) {
     for (int i = 0; i < 4; i++) {
-        free(ready->queues[i]);
-    }
-    free(ready->queues);
-    ready->queues = NULL;
-    ready->size = 0;
-}
-
-int nextReady(Ready *ready) {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < ready->size; ++j) {
-            if (ready->queues[i][j] != -1) {
-                return ready->queues[i][j];
-            }
+        node* aux = ready->queues[i].front;
+        while (aux != NULL) {
+            node* next = aux->next;
+            free(aux);
+            aux = next;
         }
-    }
-    return -1;
-}
-
-void insertReady(Ready *ready, int processId, int prior) {
-    sortReady(ready);
-    for (int k = 0; k < ready->size; ++k) {
-        if (ready->queues[prior][k] == -1) {
-            ready->queues[prior][k] = processId;
-            return;
-        }
-    }
-    printf("lista de prontos Cheia.");
-}
-
-void sortReady(Ready *ready) {
-    for (int i = 0; i < 4; ++i) {
-        int *queue = ready->queues[i];
-        int j = 0;
-        while (queue[j] != -1) {
-            int k = j + 1;
-            while (queue[k] != -1) {
-                if (queue[j] > queue[k]) {
-                    int aux = queue[j];
-                    queue[j] = queue[k];
-                    queue[k] = aux;
-                }
-                k++;
-            }
-            j++;
-        }
-    }
-}
-
-void removeReady(Ready *ready, int processId) {
-    int i = 0;
-    for (int j = 0; j < 4; ++j) {
-        for (int k = 0; k < ready->size; ++k) {
-            if (ready->queues[j][k] == processId) {
-                ready->queues[j][k] = -1;
-            }
-        }
-        sortReady(ready);
-    }
-}
-
-void printState( Ready *ready) {
-    printf("Ready State:\n");
-    for (int i = 0; i < 4; ++i) {
-        printf("Prioridade %d: ", i);
-        for (int j = 0; j < ready->size; ++j) {
-            printf("%d ", ready->queues[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-//TA TUDO ERRADO AQUI CONCERTO AMANHÃ
-
-void moveFromPriorityToPriority(Ready *ready, int sourcePriority, int destinationPriority, int processId) {
-    int *sourceQueue = ready->queues[sourcePriority];
-    int *destinationQueue = ready->queues[destinationPriority];
-
-    // Find the Process index in the source queue
-    int processIndex = -1;
-    for (int i = 0; i < ready->size; i++) {
-        if (sourceQueue[i] == processId) {
-            processIndex = i;
-            break;
-        }
-    }
-
-    // If the Process was found in the source queue
-    if (processIndex != -1) {
-        // Remove it from the source queue
-        for (int i = processIndex; i < ready->size - 1; i++) {
-            sourceQueue[i] = sourceQueue[i + 1];
-        }
-        // Add it to the destination queue
-        processId;
     }
 }
