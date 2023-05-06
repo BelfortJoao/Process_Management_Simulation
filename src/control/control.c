@@ -4,13 +4,18 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <limits.h>
-#include "../input/input.h"
 #include "../error/error.h"
+#include "../printer/printer.h"
 
 #include "control.h"
 
 #define PRINTER_DEFAULT_SIZE 10
 
+/**
+ * @brief Allocates memory for a new Control struct and initializes its process manager and printer.
+ *
+ * @return Pointer to the newly created Control struct, or NULL if memory allocation fails.
+ */
 Control *initializeControl()
 {
     Control *control = (Control *) malloc(sizeof(Control));
@@ -65,10 +70,11 @@ int runControl(Control *control)
                     return 0;
                 case 'U':
                     processExecuting(control->processManager);
-                    continue;
+                    break;
                 case 'I':
                     printProcessTable(control->processManager->processTable);
-                    continue;
+                    printState(control->processManager->processTable->readyArray);
+                    break;
                 default:
                     printf(INVALID_COMMAND, command);
             }

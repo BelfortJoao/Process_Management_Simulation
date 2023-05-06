@@ -105,31 +105,6 @@ bool removeFromReadyQueue(Ready *ready, int id)
     return false;
 }
 
-void printState(Ready *rs)
-{
-    printf("\n+-----------------+\n");
-    printf("| Estado da fila: |\n");
-    printf("+-----------------+\n");
-    for (int i = 0; i < 4; i++)
-    {
-        printf("| Fila %d: ", i);
-        if (rs->queues[i].front == NULL)
-        {
-            printf("Vazia");
-        } else
-        {
-            node *atual = rs->queues[i].front;
-            while (atual != NULL)
-            {
-                printf("%d ", atual->id);
-                atual = atual->next;
-            }
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
-
 void freeReady(Ready *ready)
 {
     for (int i = 0; i < 4; i++)

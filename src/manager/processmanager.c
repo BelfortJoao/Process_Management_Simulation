@@ -4,6 +4,7 @@
 #include <string.h>
 #include "../input/input.h"
 #include "../error/error.h"
+#include "../printer/printer.h"
 
 #include "processmanager.h"
 
@@ -55,12 +56,12 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
 
     if (!addProcessTableProcess(processManager->processTable, filename, -1, 0))
     {
-        printf("FULL QUEUE");
+        printFullQueue();
     }
 
     if (!removeFromReadyQueue(processManager->processTable->readyArray, 0))
     {
-        printf("PROCESS NOT FOUND");
+        printProcessNotFound();
     }
 
     contextExchange(0, processManager->processTable->executingArray);
@@ -86,13 +87,13 @@ void blockProcess(ProcessManager *processManager, int blockTime)
 
     if (go_exec == -1)
     {
-        printf("Empty queue");
+        printEmptyQueue();
     }
 
     contextExchange(go_exec, processManager->processTable->executingArray);
     if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
     {
-        printf("Process not found");
+        printProcessNotFound();
     }
 
     //Operação em tabela-sai de executando e vai para block
@@ -125,7 +126,7 @@ void scheduleProcess(ProcessManager *processManager)
     contextExchange(go_exec, processManager->processTable->executingArray);
     if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
     {
-        printf("PROCESS NOT FOUND");
+        printProcessNotFound();
     }
     //Operação em tabela-sai de executando e vai para pronto
     int i = searchByIdInProcessTable(go_exec, processManager->processTable);
@@ -134,7 +135,7 @@ void scheduleProcess(ProcessManager *processManager)
     if (!insertToReadyQueue(processManager->processTable->readyArray, go_ready,
                             processManager->processTable->priorityIdArray[j]))
     {
-        printf("QUEUE IS FULL.");
+        printFullQueue();
     }
 
     //Operação real
@@ -166,13 +167,13 @@ void endProcess(ProcessManager *processManager)
 
     if (go_exec == -1)
     {
-        printf("QUEUE FULL");
+        printFullQueue();
     } else
     {
         contextExchange(go_exec, processManager->processTable->executingArray);
         if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
         {
-            printf("PROCESS NOT FOUND");
+            printProcessNotFound();
         }
     }
 
@@ -212,13 +213,13 @@ void execute(ProcessManager *processManager)
     go_exec = nextReady(processManager->processTable->readyArray);
     if (go_exec == -1 || processManager->processTable->executingArray == NULL)
     {
-        printf("\nThere is nothing more to execute.\n");
+        printFinishExe();
         return;
     }
     contextExchange(go_exec, processManager->processTable->executingArray);
     if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
     {
-        printf("PROCESS NOT FOUND");
+        printProcessNotFound();
     }
 
     //Operação Real
@@ -277,7 +278,7 @@ void processUnblock(ProcessManager *processManager)
                                     processManager->processTable->priorityIdArray[searchByIdInProcessTable(go_ready,
                                                                                                            processManager->processTable)]))
             {
-                printf("QUEUE IS FULL");
+                printFullQueue();
             }
             processManager->processTable->processStateArray[searchByIdInProcessTable(go_ready,
                                                                                      processManager->processTable)] = READY;
@@ -298,7 +299,7 @@ void processCP(ProcessManager *processManager, Process *process, int PcPlus)
     process = generateProcessCopy(processManager->cpu->runningProcess);
     if (!copyProcess(processManager->processTable, process, processManager->timer, PcPlus))
     {
-        printf("QUEUE IS FULL");
+        printFullQueue();
     }
 }
 
@@ -322,7 +323,6 @@ void uperInterpreter(ProcessManager *processManager)
     Process *proc;
     int PcPlus;
     char **arq;
-    printf("PC: %d\n", processManager->cpu->programCounter);
     int cpuResp = interpreter(processManager->cpu, &blk, arq, &PcPlus);
     processManager->cpu->programCounter++;
     attExec(processManager);

@@ -166,12 +166,9 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
 {
     int foundId = searchByIdInProcessTable(id, processTable);
 
-    freeProcess(processTable->processArray[foundId]);
-    removeFromReadyQueue(processTable->readyArray, foundId);
-
     processTable->tableSize--;
     processTable->emptyArray[foundId] = 0;
-    processTable->processArray = NULL;
+    processTable->processArray[foundId] = NULL;
     processTable->priorityIdArray[foundId] = -1;
     processTable->programCounterArray[id] = 0;
     processTable->processStateArray[id] = BLOCKED;
@@ -216,33 +213,6 @@ int searchByIdInProcessTable(int id, ProcessTable *processTable)
     }
 
     return -1;
-}
-
-void printProcessTable(ProcessTable *processTable)
-{
-    printf("Proximo idArray Livre: %d\n", processTable->nextFreeId);
-    printf("Numero atual de processos: %d\n", processTable->tableSize);
-    printf("Capacidade da tabela: %d\n", processTable->tableCapacity);
-    printf("| %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s |\n", "idArray", "PC", "Pai", "Prioridade",
-           "Estado", "Inicio", "T de uso");
-    printf("============================================================================================");
-    for (int i = 0; i < processTable->tableCapacity; i++)
-    {
-        if (processTable->emptyArray[i] != 0)
-        {
-            if (i != 0)
-            {
-                printf("\n|            |            |            |            |            |            |            |");
-            }
-            printf("\n| %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d |", processTable->idArray[i],
-                   processTable->programCounterArray[i],
-                   processTable->parentProcessArray[i], processTable->priorityIdArray[i],
-                   processTable->processStateArray[i], processTable->initialTimerArray[i],
-                   processTable->CPUTimerArray[i]);
-        }
-    }
-
-    printf("\n");
 }
 
 int nextID(ProcessTable *processTable)
