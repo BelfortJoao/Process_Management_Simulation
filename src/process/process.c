@@ -42,6 +42,7 @@ int getNumberOfLinesInFile(FILE *file)
     return numLines;
 }
 
+
 Process *initializeProcessFromFile(char *filename)
 {
     Process *process = initializeProcess();
@@ -82,6 +83,7 @@ Process *initializeProcessFromFile(char *filename)
     return process;
 }
 
+
 Process *generateProcessCopy(Process *processToCopy)
 {
     Process *newProcess = initializeProcess();
@@ -105,31 +107,37 @@ Process *generateProcessCopy(Process *processToCopy)
     return newProcess;
 }
 
+
 void initializeProcessMemory(Process *process, int memorySize)
 {
     process->memory = (int *) calloc(memorySize, sizeof(int));
     process->memorySize = memorySize;
 }
 
+
 void clearProcessMemory(Process *process, int position)
 {
     process->memory[position] = 0;
 }
+
 
 void changeValueInProcessMemory(Process *process, int position, int value)
 {
     process->memory[position] = value;
 }
 
+
 void increaseValueInProcessMemory(Process *process, int position, int value)
 {
     process->memory[position] += value;
 }
 
+
 void reduceValueInProcessMemory(Process *process, int position, int value)
 {
     process->memory[position] -= value;
 }
+
 
 void printProcessMemoryInfo(Process *process)
 {
@@ -143,6 +151,7 @@ void printProcessMemoryInfo(Process *process)
     printf("\n");
 }
 
+
 void printProcessInfo(Process *process)
 {
     printf("\nProgram:\n");
@@ -154,6 +163,7 @@ void printProcessInfo(Process *process)
 
     printf("\n");
 }
+
 
 void freeProcess(Process *process)
 {

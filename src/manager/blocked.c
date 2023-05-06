@@ -4,6 +4,7 @@
 
 #include "blocked.h"
 
+
 Blocked *initializeBlocked(int size)
 {
     Blocked *blockedProcesses = (Blocked *) malloc(sizeof(Blocked));
@@ -42,7 +43,7 @@ Blocked *initializeBlocked(int size)
     return blockedProcesses;
 }
 
-//Return status
+
 void insertBlockedId(Blocked *blocked, int processId, int blockTime)
 {
     int i = 0;
@@ -55,6 +56,7 @@ void insertBlockedId(Blocked *blocked, int processId, int blockTime)
     blocked->ids[i] = processId;
     blocked->blockTimes[i] = blockTime;
 }
+
 
 void removeBlockedId(Blocked *blocked, int processId)
 {
@@ -76,6 +78,7 @@ void removeBlockedId(Blocked *blocked, int processId)
     }
 }
 
+
 void blockDownClock(Blocked *blocked)
 {
     for (int i = 0; i < blocked->size; ++i)
@@ -87,6 +90,7 @@ void blockDownClock(Blocked *blocked)
 
     }
 }
+
 
 void freeBlocked(Blocked *blocked)
 {

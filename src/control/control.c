@@ -11,6 +11,7 @@
 
 #define PRINTER_DEFAULT_SIZE 10
 
+
 /**
  * @brief Allocates memory for a new Control struct and initializes its process manager and printer.
  *
@@ -42,6 +43,7 @@ Control *initializeControl()
 
     return control;
 }
+
 
 int runControl(Control *control)
 {

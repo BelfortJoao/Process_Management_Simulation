@@ -4,6 +4,7 @@
 
 #include "ready.h"
 
+
 Ready *initializeReady(int size)
 {
     Ready *ready = (Ready *) malloc(sizeof(Ready));
@@ -25,6 +26,7 @@ Ready *initializeReady(int size)
     return ready;
 }
 
+
 queue *createQueue()
 {
     queue *q = (queue *) malloc(sizeof(queue));
@@ -32,6 +34,7 @@ queue *createQueue()
     q->rear = NULL;
     return q;
 }
+
 
 int nextReady(Ready *ready)
 {
@@ -46,6 +49,7 @@ int nextReady(Ready *ready)
     //printEmptyQueue();
     return -1;
 }
+
 
 bool insertToReadyQueue(Ready *ready, int id, int prior)
 {
@@ -64,7 +68,8 @@ bool insertToReadyQueue(Ready *ready, int id, int prior)
     {
         ready->queues[prior].front = newNode;
         ready->queues[prior].rear = newNode;
-    } else
+    }
+    else
     {
         ready->queues[prior].rear->next = newNode;
         ready->queues[prior].rear = newNode;
@@ -72,6 +77,7 @@ bool insertToReadyQueue(Ready *ready, int id, int prior)
     ready->size_at++;
     return true;
 }
+
 
 bool removeFromReadyQueue(Ready *ready, int id)
 {
@@ -86,7 +92,8 @@ bool removeFromReadyQueue(Ready *ready, int id)
                 if (prev == NULL)
                 {
                     ready->queues[i].front = aux->next;
-                } else
+                }
+                else
                 {
                     prev->next = aux->next;
                 }
@@ -104,6 +111,7 @@ bool removeFromReadyQueue(Ready *ready, int id)
     }
     return false;
 }
+
 
 void freeReady(Ready *ready)
 {

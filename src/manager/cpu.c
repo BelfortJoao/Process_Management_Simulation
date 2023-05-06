@@ -8,6 +8,7 @@
 
 #define DEFAULT_QUANTUM 8
 
+
 CPU *initializeCPU(char *filename)
 {
     CPU *cpu = (CPU *) malloc(sizeof(CPU));
@@ -33,6 +34,7 @@ CPU *initializeCPU(char *filename)
     return cpu;
 }
 
+
 int convertStringToInt(char *string)
 {
     char *errorCheckingStrTol;
@@ -47,6 +49,7 @@ int convertStringToInt(char *string)
 
     return number;
 }
+
 
 int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus)
 {
@@ -118,6 +121,7 @@ int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus)
     return 0;
 }
 
+
 void changeProcess(CPU *cpu, Process *process, int programCounter, Timer program_timer, Timer executing_timer)
 {
     for (int i = 0; i < process->numLines; i++)
@@ -128,12 +132,13 @@ void changeProcess(CPU *cpu, Process *process, int programCounter, Timer program
     for (int i = 0; i < process->memorySize; i++)
     {
         cpu->runningProcess->memory[i] = process->memory[i];
-    } //pode dar erro
+    }
 
     cpu->programCounter = programCounter;
     cpu->program_timer = program_timer;
     cpu->executing_timer = executing_timer;
 }
+
 
 void freeCPU(CPU *cpu)
 {

@@ -6,6 +6,7 @@
 
 #include "processtable.h"
 
+
 ProcessTable *initializeProcessTable(int initialCapacity)
 {
     ProcessTable *processTable = (ProcessTable *) malloc(sizeof(ProcessTable));
@@ -130,6 +131,7 @@ ProcessTable *initializeProcessTable(int initialCapacity)
     return processTable;
 }
 
+
 int getProcessTableEmptySpace(ProcessTable *processTable)
 {
     for (int i = 0; i < processTable->tableCapacity; i++)
@@ -142,6 +144,7 @@ int getProcessTableEmptySpace(ProcessTable *processTable)
 
     return -1;
 }
+
 
 bool addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcess, int clock)
 {
@@ -162,6 +165,7 @@ bool addProcessTableProcess(ProcessTable *processTable, char *filename, int pare
                               processTable->priorityIdArray[emptyPosition]);
 }
 
+
 void deleteProcessTableProcess(int id, ProcessTable *processTable)
 {
     int foundId = searchByIdInProcessTable(id, processTable);
@@ -178,6 +182,7 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
 
     removeBlockedId(processTable->blockedArray, id);
 }
+
 
 void deleteProcessTable(ProcessTable *processTable)
 {
@@ -202,6 +207,7 @@ void deleteProcessTable(ProcessTable *processTable)
     free(processTable);
 }
 
+
 int searchByIdInProcessTable(int id, ProcessTable *processTable)
 {
     for (int i = 0; i < processTable->tableCapacity; i++)
@@ -215,11 +221,13 @@ int searchByIdInProcessTable(int id, ProcessTable *processTable)
     return -1;
 }
 
+
 int nextID(ProcessTable *processTable)
 {
     processTable->nextFreeId++;
     return processTable->nextFreeId - 1;
 }
+
 
 bool copyProcess(ProcessTable *processTable, Process *proc, Timer timer, int PcPlus)
 {

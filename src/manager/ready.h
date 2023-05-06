@@ -3,14 +3,16 @@
 
 #include <stdbool.h>
 
-typedef struct node {
+typedef struct node
+{
     int id;
-    struct node* next;
+    struct node *next;
 } node;
 
-typedef struct {
-    node* front;
-    node* rear;
+typedef struct
+{
+    node *front;
+    node *rear;
 } queue;
 
 typedef struct
@@ -22,7 +24,7 @@ typedef struct
 
 Ready *initializeReady(int size);
 
-queue* createQueue();
+queue *createQueue();
 
 bool insertToReadyQueue(Ready *ready, int processId, int prior);
 
