@@ -9,6 +9,7 @@
 
 #define FILES_FOLDER "../files/"
 
+
 Process *initializeProcess()
 {
     Process *process = (Process *) malloc(sizeof(Process));
@@ -21,6 +22,7 @@ Process *initializeProcess()
 
     return process;
 }
+
 
 int getNumberOfLinesInFile(FILE *file)
 {
