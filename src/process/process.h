@@ -7,6 +7,8 @@
 #ifndef SRC_PROCESS_H
 #define SRC_PROCESS_H
 
+#include <stdio.h>
+
 #define RUNNING "RUNNING"
 #define BLOCKED "BLOCKED"
 #define READY "READY"

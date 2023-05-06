@@ -23,6 +23,6 @@ add_executable(src src/main.c
         src/printer/printer.c
         src/printer/printer.h
         src/manager/processmanager.c
-        src/manager/processmanager.h src/input/input.c src/input/input.h src/error/error.h)
+        src/manager/processmanager.h src/input/input.c src/input/input.h src/error/error.h src/datastruct/queue.c src/datastruct/queue.h src/datastruct/queuenode.c src/datastruct/queuenode.h)
 
 target_link_libraries(src m)
