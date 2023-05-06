@@ -22,14 +22,14 @@ queue* createQueue() {
     return q;
 }
 
-void insertReady(Ready *ready, int id, int prior) {
+int insertReady(Ready *ready, int id, int prior) {
     if (prior > 3){
         prior = 3;
-        return;
+        return 0;
     }
     if (ready->size_at == ready->maxSize) {
         //printFullQueue();
-        return;
+        return 1;
     }
     node* newNode = (node*) malloc(sizeof(node));
     newNode->id = id;
@@ -42,6 +42,7 @@ void insertReady(Ready *ready, int id, int prior) {
         ready->queues[prior].rear = newNode;
     }
     ready->size_at++;
+    return 0;
 }
 
 void removeReady(Ready *ready, int id) {

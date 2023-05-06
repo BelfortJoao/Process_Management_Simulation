@@ -1,7 +1,6 @@
 #ifndef SRC_READYSTATE_H
 #define SRC_READYSTATE_H
 
-#include "../printer/printer.h"
 
 typedef struct node {
     int id;
@@ -21,7 +20,7 @@ typedef struct {
 
 void initReady(Ready *ready, int maxSize);
 queue* createQueue();
-void insertReady(Ready *ready, int id, int prior);
+int insertReady(Ready *ready, int id, int prior);
 void removeReady(Ready *ready, int id);
 int nextReady(Ready *ready);
 void freeReady(Ready *ready);

@@ -44,7 +44,7 @@ int getProcessTableEmptySpace(ProcessTable *processTable) {
     return -1;
 }
 
-void addProcessTableProcess(ProcessTable *processTable, char *arq, int father, Timer clock) {
+int addProcessTableProcess(ProcessTable *processTable, char *arq, int father, Timer clock) {
     processTable->tableSize++;
     int i = getProcessTableEmptySpace(processTable);
     processTable->emptyArray[i] = 1;
@@ -55,7 +55,10 @@ void addProcessTableProcess(ProcessTable *processTable, char *arq, int father, T
     processTable->initialTimeArray[i] = clock;
     processTable->CPUTimeArray[i] = (Timer) 0;
     processTable->idArray[i] = nextID(processTable);
-    insertReady(processTable->readyArray, i, processTable->priorityIdsArray[i]);
+    if(insertReady(processTable->readyArray, i, processTable->priorityIdsArray[i])) {
+        return 1;
+    }
+    else return 0;
 }
 
 void deleteProcessTableProcess(int ID, ProcessTable *processTable) {
@@ -112,7 +115,7 @@ int nextID(ProcessTable *processTable) {
     return (processTable->nextFreeId - 1);
 }
 
-void copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus) {
+int copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus) {
     processTable->tableSize++;
     int i = getProcessTableEmptySpace(processTable);
     processTable->emptyArray[i] = 1;
@@ -123,7 +126,10 @@ void copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus)
     processTable->initialTimeArray[i] = t;
     processTable->CPUTimeArray[i] = 0;
     processTable->idArray[i] = nextID(processTable);
-    insertReady(processTable->readyArray, i, processTable->priorityIdsArray[i]);
+    if(insertReady(processTable->readyArray, i, processTable->priorityIdsArray[i])) {
+        return 1;
+    }
+    else return 0;
 }
 
 void rewid(ProcessTable *processTable) {

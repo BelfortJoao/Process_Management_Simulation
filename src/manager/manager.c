@@ -17,7 +17,9 @@ void initComputer(Computer *comp, char *arq) {
 
     initProcessTable(&(comp->processTable), tam);
 
-    addProcessTableProcess(&comp->processTable, arq, -1, 0);
+    if(addProcessTableProcess(&comp->processTable, arq, -1, 0)) {
+        printFullQueue();
+    }
     removeReady(comp->processTable.readyArray, 0);
     contextExchange(0, comp->processTable.executingArray);
     comp->processTable.processStateArray[0]="EXECUTANDO";
@@ -66,8 +68,10 @@ void scheduleProcess(Computer *comp) {
     //Operação em tabela-sai de executando e vai para pronto
     int i = searchID(go_exec, &comp->processTable);
     int j= searchID(go_ready, &comp->processTable);
-    insertReady(comp->processTable.readyArray, go_ready,
-                comp->processTable.priorityIdsArray[j]);
+    if(insertReady(comp->processTable.readyArray, go_ready,
+                comp->processTable.priorityIdsArray[j])) {
+                    printFullQueue();
+                }
     //sortReady(comp->processTable.readyArray);
 
     //Operação real
@@ -169,8 +173,10 @@ void processUnblock(Computer *comp) {
         if (comp->processTable.blockedArray->blockTime[i] == 0) {
             go_ready = comp->processTable.blockedArray->id[i];
             removeBlockedId(comp->processTable.blockedArray, go_ready);
-            insertReady(comp->processTable.readyArray, go_ready,
-                        comp->processTable.priorityIdsArray[searchID(go_ready, &comp->processTable)]);
+            if(insertReady(comp->processTable.readyArray, go_ready,
+                        comp->processTable.priorityIdsArray[searchID(go_ready, &comp->processTable)])) {
+                            printFullQueue();
+                        }
             comp->processTable.processStateArray[searchID(go_ready, &comp->processTable)] = "PRONTO";
         }
     }
@@ -188,7 +194,9 @@ void clockUpPC(Computer *comp) {
 void processCP(Computer *comp, Process *proc, int PcPlus) {
 
     proc = generateNewProcess(comp->cpu.proc);
-    copyProcess(&comp->processTable, proc, comp->timer, PcPlus);
+    if(copyProcess(&comp->processTable, proc, comp->timer, PcPlus)) {
+        printFullQueue();
+    }
 }
 
 void processRewind(Computer *comp, char *arq) {

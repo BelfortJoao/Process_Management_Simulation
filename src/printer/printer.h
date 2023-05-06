@@ -33,7 +33,7 @@ void printReadFile(char *arg1);
 
 void printState(Ready* ready);
 
-//void printFullQueue();
+void printFullQueue();
 
 //void printProcessNotFound();
 

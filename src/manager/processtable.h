@@ -31,9 +31,9 @@ void deleteProcessTable(ProcessTable *processTable);
 
 void deleteProcessTableProcess(int ID, ProcessTable *processTable);
 
-void addProcessTableProcess(ProcessTable *processTable, char *arq, int father, Timer clock);
+int addProcessTableProcess(ProcessTable *processTable, char *arq, int father, Timer clock);
 
-void copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus);
+int copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus);
 
 int getProcessTableEmptySpace(ProcessTable *processTable);
 
