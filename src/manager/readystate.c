@@ -28,7 +28,7 @@ void insertReady(Ready *ready, int id, int prior) {
         return;
     }
     if (ready->size_at == ready->maxSize) {
-        printf("Fila cheia\n");
+        //printFullQueue();
         return;
     }
     node* newNode = (node*) malloc(sizeof(node));
@@ -66,7 +66,7 @@ void removeReady(Ready *ready, int id) {
             aux = aux->next;
         }
     }
-    printf("Processo não encontrado\n");
+    //printProcessNotFound();
 }
 
 int nextReady(Ready *ready) {
@@ -76,28 +76,8 @@ int nextReady(Ready *ready) {
             return id;
         }
     }
-    printf("Fila vazia\n");
+    //printEmptyQueue();
     return -1;
-}
-
-void printState(Ready* rs) {
-    printf("+-----------------+\n");
-    printf("| Estado da fila: |\n");
-    printf("+-----------------+\n");
-    for (int i = 0; i < 4; i++) {
-        printf("| Fila %d: ", i);
-        if (rs->queues[i].front == NULL) {
-            printf("Vazia");
-        } else {
-            node* atual = rs->queues[i].front;
-            while (atual != NULL) {
-                printf("%d ", atual->id);
-                atual = atual->next;
-            }
-        }
-        printf("\n");
-    }
-    printf("+-----------------+\n");
 }
 
 void freeReady(Ready *ready) {

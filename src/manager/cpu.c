@@ -8,7 +8,6 @@ int interpreter(CPU *cpu, int *blk, char **arq, int *PCPlus) {
     char *token = strsep(&input, " "); //Separando o input em Tokens
     char *arg1 = strsep(&input, " "); //Separando o input em Tokens
     char *arg2 = strsep(&input, " "); //Separando o input em Tokens
-    printInvalidArgument(arg1, arg2);
     switch (token[0]) {
         case 'N':
             initMemory(cpu->proc, atoi(arg1));

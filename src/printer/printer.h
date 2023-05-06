@@ -2,6 +2,7 @@
 #define SRC_PRINTER_H
 
 #include "../manager/processtable.h"
+#include "../manager/readystate.h"
 
 typedef struct {
     int **responseTimes;
@@ -11,8 +12,6 @@ typedef struct {
 void printMedResponseTime(Print *print);
 
 void printProcessTable(ProcessTable *processTable);
-
-void printInvalidArgument(char *arg1, char *arg2);
 
 void printInitMem(char *arg1);
 
@@ -31,5 +30,13 @@ void printTerProcess();
 void printCopyProcess();
 
 void printReadFile(char *arg1);
+
+void printState(Ready* ready);
+
+//void printFullQueue();
+
+//void printProcessNotFound();
+
+//void printEmptyQueue()
 
 #endif

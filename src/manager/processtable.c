@@ -113,7 +113,6 @@ int nextID(ProcessTable *processTable) {
 }
 
 void copyProcess(ProcessTable *processTable, Process *proc, Timer t, int PcPlus) {
-    printf("O0000000000000000000000000000000000000 PC PLUS E ISSO AQUI: %d\n", PcPlus );
     processTable->tableSize++;
     int i = getProcessTableEmptySpace(processTable);
     processTable->emptyArray[i] = 1;

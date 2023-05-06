@@ -16,7 +16,6 @@ void initComputer(Computer *comp, char *arq) {
     }
 
     initProcessTable(&(comp->processTable), tam);
-    printf("Capacidade da Tabela de Processos: %d\n", comp->processTable.tableCapacity);
 
     addProcessTableProcess(&comp->processTable, arq, -1, 0);
     removeReady(comp->processTable.readyArray, 0);
@@ -67,23 +66,17 @@ void scheduleProcess(Computer *comp) {
     //Operação em tabela-sai de executando e vai para pronto
     int i = searchID(go_exec, &comp->processTable);
     int j= searchID(go_ready, &comp->processTable);
-    printf("ID ARRAY: %d\n", comp->processTable.idArray[i]);
-    printf("PRIOR ID: %d\n", comp->processTable.priorityIdsArray[j]);
-    printProcessTable(&comp->processTable);
     insertReady(comp->processTable.readyArray, go_ready,
                 comp->processTable.priorityIdsArray[j]);
     //sortReady(comp->processTable.readyArray);
 
-    printProcessTable(&comp->processTable);
     //Operação real
     if (pow(2,(4 - comp->processTable.priorityIdsArray[i]) -1) >= 1) {
         time = (int) pow(2, (4 - comp->processTable.priorityIdsArray[i]) - 1);
     }
-    //printf("\n\n\n\n%d\n\n\n\n", time);
     changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i], time, 0);
     comp->processTable.processStateArray[go_exec] = "EXECUTANDO";
     comp->processTable.processStateArray[go_ready] = "PRONTO";
-    printProcessTable(&comp->processTable);
 }
 
 //T termina o processo simulado atual e passa o cpu para o proximo processo pronto
@@ -115,7 +108,6 @@ void endProcess(Computer *comp) {
     }
     //exclui processo da tabela de processos
     deleteProcessTableProcess(go_excl, &comp->processTable);
-    printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 };
 
 void killComputer(Computer *comp) {

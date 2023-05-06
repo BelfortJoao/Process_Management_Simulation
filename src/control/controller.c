@@ -38,6 +38,7 @@ void control(Control *cont) {
                     continue;
                 case 'I':
                     printProcessTable(&cont->comp->processTable);
+                    printState(cont->comp->processTable.readyArray);
                     continue;
                 default:
                         printf("%c", resp);

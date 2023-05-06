@@ -10,8 +10,9 @@ void printProcessTable(ProcessTable *processTable) {
     printf("Proximo idArray Livre: %d\n", processTable->nextFreeId);
     printf("Numero atual de processos: %d\n", processTable->tableSize);
     printf("Capacidade da tabela: %d\n", processTable->tableCapacity);
+    printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
     printf("| %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s |\n", "idArray", "PC", "Pai", "Prioridade", "Estado", "Inicio", "T de uso");
-    printf("============================================================================================");
+    printf("+------------+------------+------------+------------+------------+------------+------------+");
     for (int i = 0; i < processTable->tableCapacity; ++i) {
         if (processTable->emptyArray[i] != 0) {
             if (i != 0) {
@@ -23,16 +24,7 @@ void printProcessTable(ProcessTable *processTable) {
                    processTable->CPUTimeArray[i]);
         };
     }
-    printf("\n");
-}
-
-void printInvalidArgument(char *arg1, char *arg2) {
-    if (arg1 == NULL) {
-            printf("argumento 1 nulo\n");
-        }
-        if (arg2 == NULL) {
-            printf("argumento 2 nulo\n");
-        }
+    printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
 }
 
 void printInitMem(char *arg1) {
@@ -70,3 +62,35 @@ void printCopyProcess() {
 void printReadFile(char *arg1) {
     printf("Lendo o arquivo %s\n", arg1);
 }
+
+void printState(Ready* rs) {
+    printf("\n+-----------------+\n");
+    printf("| Estado da fila: |\n");
+    printf("+-----------------+\n");
+    for (int i = 0; i < 4; i++) {
+        printf("| Fila %d: ", i);
+        if (rs->queues[i].front == NULL) {
+            printf("Vazia");
+        } else {
+            node* atual = rs->queues[i].front;
+            while (atual != NULL) {
+                printf("%d ", atual->id);
+                atual = atual->next;
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+/*
+void printFullQueue() {
+    printf("Fila cheia\n");
+}
+
+void printProcessNotFound() {
+    printf("Processo não encontrado\n");
+}
+
+void printEmptyQueue() {
+    printf("Fila vazia\n");
+}*/
