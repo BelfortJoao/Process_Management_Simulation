@@ -3,11 +3,12 @@
  * @brief Header file for the CPU module
  */
 
-#ifndef CPU_H
-#define CPU_H
+#ifndef SRC_CPU_H
+#define SRC_CPU_H
 
 #include "../process/process.h"
 #include "timer.h"
+
 
 /**
  * @struct CPU
@@ -21,6 +22,7 @@ typedef struct CPU
     Timer program_timer; /**< Timer for the current program's time */
 } CPU;
 
+
 /**
  * @brief Initializes a new CPU with the program stored in the specified file
  * @param filename Name of the file containing the program to load
@@ -28,12 +30,14 @@ typedef struct CPU
  */
 CPU *initializeCPU(char *filename);
 
+
 /**
  * @brief Converts a string to an integer
  * @param string The string to convert
  * @return The integer representation of the string, or 0 if the conversion failed
  */
 int convertStringToInt(char *string);
+
 
 /**
  * @brief Interprets a single line of the program
@@ -50,6 +54,7 @@ int convertStringToInt(char *string);
  */
 int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus);
 
+
 /**
  * @brief Replaces the currently running process with a new process
  * @param cpu Pointer to the CPU that is executing the program
@@ -60,10 +65,12 @@ int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus);
  */
 void changeProcess(CPU *cpu, Process *process, int programCounter, Timer program_timer, Timer executing_timer);
 
+
 /**
  * @brief Frees the memory used by a CPU
  * @param cpu Pointer to the CPU to free
  */
 void freeCPU(CPU *cpu);
 
-#endif /* CPU_H */
+
+#endif /* SRC_CPU_H */

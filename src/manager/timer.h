@@ -1,8 +1,13 @@
+/**
+ * @file timer.h
+ * @brief Contains functions and data structures related to time management.
+ */
+
 #ifndef SRC_TIMER_H
 #define SRC_TIMER_H
 
 
-typedef int Timer; //estrutura que mede o tempo
+typedef int Timer; /**< Struct that measures the time. */
 
 
 /**
@@ -29,4 +34,4 @@ void timeUp(Timer *time);
 void timeDown(Timer *time);
 
 
-#endif
+#endif /* SRC_TIMER_H */

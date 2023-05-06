@@ -30,12 +30,14 @@ typedef struct
  */
 Printer *initializePrinter(int size);
 
+
 /**
  * Prints a message indicating the average response time.
  *
  * @param printer a pointer to the Printer to use for printing
  */
 void printAverageResponseTime(Printer *printer);
+
 
 /**
  * Prints the contents of the given ProcessTable.
@@ -44,6 +46,7 @@ void printAverageResponseTime(Printer *printer);
  */
 void printProcessTable(ProcessTable *processTable);
 
+
 /**
  * Prints a message indicating that memory has been initialized.
  *
@@ -51,12 +54,14 @@ void printProcessTable(ProcessTable *processTable);
  */
 void printInitMem(int initialMemorySize);
 
+
 /**
  * Prints a message indicating that a memory position has been cleared.
  *
  * @param position the position that has been cleared
  */
 void printDeclareVar(int position);
+
 
 /**
  * Prints a message indicating that the value at a memory position has changed.
@@ -66,6 +71,7 @@ void printDeclareVar(int position);
  */
 void printChangeVar(int position, int value);
 
+
 /**
  * Prints a message indicating that a memory position has been increased.
  *
@@ -73,6 +79,7 @@ void printChangeVar(int position, int value);
  * @param increaseValue the amount by which the memory position has been increased
  */
 void printAddVar(int position, int increaseValue);
+
 
 /**
  * Prints a message indicating that a memory position has been decreased.
@@ -82,6 +89,7 @@ void printAddVar(int position, int increaseValue);
  */
 void printSubVar(int position, int decreaseValue);
 
+
 /**
  * Prints a message indicating that a process has been blocked.
  *
@@ -89,15 +97,18 @@ void printSubVar(int position, int decreaseValue);
  */
 void printBlkProcess(int timeUnits);
 
+
 /**
  * Prints a message indicating that a process is terminating.
  */
 void printTerProcess();
 
+
 /**
  * Prints a message indicating that a process is being copied.
  */
 void printCopyProcess();
+
 
 /**
  * Prints a message indicating that a file is being read.
@@ -106,6 +117,7 @@ void printCopyProcess();
  */
 void printReadFile(char *arg1);
 
+
 /**
  * Prints the state of the given Ready queue.
  *
@@ -113,24 +125,29 @@ void printReadFile(char *arg1);
  */
 void printState(Ready *rs);
 
+
 /**
  * Prints a message indicating that a queue is full.
  */
 void printFullQueue();
+
 
 /**
  * Prints a message indicating that a process was not found.
  */
 void printProcessNotFound();
 
+
 /**
  * Prints a message indicating that a queue is empty.
  */
 void printEmptyQueue();
+
 
 /**
  * Prints a message indicating that there is nothing left to execute.
  */
 void printFinishExe();
 
-#endif
+
+#endif /* SRC_PRINTER_H */

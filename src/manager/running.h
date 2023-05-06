@@ -1,7 +1,17 @@
+/**
+ * @file running.h
+ * @brief Header file for the Running process functionality.
+ */
+
 #ifndef SRC_RUNNING_H
 #define SRC_RUNNING_H
 
-typedef int Running; //Guarda o processo que está atualmente rodando no CPU
+
+/**
+ * @brief An integer representing a Running process.
+ */
+typedef int Running; /**< Stores ID of the running process. */
+
 
 /**
  * @brief Initializes a new Running process.
@@ -21,4 +31,4 @@ Running *initializeRunningProcess();
 void contextExchange(int id, Running *runningProcess);
 
 
-#endif
+#endif /* SRC_RUNNING_H */

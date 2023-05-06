@@ -141,4 +141,4 @@ void upperInterpreter(ProcessManager *processManager);
 void freeProcessManager(ProcessManager *processManager);
 
 
-#endif
+#endif /* SRC_PROCESSMANAGER_H */

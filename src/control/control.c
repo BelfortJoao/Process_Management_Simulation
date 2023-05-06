@@ -12,11 +12,6 @@
 #define PRINTER_DEFAULT_SIZE 10
 
 
-/**
- * @brief Allocates memory for a new Control struct and initializes its process manager and printer.
- *
- * @return Pointer to the newly created Control struct, or NULL if memory allocation fails.
- */
 Control *initializeControl()
 {
     Control *control = (Control *) malloc(sizeof(Control));
