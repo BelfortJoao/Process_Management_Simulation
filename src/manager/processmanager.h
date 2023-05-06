@@ -102,10 +102,9 @@ void clockUpPC(ProcessManager *processManager);
  * @brief Creates a copy of the current process and inserts it into the process table.
  *
  * @param processManager Pointer to the process manager struct.
- * @param process Pointer to the process struct.
  * @param PcPlus Integer value of program counter.
  */
-void processCP(ProcessManager *processManager, Process *process, int PcPlus);
+void processCP(ProcessManager *processManager, int PcPlus);
 
 
 /**

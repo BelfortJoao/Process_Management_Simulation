@@ -36,7 +36,7 @@ queue *createQueue()
 }
 
 
-int nextReady(Ready *ready)
+int nextProcessReady(Ready *ready)
 {
     for (int i = 0; i < 4; i++)
     {
@@ -46,6 +46,7 @@ int nextReady(Ready *ready)
             return id;
         }
     }
+
     //printEmptyQueue();
     return -1;
 }
@@ -57,13 +58,16 @@ bool insertToReadyQueue(Ready *ready, int id, int prior)
     {
         return true;
     }
+
     if (ready->size_at == ready->maxSize)
     {
         return false;
     }
+
     node *newNode = (node *) malloc(sizeof(node));
     newNode->id = id;
     newNode->next = NULL;
+
     if (ready->queues[prior].rear == NULL)
     {
         ready->queues[prior].front = newNode;
@@ -74,7 +78,9 @@ bool insertToReadyQueue(Ready *ready, int id, int prior)
         ready->queues[prior].rear->next = newNode;
         ready->queues[prior].rear = newNode;
     }
+
     ready->size_at++;
+
     return true;
 }
 
@@ -85,6 +91,7 @@ bool removeFromReadyQueue(Ready *ready, int id)
     {
         node *aux = ready->queues[i].front;
         node *prev = NULL;
+
         while (aux != NULL)
         {
             if (aux->id == id)
@@ -109,6 +116,7 @@ bool removeFromReadyQueue(Ready *ready, int id)
             aux = aux->next;
         }
     }
+
     return false;
 }
 
