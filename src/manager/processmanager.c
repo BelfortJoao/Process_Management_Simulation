@@ -52,7 +52,6 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
     }
 
     processManager->processTable = initializeProcessTable(size);
-    printf("Process Table Capacity: %d\n", processManager->processTable->tableCapacity);
 
     if (!addProcessTableProcess(processManager->processTable, filename, -1, 0))
     {
