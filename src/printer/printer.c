@@ -55,56 +55,56 @@ void printProcessTable(ProcessTable *processTable)
 }
 
 
-void printInitMem(int initialMemorySize)
+void printInitialMemorySize(int initialMemorySize)
 {
     printf("Memory initialized with size %d.\n", initialMemorySize);
 }
 
 
-void printDeclareVar(int position)
+void printClearMemory(int position)
 {
     printf("Memory at position %d has been cleared.\n", position);
 }
 
 
-void printChangeVar(int position, int value)
+void printMemoryChange(int position, int value)
 {
     printf("Memory changed to %d at position %d.\n", value, position);
 }
 
 
-void printAddVar(int position, int increaseValue)
+void printMemoryIncrease(int position, int increaseValue)
 {
     printf("Memory increased by %d at position %d.\n", increaseValue, position);
 }
 
 
-void printSubVar(int position, int decreaseValue)
+void printDecreaseMemory(int position, int decreaseValue)
 {
-    printf("Posição de memória %d subtraida em %d\n", decreaseValue, position);
+    printf("Memory decreased by %d at position %d.\n", decreaseValue, position);
 }
 
-void printBlkProcess(int timeUnits)
+void printBlockedProcess(int timeUnits)
 {
     printf("Blocking process for %d time unit(s).\n", timeUnits);
 }
 
 
-void printTerProcess()
+void printFinishProcess()
 {
-    printf("Terminando processo\n");
+    printf("Finishing process.\n");
 }
 
 
 void printCopyProcess()
 {
-    printf("Copiando processo\n");
+    printf("Copying process.\n");
 }
 
 
 void printReadFile(char *arg1)
 {
-    printf("Lendo o arquivo %s\n", arg1);
+    printf("Reading file %s.\n", arg1);
 }
 
 
@@ -142,23 +142,23 @@ void printState(Ready *rs)
 
 void printFullQueue()
 {
-    printf("Fila cheia\n");
+    printf("Queue is full.\n");
 }
 
 
 void printProcessNotFound()
 {
-    printf("Processo não encontrado\n");
+    printf("Process not found.\n");
 }
 
 
 void printEmptyQueue()
 {
-    printf("Fila vazia\n");
+    printf("Queue is empty.\n");
 }
 
 
 void printFinishExe()
 {
-    printf("Não ha mais nada para executar\n");
+    printf("Nothing else to run.\n");
 }
