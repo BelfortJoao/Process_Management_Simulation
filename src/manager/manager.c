@@ -40,6 +40,7 @@ void blockProcess(Computer *comp, int blockT) {
     //Operação em tabela-sai de readyArray e vai para executando
     go_block = *comp->processTable.executingArray;
     go_exec = nextReady(comp->processTable.readyArray);
+    if(go_exec == -1) printEmptyQueue();
     contextExchange(go_exec, comp->processTable.executingArray);
     if(removeReady(comp->processTable.readyArray, go_exec)) {
         printProcessNotFound();
@@ -61,6 +62,7 @@ void scheduleProcess(Computer *comp) {
     //Operação em tabela-sai de readyArray e vai para executando
     go_ready = *comp->processTable.executingArray;
     go_exec = nextReady(comp->processTable.readyArray);
+    if(go_exec == -1) printEmptyQueue();
     if (go_exec == -1) {
         return;
     }
@@ -99,6 +101,7 @@ void endProcess(Computer *comp) {
     //Operação em tabela-sai de readyArray e vai para executando
     go_excl = *comp->processTable.executingArray;
     go_exec = nextReady(comp->processTable.readyArray);
+    if(go_exec == -1) printEmptyQueue();
     if (go_exec != -1) {
         contextExchange(go_exec, comp->processTable.executingArray);
         if(removeReady(comp->processTable.readyArray, go_exec)) {
@@ -134,6 +137,7 @@ void execute(Computer *comp) {
     int go_exec;
     //Operação sob a tabela Ready
     go_exec = nextReady(comp->processTable.readyArray);
+    if(go_exec == -1) printEmptyQueue();
     if(go_exec==-1 || comp->processTable.executingArray==NULL){
         printf("Não ha mais nada para executar\n");
         return;

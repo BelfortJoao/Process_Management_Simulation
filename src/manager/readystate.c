@@ -66,7 +66,6 @@ int removeReady(Ready *ready, int id) {
             aux = aux->next;
         }
     }
-    //printProcessNotFound();
     return 1;
 }
 

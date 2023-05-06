@@ -37,6 +37,6 @@ void printFullQueue();
 
 void printProcessNotFound();
 
-//void printEmptyQueue()
+void printEmptyQueue();
 
 #endif

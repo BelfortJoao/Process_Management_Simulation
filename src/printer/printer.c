@@ -90,7 +90,7 @@ void printFullQueue() {
 void printProcessNotFound() {
     printf("Processo não encontrado\n");
 }
-/*
+
 void printEmptyQueue() {
     printf("Fila vazia\n");
-}*/
+}
