@@ -1,8 +1,8 @@
 #include "control/control.h"
 
 
-/*
- * Start point.
+/**
+ * @brief Start point.
  */
 int main()
 {

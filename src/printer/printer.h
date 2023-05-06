@@ -52,7 +52,7 @@ void printProcessTable(ProcessTable *processTable);
  *
  * @param initialMemorySize the size of the initialized memory
  */
-void printInitMem(int initialMemorySize);
+void printInitialMemorySize(int initialMemorySize);
 
 
 /**
@@ -60,7 +60,7 @@ void printInitMem(int initialMemorySize);
  *
  * @param position the position that has been cleared
  */
-void printDeclareVar(int position);
+void printClearMemory(int position);
 
 
 /**
@@ -69,7 +69,7 @@ void printDeclareVar(int position);
  * @param position the position whose value has changed
  * @param value the new value of the memory position
  */
-void printChangeVar(int position, int value);
+void printMemoryChange(int position, int value);
 
 
 /**
@@ -78,7 +78,7 @@ void printChangeVar(int position, int value);
  * @param position the position whose value has been increased
  * @param increaseValue the amount by which the memory position has been increased
  */
-void printAddVar(int position, int increaseValue);
+void printMemoryIncrease(int position, int increaseValue);
 
 
 /**
@@ -87,7 +87,7 @@ void printAddVar(int position, int increaseValue);
  * @param position the position whose value has been decreased
  * @param decreaseValue the amount by which the memory position has been decreased
  */
-void printSubVar(int position, int decreaseValue);
+void printDecreaseMemory(int position, int decreaseValue);
 
 
 /**
@@ -95,13 +95,13 @@ void printSubVar(int position, int decreaseValue);
  *
  * @param timeUnits the number of time units for which the process has been blocked
  */
-void printBlkProcess(int timeUnits);
+void printBlockedProcess(int timeUnits);
 
 
 /**
  * Prints a message indicating that a process is terminating.
  */
-void printTerProcess();
+void printFinishProcess();
 
 
 /**

@@ -69,40 +69,40 @@ int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus)
     {
         case 'N':
             initializeProcessMemory(cpu->runningProcess, convertStringToInt(firstArgument));
-            printInitMem(convertStringToInt(firstArgument));
+            printInitialMemorySize(convertStringToInt(firstArgument));
             free(input);
             return 0;
         case 'D':
             clearProcessMemory(cpu->runningProcess, convertStringToInt(firstArgument));
-            printDeclareVar(convertStringToInt(firstArgument));
+            printClearMemory(convertStringToInt(firstArgument));
             free(input);
             return 0;
         case 'V':
             changeValueInProcessMemory(cpu->runningProcess, convertStringToInt(firstArgument),
                                        convertStringToInt(secondArgument));
 
-            printChangeVar(convertStringToInt(firstArgument), convertStringToInt(secondArgument));
+            printMemoryChange(convertStringToInt(firstArgument), convertStringToInt(secondArgument));
             free(input);
             return 0;
         case 'A':
             increaseValueInProcessMemory(cpu->runningProcess, convertStringToInt(firstArgument),
                                          convertStringToInt(secondArgument));
-            printAddVar(convertStringToInt(firstArgument), convertStringToInt(secondArgument));
+            printMemoryIncrease(convertStringToInt(firstArgument), convertStringToInt(secondArgument));
             free(input);
             return 0;
         case 'S':
             reduceValueInProcessMemory(cpu->runningProcess, convertStringToInt(firstArgument),
                                        convertStringToInt(secondArgument));
-            printSubVar(convertStringToInt(firstArgument), convertStringToInt(secondArgument));
+            printDecreaseMemory(convertStringToInt(firstArgument), convertStringToInt(secondArgument));
             free(input);
             return 0;
         case 'B':
             *blk = convertStringToInt(firstArgument);
-            printBlkProcess(convertStringToInt(firstArgument));
+            printBlockedProcess(convertStringToInt(firstArgument));
             free(input);
             return 1;
         case 'T':
-            printTerProcess();
+            printFinishProcess();
             free(input);
             return 2;
         case 'F':
