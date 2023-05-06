@@ -7,4 +7,4 @@
 #define ALLOCATION_ERROR "\nERROR: Couldn't allocate memory correctly for %s.\n"
 #define ERROR_FILE "\nERROR: Couldn't open the file at '%s'.\n"
 
-#endif //SRC_ERROR_H
+#endif
