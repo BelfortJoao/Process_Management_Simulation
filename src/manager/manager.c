@@ -20,7 +20,9 @@ void initComputer(Computer *comp, char *arq) {
     if(addProcessTableProcess(&comp->processTable, arq, -1, 0)) {
         printFullQueue();
     }
-    removeReady(comp->processTable.readyArray, 0);
+    if(removeReady(comp->processTable.readyArray, 0)) {
+        printProcessNotFound();
+    }
     contextExchange(0, comp->processTable.executingArray);
     comp->processTable.processStateArray[0]="EXECUTANDO";
     comp->timer = 0;
@@ -39,7 +41,9 @@ void blockProcess(Computer *comp, int blockT) {
     go_block = *comp->processTable.executingArray;
     go_exec = nextReady(comp->processTable.readyArray);
     contextExchange(go_exec, comp->processTable.executingArray);
-    removeReady(comp->processTable.readyArray, go_exec);
+    if(removeReady(comp->processTable.readyArray, go_exec)) {
+        printProcessNotFound();
+    }
     //Operação em tabela-sai de executando e vai para block
     insertBlockedId(comp->processTable.blockedArray, go_block, blockT);
     //Operação real
@@ -64,7 +68,9 @@ void scheduleProcess(Computer *comp) {
         comp->processTable.priorityIdsArray[*comp->processTable.executingArray]++;
     }
     contextExchange(go_exec, comp->processTable.executingArray);
-    removeReady(comp->processTable.readyArray, go_exec);
+    if(removeReady(comp->processTable.readyArray, go_exec)) {
+        printProcessNotFound();
+    }
     //Operação em tabela-sai de executando e vai para pronto
     int i = searchID(go_exec, &comp->processTable);
     int j= searchID(go_ready, &comp->processTable);
@@ -95,7 +101,9 @@ void endProcess(Computer *comp) {
     go_exec = nextReady(comp->processTable.readyArray);
     if (go_exec != -1) {
         contextExchange(go_exec, comp->processTable.executingArray);
-        removeReady(comp->processTable.readyArray, go_exec);
+        if(removeReady(comp->processTable.readyArray, go_exec)) {
+            printProcessNotFound();
+        }
 
     //Operação real
         int i = searchID(go_exec, &comp->processTable);
@@ -131,7 +139,9 @@ void execute(Computer *comp) {
         return;
     }
     contextExchange(go_exec, comp->processTable.executingArray);
-    removeReady(comp->processTable.readyArray, go_exec);
+    if(removeReady(comp->processTable.readyArray, go_exec)) {
+        printProcessNotFound();
+    }
     //Operação Real
     int i = searchID(go_exec, &comp->processTable);
     changeProcess(&comp->cpu, comp->processTable.processArray[i], comp->processTable.programCounterArray[i],

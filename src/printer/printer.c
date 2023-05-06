@@ -86,11 +86,11 @@ void printState(Ready* rs) {
 void printFullQueue() {
     printf("Fila cheia\n");
 }
-/*
+
 void printProcessNotFound() {
     printf("Processo não encontrado\n");
 }
-
+/*
 void printEmptyQueue() {
     printf("Fila vazia\n");
 }*/

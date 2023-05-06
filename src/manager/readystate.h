@@ -21,7 +21,7 @@ typedef struct {
 void initReady(Ready *ready, int maxSize);
 queue* createQueue();
 int insertReady(Ready *ready, int id, int prior);
-void removeReady(Ready *ready, int id);
+int removeReady(Ready *ready, int id);
 int nextReady(Ready *ready);
 void freeReady(Ready *ready);
 

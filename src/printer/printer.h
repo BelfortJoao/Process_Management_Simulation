@@ -35,7 +35,7 @@ void printState(Ready* ready);
 
 void printFullQueue();
 
-//void printProcessNotFound();
+void printProcessNotFound();
 
 //void printEmptyQueue()
 

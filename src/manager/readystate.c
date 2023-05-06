@@ -28,7 +28,6 @@ int insertReady(Ready *ready, int id, int prior) {
         return 0;
     }
     if (ready->size_at == ready->maxSize) {
-        //printFullQueue();
         return 1;
     }
     node* newNode = (node*) malloc(sizeof(node));
@@ -45,7 +44,7 @@ int insertReady(Ready *ready, int id, int prior) {
     return 0;
 }
 
-void removeReady(Ready *ready, int id) {
+int removeReady(Ready *ready, int id) {
     for (int i = 0; i < 4; i++) {
         node* aux = ready->queues[i].front;
         node* prev = NULL;
@@ -61,13 +60,14 @@ void removeReady(Ready *ready, int id) {
                 }
                 free(aux);
                 ready->size_at--;
-                return;
+                return 0;
             }
             prev = aux;
             aux = aux->next;
         }
     }
     //printProcessNotFound();
+    return 1;
 }
 
 int nextReady(Ready *ready) {
