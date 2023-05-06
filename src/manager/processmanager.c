@@ -75,69 +75,78 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
 
 void blockProcess(ProcessManager *processManager, int blockTime)
 {
-    int go_exec;
-    int go_block;
-    if (processManager->processTable->executingArray == 0 || processManager->processTable->executingArray == NULL)
+    if (processManager->processTable->executingArray == NULL || processManager->processTable->executingArray == 0)
     {
         return;
     }
-    //Operação em tabela-sai de readyArray e vai para executando
-    go_block = *processManager->processTable->executingArray;
-    go_exec = nextReady(processManager->processTable->readyArray);
 
-    if (go_exec == -1)
+    //Operação em tabela-sai de readyArray e vai para executando
+    int processToRun = nextProcessReady(processManager->processTable->readyArray);
+
+    if (processToRun == -1)
     {
         printEmptyQueue();
     }
 
-    contextExchange(go_exec, processManager->processTable->executingArray);
-    if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
+    contextExchange(processToRun, processManager->processTable->executingArray);
+
+    if (!removeFromReadyQueue(processManager->processTable->readyArray, processToRun))
     {
         printProcessNotFound();
     }
 
+    int processToBlock = *processManager->processTable->executingArray;
+
     //Operação em tabela-sai de executando e vai para block
-    insertBlockedId(processManager->processTable->blockedArray, go_block, blockTime);
+    insertBlockedId(processManager->processTable->blockedArray, processToBlock, blockTime);
+
     //Operação real
-    int i = searchByIdInProcessTable(go_exec, processManager->processTable);
-    changeProcess(processManager->cpu, processManager->processTable->processArray[i],
-                  processManager->processTable->programCounterArray[i],
+    int processIdToChange = searchByIdInProcessTable(processToRun, processManager->processTable);
+
+    changeProcess(processManager->cpu, processManager->processTable->processArray[processIdToChange],
+                  processManager->processTable->programCounterArray[processIdToChange],
                   *processManager->processTable->CPUTimerArray, 0);
-    processManager->processTable->processStateArray[go_exec] = RUNNING;
-    processManager->processTable->processStateArray[go_block] = BLOCKED;
+    processManager->processTable->processStateArray[processToRun] = RUNNING;
+    processManager->processTable->processStateArray[processToBlock] = BLOCKED;
 }
 
 
 void scheduleProcess(ProcessManager *processManager)
 {
-    int go_exec;
-    int go_ready;
-    int time = 1;
     //Operação em tabela-sai de readyArray e vai para executando
-    go_ready = *processManager->processTable->executingArray;
-    go_exec = nextReady(processManager->processTable->readyArray);
-    if (go_exec == -1)
+    int processToRun = nextProcessReady(processManager->processTable->readyArray);
+
+    if (processToRun == -1)
     {
         return;
     }
+
     if (processManager->processTable->priorityIdArray[*processManager->processTable->executingArray] < 3)
     {
         processManager->processTable->priorityIdArray[*processManager->processTable->executingArray]++;
     }
-    contextExchange(go_exec, processManager->processTable->executingArray);
-    if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
+
+    contextExchange(processToRun, processManager->processTable->executingArray);
+
+    if (!removeFromReadyQueue(processManager->processTable->readyArray, processToRun))
     {
         printProcessNotFound();
     }
+
+    int readyProcess = *processManager->processTable->executingArray;
+
     //Operação em tabela-sai de executando e vai para pronto
-    int i = searchByIdInProcessTable(go_exec, processManager->processTable);
-    int j = searchByIdInProcessTable(go_ready, processManager->processTable);
+    int i = searchByIdInProcessTable(processToRun, processManager->processTable);
+    int j = searchByIdInProcessTable(readyProcess, processManager->processTable);
+
     printProcessTable(processManager->processTable);
-    if (!insertToReadyQueue(processManager->processTable->readyArray, go_ready,
+    if (!insertToReadyQueue(processManager->processTable->readyArray, readyProcess,
                             processManager->processTable->priorityIdArray[j]))
     {
         printFullQueue();
     }
+
+    int time = 1;
 
     //Operação real
     if (pow(2, (4 - processManager->processTable->priorityIdArray[i]) - 1) >= 1)
@@ -149,22 +158,21 @@ void scheduleProcess(ProcessManager *processManager)
                   processManager->processTable->programCounterArray[i],
                   time,
                   0);
-    processManager->processTable->processStateArray[go_exec] = RUNNING;
-    processManager->processTable->processStateArray[go_ready] = READY;
+    processManager->processTable->processStateArray[processToRun] = RUNNING;
+    processManager->processTable->processStateArray[readyProcess] = READY;
 }
 
 
 void endProcess(ProcessManager *processManager)
 {
-    int go_excl;
-    int go_exec;
-    if (processManager->processTable->executingArray <= 0 || processManager->processTable->executingArray == NULL)
+    if (processManager->processTable->executingArray == NULL || processManager->processTable->executingArray <= 0)
     {
         return;
     }
+
     //Operação em tabela-sai de readyArray e vai para executando
-    go_excl = *processManager->processTable->executingArray;
-    go_exec = nextReady(processManager->processTable->readyArray);
+    int go_excl = *processManager->processTable->executingArray;
+    int go_exec = nextProcessReady(processManager->processTable->readyArray);
 
     if (go_exec == -1)
     {
@@ -205,7 +213,7 @@ void execute(ProcessManager *processManager)
 {
     int go_exec;
     //Operação sob a tabela Ready
-    go_exec = nextReady(processManager->processTable->readyArray);
+    go_exec = nextProcessReady(processManager->processTable->readyArray);
     if (go_exec == -1 || processManager->processTable->executingArray == NULL)
     {
         printFinishExe();
@@ -293,10 +301,11 @@ void clockUpPC(ProcessManager *processManager)
 }
 
 
-void processCP(ProcessManager *processManager, Process *process, int PcPlus)
+void processCP(ProcessManager *processManager, int PcPlus)
 {
-    process = generateProcessCopy(processManager->cpu->runningProcess);
-    if (!copyProcess(processManager->processTable, process, processManager->timer, PcPlus))
+    if (!copyProcess(processManager->processTable,
+                     generateProcessCopy(processManager->cpu->runningProcess),
+                     processManager->timer, PcPlus))
     {
         printFullQueue();
     }
@@ -321,28 +330,30 @@ void attExec(ProcessManager *processManager)
 
 void upperInterpreter(ProcessManager *processManager)
 {
-    int blk;
-    Process *proc;
+    int blockProcessId;
+    Process *process;
     int PcPlus;
-    char **arq;
-    int cpuResp = interpreter(processManager->cpu, &blk, arq, &PcPlus);
+    char **filename;
+    int cpuResp = interpreter(processManager->cpu, &blockProcessId, filename, &PcPlus);
+
     processManager->cpu->programCounter++;
     attExec(processManager);
+
     switch (cpuResp)
     {
         case 0:
             return;
         case 1://Bloqueia esse processo simulado por n unidades de tempo.
-            blockProcess(processManager, blk);
+            blockProcess(processManager, blockProcessId);
             return;
         case 2://Acaba com o processo atual e coloca outro no lugar
             endProcess(processManager);
             return;
         case 3://Crian um novo processo com base no atual do CPU
-            processCP(processManager, proc, PcPlus);
+            processCP(processManager, PcPlus);
             return;
         case 4://Recria o processo atual com base em um arquivo
-            processRewind(processManager, *arq);
+            processRewind(processManager, *filename);
             return;
         default:
             return;

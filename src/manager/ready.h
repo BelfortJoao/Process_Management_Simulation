@@ -38,7 +38,7 @@ bool insertToReadyQueue(Ready *ready, int processId, int prior);
 bool removeFromReadyQueue(Ready *ready, int processId);
 
 
-int nextReady(Ready *ready);
+int nextProcessReady(Ready *ready);
 
 
 void freeReady(Ready *ready);
