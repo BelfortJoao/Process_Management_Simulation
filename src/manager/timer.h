@@ -9,6 +9,4 @@ void timeUp(Timer *time);
 
 void timeDown(Timer *time);
 
-void freeTimer(Timer *timer);
-
 #endif

@@ -54,31 +54,27 @@ int runControl(Control *control)
 
     while (true)
     {
-        char command = ' ';
+        char command = (char) getchar();
+
+        if (command != '\n')
+        {
+            switch (toupper(command))
+            {
+                case 'M':
+                    printAverageResponseTime(control->printer);
+                    return 0;
+                case 'U':
+                    processExecuting(control->processManager);
+                    continue;
+                case 'I':
+                    printProcessTable(control->processManager->processTable);
+                    continue;
+                default:
+                    printf(INVALID_COMMAND, command);
+            }
+        }
 
         printf("Type a command (U, I or M): ");
-        cleanStdin();
-
-        if (!scanf("%c", &command))
-        {
-            printf("INVALID INPUT\n");
-            cleanStdin();
-            continue;
-        }
-
-        switch (toupper(command))
-        {
-            case 'M':
-                printAverageResponseTime(control->printer);
-                return 0;
-            case 'U':
-                processExecuting(control->processManager);
-                continue;
-            case 'I':
-                printProcessTable(control->processManager->processTable);
-                continue;
-            default:
-                printf(INVALID_COMMAND, command);
-        }
+        fflush(stdout);
     }
 }

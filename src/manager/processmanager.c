@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 #include "../input/input.h"
 #include "../error/error.h"
 
@@ -52,8 +53,16 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
     processManager->processTable = initializeProcessTable(size);
     printf("Process Table Capacity: %d\n", processManager->processTable->tableCapacity);
 
-    addProcessTableProcess(processManager->processTable, filename, -1, 0);
-    removeFromReadyQueue(processManager->processTable->readyArray, 0);
+    if (!addProcessTableProcess(processManager->processTable, filename, -1, 0))
+    {
+        printf("FULL QUEUE");
+    }
+
+    if (!removeFromReadyQueue(processManager->processTable->readyArray, 0))
+    {
+        printf("PROCESS NOT FOUND");
+    }
+
     contextExchange(0, processManager->processTable->executingArray);
     processManager->processTable->processStateArray[0] = RUNNING;
     processManager->kill = 0;
@@ -74,8 +83,18 @@ void blockProcess(ProcessManager *processManager, int blockTime)
     //Operação em tabela-sai de readyArray e vai para executando
     go_block = *processManager->processTable->executingArray;
     go_exec = nextReady(processManager->processTable->readyArray);
+
+    if (go_exec == -1)
+    {
+        printf("Empty queue");
+    }
+
     contextExchange(go_exec, processManager->processTable->executingArray);
-    removeFromReadyQueue(processManager->processTable->readyArray, go_exec);
+    if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
+    {
+        printf("Process not found");
+    }
+
     //Operação em tabela-sai de executando e vai para block
     insertBlockedId(processManager->processTable->blockedArray, go_block, blockTime);
     //Operação real
@@ -104,32 +123,32 @@ void scheduleProcess(ProcessManager *processManager)
         processManager->processTable->priorityIdArray[*processManager->processTable->executingArray]++;
     }
     contextExchange(go_exec, processManager->processTable->executingArray);
-    removeFromReadyQueue(processManager->processTable->readyArray, go_exec);
+    if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
+    {
+        printf("PROCESS NOT FOUND");
+    }
     //Operação em tabela-sai de executando e vai para pronto
     int i = searchByIdInProcessTable(go_exec, processManager->processTable);
     int j = searchByIdInProcessTable(go_ready, processManager->processTable);
-    printf("ID ARRAY: %d\n", processManager->processTable->idArray[i]);
-    printf("PRIOR ID: %d\n", processManager->processTable->priorityIdArray[j]);
-    printf("EU TO AQUIIIIIIIIIIIIIIIIII\n");
     printProcessTable(processManager->processTable);
-    insertToReadyQueue(processManager->processTable->readyArray, go_ready,
-                       processManager->processTable->priorityIdArray[j]);
-    //sortReady(processManager->processTable.readyArray);
+    if (!insertToReadyQueue(processManager->processTable->readyArray, go_ready,
+                            processManager->processTable->priorityIdArray[j]))
+    {
+        printf("QUEUE IS FULL.");
+    }
 
-    printProcessTable(processManager->processTable);
     //Operação real
     if (pow(2, (4 - processManager->processTable->priorityIdArray[i]) - 1) >= 1)
     {
         time = (int) pow(2, (4 - processManager->processTable->priorityIdArray[i]) - 1);
     }
-    printf("\n\n\n\n%d\n\n\n\n", time);
+
     changeProcess(processManager->cpu, processManager->processTable->processArray[i],
                   processManager->processTable->programCounterArray[i],
                   time,
                   0);
     processManager->processTable->processStateArray[go_exec] = RUNNING;
     processManager->processTable->processStateArray[go_ready] = READY;
-    printProcessTable(processManager->processTable);
 }
 
 //T termina o processo simulado atual e passa o cpu para o proximo processo pronto
@@ -144,8 +163,19 @@ void endProcess(ProcessManager *processManager)
     //Operação em tabela-sai de readyArray e vai para executando
     go_excl = *processManager->processTable->executingArray;
     go_exec = nextReady(processManager->processTable->readyArray);
-    contextExchange(go_exec, processManager->processTable->executingArray);
-    removeFromReadyQueue(processManager->processTable->readyArray, go_exec);
+
+    if (go_exec == -1)
+    {
+        printf("QUEUE FULL");
+    } else
+    {
+        contextExchange(go_exec, processManager->processTable->executingArray);
+        if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
+        {
+            printf("PROCESS NOT FOUND");
+        }
+    }
+
     //Sai de Ready e vai para executingArray
 
     //Operação real
@@ -156,10 +186,13 @@ void endProcess(ProcessManager *processManager)
                       processManager->processTable->programCounterArray[i],
                       *processManager->processTable->CPUTimerArray, 0);
         processManager->processTable->processStateArray[go_exec] = RUNNING;
+    } else
+    {
+        //exclui processo da tabela de processos
+        processManager->processTable->executingArray = NULL;
+        processManager->cpu->runningProcess = NULL;
     }
-    //exclui processo da tabela de processos
-    processManager->processTable->executingArray = NULL;
-    processManager->cpu->runningProcess = NULL;
+
     deleteProcessTableProcess(go_excl, processManager->processTable);
 }
 
@@ -183,7 +216,11 @@ void execute(ProcessManager *processManager)
         return;
     }
     contextExchange(go_exec, processManager->processTable->executingArray);
-    removeFromReadyQueue(processManager->processTable->readyArray, go_exec);
+    if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
+    {
+        printf("PROCESS NOT FOUND");
+    }
+
     //Operação Real
     int i = searchByIdInProcessTable(go_exec, processManager->processTable);
     changeProcess(processManager->cpu, processManager->processTable->processArray[i],
@@ -206,11 +243,8 @@ void processExecuting(ProcessManager *processManager)
             return;
         }
         //if cpu isn't ampity check the cpu time and escalonate
-    }
-    else
+    } else
     {
-        printf("\n\n\n\n%d\n\n\n\n", processManager->cpu->executing_timer);
-        printf("\n\n\n\n%d\n\n\n\n", processManager->cpu->program_timer);
         if (processManager->cpu->executing_timer >= processManager->cpu->program_timer)
         {
             scheduleProcess(processManager);
@@ -239,9 +273,12 @@ void processUnblock(ProcessManager *processManager)
         {
             go_ready = processManager->processTable->blockedArray->ids[i];
             removeBlockedId(processManager->processTable->blockedArray, go_ready);
-            insertToReadyQueue(processManager->processTable->readyArray, go_ready,
-                               processManager->processTable->priorityIdArray[searchByIdInProcessTable(go_ready,
-                                                                                                      processManager->processTable)]);
+            if (!insertToReadyQueue(processManager->processTable->readyArray, go_ready,
+                                    processManager->processTable->priorityIdArray[searchByIdInProcessTable(go_ready,
+                                                                                                           processManager->processTable)]))
+            {
+                printf("QUEUE IS FULL");
+            }
             processManager->processTable->processStateArray[searchByIdInProcessTable(go_ready,
                                                                                      processManager->processTable)] = READY;
         }
@@ -258,9 +295,11 @@ void clockUpPC(ProcessManager *processManager)
 
 void processCP(ProcessManager *processManager, Process *process, int PcPlus)
 {
-
     process = generateProcessCopy(processManager->cpu->runningProcess);
-    copyProcess(processManager->processTable, process, processManager->timer, PcPlus);
+    if (!copyProcess(processManager->processTable, process, processManager->timer, PcPlus))
+    {
+        printf("QUEUE IS FULL");
+    }
 }
 
 void processRewind(ProcessManager *processManager, char *filename)

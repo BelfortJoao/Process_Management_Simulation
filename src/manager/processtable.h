@@ -1,6 +1,7 @@
 #ifndef SRC_PROCESSTABLE_H
 #define SRC_PROCESSTABLE_H
 
+#include <stdbool.h>
 #include "../process/process.h"
 #include "timer.h"
 #include "ready.h"
@@ -32,9 +33,9 @@ void deleteProcessTable(ProcessTable *processTable);
 
 void deleteProcessTableProcess(int id, ProcessTable *processTable);
 
-void addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcess, int clock);
+bool addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcess, int clock);
 
-void copyProcess(ProcessTable *processTable, Process *proc, Timer timer, int PcPlus);
+bool copyProcess(ProcessTable *processTable, Process *proc, Timer timer, int PcPlus);
 
 int getProcessTableEmptySpace(ProcessTable *processTable);
 
