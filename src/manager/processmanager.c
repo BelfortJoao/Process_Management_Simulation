@@ -22,6 +22,7 @@ ProcessManager *initializeProcessManager()
     return processManager;
 }
 
+
 ProcessManager *initializeProcessManagerFromFile(char *filename)
 {
     ProcessManager *processManager = initializeProcessManager();
@@ -71,7 +72,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
     return processManager;
 }
 
-//(B n)Bloqueia o processo na CPU em N unidades de tempo
+
 void blockProcess(ProcessManager *processManager, int blockTime)
 {
     int go_exec;
@@ -105,6 +106,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
     processManager->processTable->processStateArray[go_exec] = RUNNING;
     processManager->processTable->processStateArray[go_block] = BLOCKED;
 }
+
 
 void scheduleProcess(ProcessManager *processManager)
 {
@@ -151,7 +153,7 @@ void scheduleProcess(ProcessManager *processManager)
     processManager->processTable->processStateArray[go_ready] = READY;
 }
 
-//T termina o processo simulado atual e passa o cpu para o proximo processo pronto
+
 void endProcess(ProcessManager *processManager)
 {
     int go_excl;
@@ -167,7 +169,8 @@ void endProcess(ProcessManager *processManager)
     if (go_exec == -1)
     {
         printFullQueue();
-    } else
+    }
+    else
     {
         contextExchange(go_exec, processManager->processTable->executingArray);
         if (!removeFromReadyQueue(processManager->processTable->readyArray, go_exec))
@@ -186,7 +189,8 @@ void endProcess(ProcessManager *processManager)
                       processManager->processTable->programCounterArray[i],
                       *processManager->processTable->CPUTimerArray, 0);
         processManager->processTable->processStateArray[go_exec] = RUNNING;
-    } else
+    }
+    else
     {
         //exclui processo da tabela de processos
         processManager->processTable->executingArray = NULL;
@@ -196,14 +200,6 @@ void endProcess(ProcessManager *processManager)
     deleteProcessTableProcess(go_excl, processManager->processTable);
 }
 
-void killComputer(ProcessManager *processManager)
-{
-    freeCPU(processManager->cpu);
-    deleteProcessTable(processManager->processTable);
-    processManager->timer = 0;
-    processManager->kill = 1;
-    processManager->freeID = 0;
-}
 
 void execute(ProcessManager *processManager)
 {
@@ -229,6 +225,7 @@ void execute(ProcessManager *processManager)
     processManager->processTable->processStateArray[go_exec] = RUNNING;
 }
 
+
 void processExecuting(ProcessManager *processManager)
 {
     //search for a proces while cpu is ampity
@@ -239,11 +236,12 @@ void processExecuting(ProcessManager *processManager)
         execute(processManager);
         if (processManager->kill == 1)
         {
-            killComputer(processManager);
+            freeProcessManager(processManager);
             return;
         }
         //if cpu isn't ampity check the cpu time and escalonate
-    } else
+    }
+    else
     {
         if (processManager->cpu->executing_timer >= processManager->cpu->program_timer)
         {
@@ -251,18 +249,19 @@ void processExecuting(ProcessManager *processManager)
         }
 
         //Interpreta o processo aumenta o timer
-        uperInterpreter(processManager);
+        upperInterpreter(processManager);
         clockUpPC(processManager);
         processUnblock(processManager);
         printState(processManager->processTable->readyArray);
         //Check the kill switch
         if (processManager->kill == 1)
         {
-            killComputer(processManager);
+            freeProcessManager(processManager);
             return;
         }
     }
 }
+
 
 void processUnblock(ProcessManager *processManager)
 {
@@ -285,6 +284,7 @@ void processUnblock(ProcessManager *processManager)
     }
 }
 
+
 void clockUpPC(ProcessManager *processManager)
 {
     timeUp(&processManager->timer);
@@ -302,12 +302,14 @@ void processCP(ProcessManager *processManager, Process *process, int PcPlus)
     }
 }
 
+
 void processRewind(ProcessManager *processManager, char *filename)
 {
     freeProcess(processManager->processTable->processArray[*processManager->processTable->executingArray]);
     processManager->processTable->processArray[*processManager->processTable->executingArray] = initializeProcessFromFile(
             filename);
 }
+
 
 void attExec(ProcessManager *processManager)
 {
@@ -316,7 +318,8 @@ void attExec(ProcessManager *processManager)
     processManager->processTable->CPUTimerArray[*processManager->processTable->executingArray]++;
 }
 
-void uperInterpreter(ProcessManager *processManager)
+
+void upperInterpreter(ProcessManager *processManager)
 {
     int blk;
     Process *proc;
@@ -344,4 +347,14 @@ void uperInterpreter(ProcessManager *processManager)
         default:
             return;
     }
+}
+
+
+void freeProcessManager(ProcessManager *processManager)
+{
+    freeCPU(processManager->cpu);
+    deleteProcessTable(processManager->processTable);
+    processManager->timer = 0;
+    processManager->kill = 1;
+    processManager->freeID = 0;
 }

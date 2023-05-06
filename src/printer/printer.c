@@ -54,25 +54,30 @@ void printProcessTable(ProcessTable *processTable)
     printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
 }
 
+
 void printInitMem(int initialMemorySize)
 {
     printf("Memory initialized with size %d.\n", initialMemorySize);
 }
+
 
 void printDeclareVar(int position)
 {
     printf("Memory at position %d has been cleared.\n", position);
 }
 
+
 void printChangeVar(int position, int value)
 {
     printf("Memory changed to %d at position %d.\n", value, position);
 }
 
+
 void printAddVar(int position, int increaseValue)
 {
     printf("Memory increased by %d at position %d.\n", increaseValue, position);
 }
+
 
 void printSubVar(int position, int decreaseValue)
 {
@@ -84,60 +89,74 @@ void printBlkProcess(int timeUnits)
     printf("Blocking process for %d time unit(s).\n", timeUnits);
 }
 
+
 void printTerProcess()
 {
     printf("Terminando processo\n");
 }
+
 
 void printCopyProcess()
 {
     printf("Copiando processo\n");
 }
 
+
 void printReadFile(char *arg1)
 {
     printf("Lendo o arquivo %s\n", arg1);
 }
+
 
 void printState(Ready *rs)
 {
     printf("\n+-----------------+\n");
     printf("| Estado da fila: |\n");
     printf("+-----------------+\n");
+
     for (int i = 0; i < 4; i++)
     {
         printf("| Fila %d: ", i);
+
         if (rs->queues[i].front == NULL)
         {
             printf("Vazia");
-        } else
+        }
+        else
         {
             node *atual = rs->queues[i].front;
+
             while (atual != NULL)
             {
                 printf("%d ", atual->id);
                 atual = atual->next;
             }
         }
+
         printf("\n");
     }
+
     printf("\n");
 }
+
 
 void printFullQueue()
 {
     printf("Fila cheia\n");
 }
 
+
 void printProcessNotFound()
 {
     printf("Processo não encontrado\n");
 }
 
+
 void printEmptyQueue()
 {
     printf("Fila vazia\n");
 }
+
 
 void printFinishExe()
 {

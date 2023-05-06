@@ -4,6 +4,7 @@
 
 #include "running.h"
 
+
 Running *initializeRunningProcess()
 {
     Running *runningProcess = (Running *) malloc(sizeof(Running));
@@ -16,6 +17,7 @@ Running *initializeRunningProcess()
 
     return runningProcess;
 }
+
 
 void contextExchange(int id, Running *runningProcess)
 {
