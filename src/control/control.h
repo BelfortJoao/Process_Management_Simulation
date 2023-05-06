@@ -3,11 +3,12 @@
  * @brief Header file for the Control module.
  */
 
-#ifndef CONTROL_H
-#define CONTROL_H
+#ifndef SRC_CONTROL_H
+#define SRC_CONTROL_H
 
 #include "../manager/processmanager.h"
 #include "../printer/printer.h"
+
 
 /**
  * @struct Control
@@ -19,12 +20,14 @@ typedef struct Control
     Printer *printer; /**< Pointer to the printer. */
 } Control;
 
+
 /**
  * @brief Allocates memory for a new Control struct and initializes its process manager and printer.
  *
  * @return Pointer to the newly created Control struct, or NULL if memory allocation fails.
  */
 Control *initializeControl();
+
 
 /**
  * @brief Runs the control loop for the simulation.
@@ -34,4 +37,5 @@ Control *initializeControl();
  */
 int runControl(Control *control);
 
-#endif /* CONTROL_H */
+
+#endif /* SRC_CONTROL_H */

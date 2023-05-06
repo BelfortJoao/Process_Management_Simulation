@@ -2,6 +2,7 @@
  * @file ProcessTable.h
  * @brief This file contains the ProcessTable data structure and its functions.
  */
+
 #ifndef SRC_PROCESSTABLE_H
 #define SRC_PROCESSTABLE_H
 
@@ -118,4 +119,4 @@ int nextID(ProcessTable *processTable);
 bool copyProcess(ProcessTable *processTable, Process *proc, Timer timer, int PcPlus);
 
 
-#endif
+#endif /* SRC_PROCESSTABLE_H */

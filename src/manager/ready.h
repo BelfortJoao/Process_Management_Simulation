@@ -3,17 +3,20 @@
 
 #include <stdbool.h>
 
+
 typedef struct node
 {
     int id;
     struct node *next;
 } node;
 
+
 typedef struct
 {
     node *front;
     node *rear;
 } queue;
+
 
 typedef struct
 {
@@ -22,16 +25,23 @@ typedef struct
     queue queues[4];
 } Ready;
 
+
 Ready *initializeReady(int size);
+
 
 queue *createQueue();
 
+
 bool insertToReadyQueue(Ready *ready, int processId, int prior);
+
 
 bool removeFromReadyQueue(Ready *ready, int processId);
 
+
 int nextReady(Ready *ready);
+
 
 void freeReady(Ready *ready);
 
-#endif
+
+#endif /* SRC_READY_H */

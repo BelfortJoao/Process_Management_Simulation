@@ -4,7 +4,6 @@
  * Contains function declarations for process creation, memory management, and information printing.
  */
 
-
 #ifndef SRC_PROCESS_H
 #define SRC_PROCESS_H
 
@@ -12,8 +11,10 @@
 #define BLOCKED "BLOCKED"
 #define READY "READY"
 
+
 typedef int *Memory;
 typedef char **Program;
+
 
 typedef struct
 {
@@ -143,5 +144,6 @@ void printProcessInfo(Process *process);
  * @param process   Pointer to the process to be freed
  */
 void freeProcess(Process *process);
+
 
 #endif /* SRC_PROCESS_H */
