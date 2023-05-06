@@ -82,6 +82,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
 
     //Operação em tabela-sai de readyArray e vai para executando
     int processToRun = nextProcessReady(processManager->processTable->readyArray);
+    int processToBlock = *processManager->processTable->executingArray;
 
     if (processToRun == -1)
     {
@@ -94,8 +95,6 @@ void blockProcess(ProcessManager *processManager, int blockTime)
     {
         printProcessNotFound();
     }
-
-    int processToBlock = *processManager->processTable->executingArray;
 
     //Operação em tabela-sai de executando e vai para block
     insertBlockedId(processManager->processTable->blockedArray, processToBlock, blockTime);
@@ -114,6 +113,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
 void scheduleProcess(ProcessManager *processManager)
 {
     //Operação em tabela-sai de readyArray e vai para executando
+    int readyProcess = *processManager->processTable->executingArray;
     int processToRun = nextProcessReady(processManager->processTable->readyArray);
 
     if (processToRun == -1)
@@ -132,8 +132,6 @@ void scheduleProcess(ProcessManager *processManager)
     {
         printProcessNotFound();
     }
-
-    int readyProcess = *processManager->processTable->executingArray;
 
     //Operação em tabela-sai de executando e vai para pronto
     int i = searchByIdInProcessTable(processToRun, processManager->processTable);
@@ -330,11 +328,10 @@ void attExec(ProcessManager *processManager)
 
 void upperInterpreter(ProcessManager *processManager)
 {
-    int blockProcessId;
-    Process *process;
+    int blockTime;
     int PcPlus;
     char **filename;
-    int cpuResp = interpreter(processManager->cpu, &blockProcessId, filename, &PcPlus);
+    int cpuResp = interpreter(processManager->cpu, &blockTime, filename, &PcPlus);
 
     processManager->cpu->programCounter++;
     attExec(processManager);
@@ -342,21 +339,21 @@ void upperInterpreter(ProcessManager *processManager)
     switch (cpuResp)
     {
         case 0:
-            return;
+            break;
         case 1://Bloqueia esse processo simulado por n unidades de tempo.
-            blockProcess(processManager, blockProcessId);
-            return;
+            blockProcess(processManager, blockTime);
+            break;
         case 2://Acaba com o processo atual e coloca outro no lugar
             endProcess(processManager);
-            return;
+            break;
         case 3://Crian um novo processo com base no atual do CPU
             processCP(processManager, PcPlus);
-            return;
+            break;
         case 4://Recria o processo atual com base em um arquivo
             processRewind(processManager, *filename);
-            return;
+            break;
         default:
-            return;
+            break;
     }
 }
 

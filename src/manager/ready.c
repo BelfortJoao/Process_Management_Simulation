@@ -4,6 +4,8 @@
 
 #include "ready.h"
 
+#define DEFAULT_QUEUE_SIZE 4
+
 
 Ready *initializeReady(int size)
 {
@@ -15,39 +17,36 @@ Ready *initializeReady(int size)
         return NULL;
     }
 
-    ready->size_at = 0;
+    ready->size = 0;
     ready->maxSize = size;
 
-    for (int i = 0; i < 4; i++)
+    ready->queues = (Queue **) malloc(DEFAULT_QUEUE_SIZE * sizeof(Queue *));
+
+    if (!ready->queues)
     {
-        ready->queues[i] = *createQueue();
+        printf(ALLOCATION_ERROR, "array of queues");
+        return NULL;
+    }
+
+    for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++)
+    {
+        ready->queues[i] = initializeQueue();
     }
 
     return ready;
 }
 
 
-queue *createQueue()
-{
-    queue *q = (queue *) malloc(sizeof(queue));
-    q->front = NULL;
-    q->rear = NULL;
-    return q;
-}
-
-
 int nextProcessReady(Ready *ready)
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++)
     {
-        if (ready->queues[i].front != NULL)
+        if (ready->queues[i]->front)
         {
-            int id = ready->queues[i].front->id;
-            return id;
+            return ready->queues[i]->front->id;
         }
     }
 
-    //printEmptyQueue();
     return -1;
 }
 
@@ -59,61 +58,31 @@ bool insertToReadyQueue(Ready *ready, int id, int prior)
         return true;
     }
 
-    if (ready->size_at == ready->maxSize)
+    if (ready->size == ready->maxSize)
     {
         return false;
     }
 
-    node *newNode = (node *) malloc(sizeof(node));
-    newNode->id = id;
-    newNode->next = NULL;
-
-    if (ready->queues[prior].rear == NULL)
+    if (insertToQueue(ready->queues[prior], id))
     {
-        ready->queues[prior].front = newNode;
-        ready->queues[prior].rear = newNode;
-    }
-    else
-    {
-        ready->queues[prior].rear->next = newNode;
-        ready->queues[prior].rear = newNode;
+        ready->size++;
+        return true;
     }
 
-    ready->size_at++;
-
-    return true;
+    return false;
 }
 
 
 bool removeFromReadyQueue(Ready *ready, int id)
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++)
     {
-        node *aux = ready->queues[i].front;
-        node *prev = NULL;
+        Queue *currQueue = ready->queues[i];
 
-        while (aux != NULL)
+        if (removeFromQueue(currQueue, id))
         {
-            if (aux->id == id)
-            {
-                if (prev == NULL)
-                {
-                    ready->queues[i].front = aux->next;
-                }
-                else
-                {
-                    prev->next = aux->next;
-                }
-                if (aux->next == NULL)
-                {
-                    ready->queues[i].rear = prev;
-                }
-                free(aux);
-                ready->size_at--;
-                return true;
-            }
-            prev = aux;
-            aux = aux->next;
+            ready->size--;
+            return true;
         }
     }
 
@@ -123,14 +92,18 @@ bool removeFromReadyQueue(Ready *ready, int id)
 
 void freeReady(Ready *ready)
 {
-    for (int i = 0; i < 4; i++)
+    if (ready)
     {
-        node *aux = ready->queues[i].front;
-        while (aux != NULL)
+        for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++)
         {
-            node *next = aux->next;
-            free(aux);
-            aux = next;
+            freeQueue(ready->queues[i]);
         }
+
+        if (ready->queues)
+        {
+            free(ready->queues);
+        }
+
+        free(ready);
     }
 }

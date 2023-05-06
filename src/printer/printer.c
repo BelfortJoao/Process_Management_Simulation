@@ -9,7 +9,7 @@ Printer *initializePrinter(int size)
 {
     Printer *printer = (Printer *) malloc(sizeof(Printer));
 
-    if (printer == NULL)
+    if (!printer)
     {
         printf(ALLOCATION_ERROR, "printer");
         return NULL;
@@ -108,7 +108,7 @@ void printReadFile(char *arg1)
 }
 
 
-void printState(Ready *rs)
+void printState(Ready *ready)
 {
     printf("\n+-----------------+\n");
     printf("| Estado da fila: |\n");
@@ -118,18 +118,18 @@ void printState(Ready *rs)
     {
         printf("| Fila %d: ", i);
 
-        if (rs->queues[i].front == NULL)
+        if (!ready->queues[i]->front)
         {
             printf("Vazia");
         }
         else
         {
-            node *atual = rs->queues[i].front;
+            QueueNode *currQueueNode = ready->queues[i]->front;
 
-            while (atual != NULL)
+            while (currQueueNode)
             {
-                printf("%d ", atual->id);
-                atual = atual->next;
+                printf("%d ", currQueueNode->id);
+                currQueueNode = currQueueNode->next;
             }
         }
 

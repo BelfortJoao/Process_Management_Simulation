@@ -121,9 +121,9 @@ void printReadFile(char *arg1);
 /**
  * Prints the state of the given Ready queue.
  *
- * @param rs a pointer to the Ready queue to print
+ * @param ready a pointer to the Ready queue to print
  */
-void printState(Ready *rs);
+void printState(Ready *ready);
 
 
 /**

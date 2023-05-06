@@ -2,34 +2,17 @@
 #define SRC_READY_H
 
 #include <stdbool.h>
-
-
-typedef struct node
-{
-    int id;
-    struct node *next;
-} node;
-
+#include "../datastruct/queue.h"
 
 typedef struct
 {
-    node *front;
-    node *rear;
-} queue;
-
-
-typedef struct
-{
-    int size_at;
+    int size;
     int maxSize;
-    queue queues[4];
+    Queue **queues;
 } Ready;
 
 
 Ready *initializeReady(int size);
-
-
-queue *createQueue();
 
 
 bool insertToReadyQueue(Ready *ready, int processId, int prior);
