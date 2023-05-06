@@ -94,3 +94,7 @@ void printProcessNotFound() {
 void printEmptyQueue() {
     printf("Fila vazia\n");
 }
+
+void printFinishExe() {
+    printf("Não ha mais nada para executar\n");
+}

@@ -139,7 +139,7 @@ void execute(Computer *comp) {
     go_exec = nextReady(comp->processTable.readyArray);
     if(go_exec == -1) printEmptyQueue();
     if(go_exec==-1 || comp->processTable.executingArray==NULL){
-        printf("Não ha mais nada para executar\n");
+        printFinishExe();
         return;
     }
     contextExchange(go_exec, comp->processTable.executingArray);

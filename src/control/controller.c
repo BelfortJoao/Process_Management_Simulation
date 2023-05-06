@@ -5,7 +5,8 @@
 #include <ctype.h>
 
 void control(Control *cont) {
-
+        
+    int c;
     char resp;
     char arq[CHAR_MAX];
 
@@ -17,15 +18,38 @@ void control(Control *cont) {
         len--;
     }
     arq[len] = '\0';
-    printf("%s\n", arq);
 
     initComputer(cont->comp, arq);
-    printf("Digite um comando(U, I ou M)");
     while (1) {
-        if (resp == '\n'| resp == NULL)
-            printf("Comando: ");
-            resp=getchar();
-        if (resp != '\n') {
+        if(resp != '\n')
+            printf("Digite um comando(U, I ou M): ");
+        fflush(stdout);
+        resp=getchar();
+        if(resp != '\n') {
+            if (islower(resp))
+                resp = toupper(resp);
+            switch (resp) {
+                case 'M':
+                    printMedResponseTime(cont->printer);
+                    return;
+                case 'U':
+                    processExecuting(cont->comp);
+                case 'I':
+                    printProcessTable(&cont->comp->processTable);
+                    printState(cont->comp->processTable.readyArray);
+                default:
+                    printf("Erro: Comando não reconhecido\n");
+            }
+        }
+        else continue;
+    }
+    
+/*
+    while (1) {
+        printf("Digite um comando(U, I ou M): ");
+        getchar();
+        resp=getchar();
+        //if (resp != '\n') {
             if (islower(resp))
                 resp = toupper(resp);
 
@@ -41,11 +65,8 @@ void control(Control *cont) {
                     printState(cont->comp->processTable.readyArray);
                     continue;
                 default:
-                        printf("%c", resp);
-                        printf("Erro Comando não reconhecido\n");
+                        printf("Erro: Comando não reconhecido\n");
             }
-            printf("Comando: ");
-            resp=getchar();
-        }
-    }
+        //}
+    }*/
 }

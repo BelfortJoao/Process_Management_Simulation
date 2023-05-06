@@ -39,4 +39,6 @@ void printProcessNotFound();
 
 void printEmptyQueue();
 
+void printFinishExe();
+
 #endif
