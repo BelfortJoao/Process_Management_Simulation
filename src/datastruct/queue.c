@@ -4,6 +4,7 @@
 
 #include "queue.h"
 
+
 Queue *initializeQueue()
 {
     Queue *queue = (Queue *) malloc(sizeof(Queue));
@@ -19,6 +20,7 @@ Queue *initializeQueue()
 
     return queue;
 }
+
 
 bool insertToQueue(Queue *queue, int id)
 {

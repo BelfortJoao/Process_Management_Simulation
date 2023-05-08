@@ -59,7 +59,6 @@ int runControl(Control *control)
     while (true)
     {
         char command = (char) getchar();
-        fflush(stdout);
 
         if (!printFlag)
         {
@@ -79,6 +78,7 @@ int runControl(Control *control)
                 return 0;
             case 'U':
                 processExecuting(control->processManager);
+                break;
             case 'I':
                 printProcessTable(control->processManager->processTable);
                 printState(control->processManager->processTable->readyArray);

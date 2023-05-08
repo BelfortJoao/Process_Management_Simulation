@@ -232,6 +232,7 @@ int nextID(ProcessTable *processTable)
 bool copyProcess(ProcessTable *processTable, Process *proc, Timer timer, int PcPlus)
 {
     processTable->tableSize++;
+
     int emptySpace = getProcessTableEmptySpace(processTable);
     processTable->emptyArray[emptySpace] = 1;
     processTable->priorityIdArray[emptySpace] = 0;
@@ -242,5 +243,6 @@ bool copyProcess(ProcessTable *processTable, Process *proc, Timer timer, int PcP
     processTable->initialTimerArray[emptySpace] = timer;
     processTable->CPUTimerArray[emptySpace] = 0;
     processTable->idArray[emptySpace] = nextID(processTable);
+
     return insertToReadyQueue(processTable->readyArray, emptySpace, processTable->priorityIdArray[emptySpace]);
 }

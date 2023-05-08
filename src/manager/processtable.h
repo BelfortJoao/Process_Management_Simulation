@@ -18,7 +18,7 @@
  * @struct ProcessTable
  * @brief This struct represents a table of processes.
  */
-typedef struct
+typedef struct ProcessTable
 {
     int nextFreeId; /**< The next free index in the idArray. */
     int tableSize; /**< The number of processes currently in the table. */

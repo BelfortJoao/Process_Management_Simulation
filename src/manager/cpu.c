@@ -39,7 +39,7 @@ int convertStringToInt(char *string)
 {
     char *errorCheckingStrTol;
 
-    int number = strtol(string, &errorCheckingStrTol, 10);
+    int number = (int) strtol(string, &errorCheckingStrTol, 10);
 
     if (*errorCheckingStrTol != '\0')
     {

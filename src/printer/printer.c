@@ -29,13 +29,14 @@ void printAverageResponseTime(Printer *printer)
 
 void printProcessTable(ProcessTable *processTable)
 {
-    printf("Proximo idArray Livre: %d\n", processTable->nextFreeId);
-    printf("Numero atual de processos: %d\n", processTable->tableSize);
-    printf("Capacidade da tabela: %d\n", processTable->tableCapacity);
+    printf("Next free idArray: %d.\n", processTable->nextFreeId);
+    printf("Current number of processes: %d.\n", processTable->tableSize);
+    printf("Process table's capacity: %d\n", processTable->tableCapacity);
     printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
-    printf("| %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s |\n", "idArray", "PC", "Pai", "Prioridade",
-           "Estado", "Inicio", "T de uso");
+    printf("| %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s |\n", "idArray", "PC", "Parent", "Priority",
+           "State", "Start", "Time");
     printf("+------------+------------+------------+------------+------------+------------+------------+");
+
     for (int i = 0; i < processTable->tableCapacity; ++i)
     {
         if (processTable->emptyArray[i] != 0)
@@ -110,17 +111,17 @@ void printReadFile(char *arg1)
 
 void printState(Ready *ready)
 {
-    printf("\n+-----------------+\n");
-    printf("| Estado da fila: |\n");
-    printf("+-----------------+\n");
+    printf("\n+----------------+\n");
+    printf("| Queue states:  |\n");
+    printf("+----------------+\n");
 
     for (int i = 0; i < 4; i++)
     {
-        printf("| Fila %d: ", i);
+        printf("| Queue %d: ", i);
 
         if (!ready->queues[i]->front)
         {
-            printf("Vazia");
+            printf("Empty |");
         }
         else
         {
@@ -128,7 +129,7 @@ void printState(Ready *ready)
 
             while (currQueueNode)
             {
-                printf("%d ", currQueueNode->id);
+                printf("%d     |", currQueueNode->id);
                 currQueueNode = currQueueNode->next;
             }
         }
@@ -136,7 +137,7 @@ void printState(Ready *ready)
         printf("\n");
     }
 
-    printf("\n");
+    printf("+----------------+\n");
 }
 
 

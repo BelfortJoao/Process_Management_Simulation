@@ -4,7 +4,8 @@
 #include <stdbool.h>
 #include "queuenode.h"
 
-typedef struct
+
+typedef struct Queue
 {
     QueueNode *front;
     QueueNode *rear;

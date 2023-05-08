@@ -4,7 +4,8 @@
 #include <stdbool.h>
 #include "../datastruct/queue.h"
 
-typedef struct
+
+typedef struct Ready
 {
     int size;
     int maxSize;

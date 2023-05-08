@@ -2,7 +2,7 @@
 #define SRC_BLOCKED_H
 
 
-typedef struct
+typedef struct Blocked
 {
     int *blockTimes;
     int *ids;
