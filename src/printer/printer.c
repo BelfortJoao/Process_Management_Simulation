@@ -29,28 +29,26 @@ void printAverageResponseTime(Printer *printer)
 
 void printProcessTable(ProcessTable *processTable)
 {
-    printf("Next free idArray: %d.\n", processTable->nextFreeId);
-    printf("Current number of processes: %d.\n", processTable->tableSize);
-    printf("Process table's capacity: %d\n", processTable->tableCapacity);
+    printf("Current number of processes: %d.\n", processTable->size);
     printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
     printf("| %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s |\n", "idArray", "PC", "Parent", "Priority",
            "State", "Start", "Time");
     printf("+------------+------------+------------+------------+------------+------------+------------+");
 
-    for (int i = 0; i < processTable->tableCapacity; ++i)
+    ProcessTableCellNode *currNode = processTable->processTableCellQueue->front;
+
+    printf("\n|            |            |            |            |            |            |            |");
+    while (currNode)
     {
-        if (processTable->emptyArray[i] != 0)
-        {
-            if (i != 0)
-            {
-                printf("\n|            |            |            |            |            |            |            |");
-            }
-            printf("\n| %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d |", processTable->idArray[i],
-                   processTable->programCounterArray[i],
-                   processTable->parentProcessArray[i], processTable->priorityIdArray[i],
-                   processTable->processStateArray[i], processTable->initialTimerArray[i],
-                   processTable->CPUTimerArray[i]);
-        };
+        printf("\n| %-10d | %-10d | %-10d | %-10d | %-10u | %-10d | %-10d |", currNode->processTableCell->id,
+               currNode->processTableCell->programCounter,
+               currNode->processTableCell->parentProcessId,
+               currNode->processTableCell->priority,
+               currNode->processTableCell->state,
+               currNode->processTableCell->initialTime,
+               currNode->processTableCell->CPUTime);
+
+        currNode = currNode->next;
     }
     printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
 }

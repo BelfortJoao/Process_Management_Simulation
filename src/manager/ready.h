@@ -16,7 +16,7 @@ typedef struct Ready
 Ready *initializeReady(int size);
 
 
-bool insertToReadyQueue(Ready *ready, int processId, int prior);
+bool insertToReadyQueue(Ready *ready, int processId, int priority);
 
 
 bool removeFromReadyQueue(Ready *ready, int processId);

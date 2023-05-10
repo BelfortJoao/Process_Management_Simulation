@@ -14,8 +14,8 @@ add_executable(src src/main.c
         src/manager/blocked.h
         src/manager/ready.c
         src/manager/ready.h
-        src/manager/processtable.c
-        src/manager/processtable.h
+        src/processtable/processtable.c
+        src/processtable/processtable.h
         src/process/process.c
         src/process/process.h
         src/control/control.c
@@ -23,6 +23,6 @@ add_executable(src src/main.c
         src/printer/printer.c
         src/printer/printer.h
         src/manager/processmanager.c
-        src/manager/processmanager.h src/input/input.c src/input/input.h src/error/error.h src/datastruct/queue.c src/datastruct/queue.h src/datastruct/queuenode.c src/datastruct/queuenode.h)
+        src/manager/processmanager.h src/input/input.c src/input/input.h src/error/error.h src/datastruct/queue.c src/datastruct/queue.h src/datastruct/queuenode.c src/datastruct/queuenode.h src/processtable/processtablecell.c src/processtable/processtablecell.h src/processtable/processtablecellqueue.c src/processtable/processtablecellqueue.h)
 
 target_link_libraries(src m)

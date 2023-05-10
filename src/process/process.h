@@ -9,9 +9,10 @@
 
 #include <stdio.h>
 
-#define RUNNING "RUNNING"
-#define BLOCKED "BLOCKED"
-#define READY "READY"
+enum ProcessState
+{
+    RUNNING, BLOCKED, READY
+};
 
 
 typedef int *Memory;

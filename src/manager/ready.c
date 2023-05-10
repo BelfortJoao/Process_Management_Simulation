@@ -51,9 +51,9 @@ int nextProcessReady(Ready *ready)
 }
 
 
-bool insertToReadyQueue(Ready *ready, int id, int prior)
+bool insertToReadyQueue(Ready *ready, int id, int priority)
 {
-    if (prior > 3)
+    if (priority > 3)
     {
         return true;
     }
@@ -63,7 +63,7 @@ bool insertToReadyQueue(Ready *ready, int id, int prior)
         return false;
     }
 
-    if (insertToQueue(ready->queues[prior], id))
+    if (insertToQueue(ready->queues[priority], id))
     {
         ready->size++;
         return true;

@@ -94,6 +94,11 @@ void blockDownClock(Blocked *blocked)
 
 void freeBlocked(Blocked *blocked)
 {
-    free(blocked->blockTimes);
-    free(blocked->ids);
+    if (blocked)
+    {
+        free(blocked->blockTimes);
+        free(blocked->ids);
+
+        free(blocked);
+    }
 }
