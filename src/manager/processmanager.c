@@ -42,17 +42,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
         return NULL;
     }
 
-    while (size <= 0)
-    {
-        printf("\nType the Process Table Capacity: ");
-        if (!scanf("%d", &size))
-        {
-            printf("\nInvalid capacity for the table->\n");
-            cleanStdin();
-        }
-    }
-
-    processManager->processTable = initializeProcessTable(size);
+    processManager->processTable = initializeProcessTable(10);
 
     if (!addProcessTableProcess(processManager->processTable, filename, -1, 0))
     {
