@@ -110,7 +110,7 @@ Process *generateProcessCopy(Process *processToCopy)
 
 void initializeProcessMemory(Process *process, int memorySize)
 {
-    process->memory = (int *) calloc(memorySize, sizeof(int));
+    process->memory = (Memory *) calloc(memorySize, sizeof(int));
     process->memorySize = memorySize;
 }
 

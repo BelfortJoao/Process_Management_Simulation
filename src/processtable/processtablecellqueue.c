@@ -14,8 +14,7 @@ ProcessTableCellQueue *initializeProcessTableCellQueue()
         return NULL;
     }
 
-    processTableCellQueue->front = (ProcessTableCellNode *) malloc(sizeof(ProcessTableCellNode));
-    processTableCellQueue->front->next = NULL;
+    processTableCellQueue->front = NULL;
 
     return processTableCellQueue;
 }
@@ -107,6 +106,11 @@ ProcessTableCell *getProcessTableCellByProcessId(ProcessTableCellQueue *processT
         }
 
         currNode = currNode->next;
+    }
+
+    if (!currNode)
+    {
+        return NULL;
     }
 
     return currNode->processTableCell;

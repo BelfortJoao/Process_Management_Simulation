@@ -15,13 +15,13 @@ enum ProcessState
 };
 
 
-typedef int *Memory;
+typedef int Memory;
 typedef char **Program;
 
 
 typedef struct
 {
-    Memory memory; /**< Pointer to the memory allocated for the process */
+    Memory *memory; /**< Pointer to the memory allocated for the process */
     Program program; /**< The program code as an array of strings */
     int numLines; /**< The number of lines in the program */
     int memorySize; /**< The size of the memory allocated for the process */
