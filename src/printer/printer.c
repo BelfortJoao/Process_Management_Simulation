@@ -26,6 +26,21 @@ void printAverageResponseTime(Printer *printer)
     printf("\nTODO: Average response time. Good luck Alan.\n");
 }
 
+char *getStateString(enum ProcessState processState)
+{
+    switch (processState)
+    {
+        case RUNNING:
+            return "RUNNING";
+        case READY:
+            return "READY";
+        case BLOCKED:
+            return "BLOCKED";
+        default:
+            return "ERROR";
+    }
+}
+
 
 void printProcessTable(ProcessTable *processTable)
 {
@@ -37,14 +52,14 @@ void printProcessTable(ProcessTable *processTable)
 
     ProcessTableCellNode *currNode = processTable->processTableCellQueue->front;
 
-    printf("\n|            |            |            |            |            |            |            |");
     while (currNode)
     {
-        printf("\n| %-10d | %-10d | %-10d | %-10d | %-10u | %-10d | %-10d |", currNode->processTableCell->id,
+        printf("\n| %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d |",
+               currNode->processTableCell->id,
                currNode->processTableCell->programCounter,
                currNode->processTableCell->parentProcessId,
                currNode->processTableCell->priority,
-               currNode->processTableCell->state,
+               getStateString(currNode->processTableCell->state),
                currNode->processTableCell->initialTime,
                currNode->processTableCell->CPUTime);
 
