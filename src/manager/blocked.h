@@ -9,21 +9,20 @@ typedef struct blockNode
     int id;
     Timer blocked_time;
     struct QueueNode *next;
-} blockNode;
+} BlockNode;
 
 typedef struct Blocked
 {
-    blockNode *front;
-    blockNode *rear;
+    BlockNode *front;
+    BlockNode *rear;
 } Blocked;
 
-Blocked *initializeBlocked(int size);
+Blocked *initializeBlocked();
+BlockNode *initializeBlockedkNode(int id, Timer time);
+bool insertBlockedId(Blocked *blocked, int processId, int blockTime);
 
 
-void insertBlockedId(Blocked *blocked, int processId, int blockTime);
-
-
-void removeBlockedId(Blocked *blocked, int processId);
+bool removeBlockedId(Blocked *blocked, int processId);
 
 
 void blockDownClock(Blocked *blocked);
