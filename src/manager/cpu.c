@@ -126,6 +126,9 @@ void changeProcess(CPU *cpu, Process *process, int programCounter, Timer program
 {
     for (int i = 0; i < process->numLines; i++)
     {
+        if(!cpu->runningProcess){
+            cpu->runningProcess=process;
+        }
         strcpy(cpu->runningProcess->program[i], process->program[i]);
     }
 
