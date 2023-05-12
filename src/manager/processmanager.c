@@ -148,16 +148,16 @@ void scheduleProcess(ProcessManager *processManager)
     int time=0;
     switch (processToRunCell->priority) {
         case 0:
-            time = 8;
+            time = 1;
             break;
         case 1:
-            time = 4;
-            break;
-        case 2:
             time = 2;
             break;
+        case 2:
+            time = 4;
+            break;
         default:
-            time = 1;
+            time = 8;
             break;
     }
 
