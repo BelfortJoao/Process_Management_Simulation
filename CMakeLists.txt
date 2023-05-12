@@ -22,7 +22,7 @@ add_executable(src src/main.c
         src/control/control.h
         src/printer/printer.c
         src/printer/printer.h
-        src/cores/cores.h
+        src/colour/colour.h
         src/manager/processmanager.c
         src/manager/processmanager.h src/input/input.c src/input/input.h src/error/error.h src/datastruct/queue.c src/datastruct/queue.h src/datastruct/queuenode.c src/datastruct/queuenode.h src/processtable/processtablecell.c src/processtable/processtablecell.h src/processtable/processtablecellqueue.c src/processtable/processtablecellqueue.h)
 

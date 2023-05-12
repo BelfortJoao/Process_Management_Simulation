@@ -3,7 +3,7 @@
 #include "../error/error.h"
 
 #include "printer.h"
-#include "../cores/cores.h"
+#include "../colour/colour.h"
 
 
 Printer *initializePrinter(int size)
@@ -57,8 +57,6 @@ void printProcessTable(ProcessTable *processTable)
 
     while (currNode)
     {
-
-
         if (currNode->processTableCell->state == RUNNING)
         {
             printf("\n|%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|", GREEN,
@@ -69,8 +67,6 @@ void printProcessTable(ProcessTable *processTable)
                    getStateString(currNode->processTableCell->state),
                    currNode->processTableCell->initialTime,
                    currNode->processTableCell->CPUTime, RESET);
-
-            currNode = currNode->next;
         }
         else
         {
@@ -82,9 +78,9 @@ void printProcessTable(ProcessTable *processTable)
                    getStateString(currNode->processTableCell->state),
                    currNode->processTableCell->initialTime,
                    currNode->processTableCell->CPUTime, RESET);
-
-            currNode = currNode->next;
         }
+
+        currNode = currNode->next;
     }
     printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
 }
