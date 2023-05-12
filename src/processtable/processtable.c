@@ -24,7 +24,7 @@ ProcessTable *initializeProcessTable(int initialCapacity)
         return NULL;
     }
 
-    processTable->size = 0;
+    processTable->nextFreeId = 0;
     processTable->blockedArray = initializeBlocked(initialCapacity);
 
     if (!processTable->blockedArray)
@@ -59,10 +59,10 @@ bool addProcessTableProcess(ProcessTable *processTable, char *filename, int pare
         return false;
     }
 
-    processTable->size++;
+    processTable->nextFreeId++;
 
     return insertToReadyQueue(processTable->readyArray,
-                              processTable->size - 1,
+                              processTable->nextFreeId - 1,
                               0);
 }
 
@@ -78,16 +78,6 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
 }
 
 
-void freeProcessTable(ProcessTable *processTable)
-{
-    if (processTable)
-    {
-        freeProcessTableCellQueue(processTable->processTableCellQueue);
-        free(processTable);
-    }
-}
-
-
 bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus)
 {
     ProcessTableCell *processTableCell = getProcessTableCellByProcessId(processTable->processTableCellQueue,
@@ -100,7 +90,7 @@ bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus)
 
     if (!insertCellToProcessTableQueue(processTable->processTableCellQueue,
                                        copyProcessTableCell(processTableCell,
-                                                            processTable->size,
+                                                            processTable->nextFreeId,
                                                             processTable->runningId,
                                                             processTableCell->programCounter + PcPlus,
                                                             timer)))
@@ -108,9 +98,19 @@ bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus)
         return false;
     }
 
-    processTable->size++;
+    processTable->nextFreeId++;
 
     return insertToReadyQueue(processTable->readyArray,
-                              processTable->size - 1,
+                              processTable->nextFreeId - 1,
                               0);
+}
+
+
+void freeProcessTable(ProcessTable *processTable)
+{
+    if (processTable)
+    {
+        freeProcessTableCellQueue(processTable->processTableCellQueue);
+        free(processTable);
+    }
 }

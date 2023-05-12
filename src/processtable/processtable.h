@@ -22,7 +22,7 @@
 typedef struct ProcessTable
 {
     ProcessTableCellQueue *processTableCellQueue;
-    int size;
+    int nextFreeId;
     Ready *readyArray; /**< An array of ready processes. */
     Blocked *blockedArray; /**< An array of blocked processes. */
     Running runningId; /**< The process currently being executed. */
@@ -60,14 +60,6 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable);
 
 
 /**
- * @brief Frees the memory allocated for a process table and its contents.
- *
- * @param processTable The process table to be freed.
- */
-void freeProcessTable(ProcessTable *processTable);
-
-
-/**
  * @brief Copies a process into the process table.
  *
  * @param processTable The process table to copy the process into.
@@ -77,6 +69,14 @@ void freeProcessTable(ProcessTable *processTable);
  * @return True if the process was successfully copied, false otherwise.
  */
 bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus);
+
+
+/**
+ * @brief Frees the memory allocated for a process table and its contents.
+ *
+ * @param processTable The process table to be freed.
+ */
+void freeProcessTable(ProcessTable *processTable);
 
 
 #endif /* SRC_PROCESSTABLE_H */
