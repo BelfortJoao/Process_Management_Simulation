@@ -25,7 +25,7 @@ ProcessTable *initializeProcessTable(int initialCapacity)
     }
 
     processTable->nextFreeId = 0;
-    processTable->blockedArray = initializeBlocked(initialCapacity);
+    processTable->blockedArray = initializeBlocked();
 
     if (!processTable->blockedArray)
     {
@@ -74,7 +74,7 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
         return;
     }
 
-    //removeBlockedId(processTable->blockedArray, id);
+    removeBlockedId(processTable->blockedArray, id);
 }
 
 

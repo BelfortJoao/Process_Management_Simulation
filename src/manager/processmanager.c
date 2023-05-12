@@ -64,13 +64,14 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
 
 void blockProcess(ProcessManager *processManager, int blockTime)
 {
-    if (processManager->processTable->runningId == 0)
+    if (processManager->processTable->runningId < 0)
     {
         return;
     }
 
     //Operação em tabela-sai de readyArray e vai para executando
     int processToRunId = nextProcessReady(processManager->processTable->readyArray);
+    int processToBlock = processManager->processTable->runningId;
 
     if (processToRunId == -1)
     {
@@ -86,7 +87,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
 
     //Operação em tabela-sai de executando e vai para block
     insertBlockedId(processManager->processTable->blockedArray,
-                    processManager->processTable->runningId,
+                    processToBlock,
                     blockTime);
 
     //Operação real
@@ -95,7 +96,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
             processToRunId);
 
     getProcessTableCellByProcessId(processManager->processTable->processTableCellQueue,
-                                   processManager->processTable->runningId)->state = BLOCKED;
+                                   processToBlock)->state = BLOCKED;
 
     changeProcess(processManager->cpu,
                   processToRun->process,
@@ -145,12 +146,20 @@ void scheduleProcess(ProcessManager *processManager)
     {
         printFullQueue();
     }
-
-    int time = 1;
-
-    if (pow(2, (4 - processToRunCell->priority) - 1) >= 1)
-    {
-        time = (int) pow(2, (4 - processToRunCell->priority) - 1);
+    int time=0;
+    switch (processToRunCell->priority) {
+        case 0:
+            time = 1;
+            break;
+        case 1:
+            time = 2;
+            break;
+        case 2:
+            time = 4;
+            break;
+        default:
+            time = 8;
+            break;
     }
 
     changeProcess(processManager->cpu,
@@ -196,11 +205,20 @@ void endProcess(ProcessManager *processManager)
 
     if (processToRunCell)
     {
-        int time = 1;
-
-        if (pow(2, (4 - processToRunCell->priority) - 1) >= 1)
-        {
-            time = (int) pow(2, (4 - processToRunCell->priority) - 1);
+        int time=0;
+        switch (processToRunCell->priority) {
+            case 0:
+                time = 1;
+                break;
+            case 1:
+                time = 2;
+                break;
+            case 2:
+                time = 4;
+                break;
+            default:
+                time = 8;
+                break;
         }
         changeProcess(processManager->cpu,
                       processToRunCell->process,
@@ -223,7 +241,7 @@ void execute(ProcessManager *processManager)
 {
     int processToRunId = nextProcessReady(processManager->processTable->readyArray);
 
-    if (processToRunId == -1 || processManager->processTable->runningId == -1)
+    if (processToRunId == -1 )
     {
         printFinishExe();
         return;
@@ -257,7 +275,7 @@ void processExecuting(ProcessManager *processManager)
     if (processManager->processTable->runningId < 0 || processManager->cpu->runningProcess == NULL)
     {
         execute(processManager);
-
+        processUnblock(processManager);
         if (processManager->kill)
         {
             freeProcessManager(processManager);
@@ -270,10 +288,9 @@ void processExecuting(ProcessManager *processManager)
     {
         scheduleProcess(processManager);
     }
-
+    processUnblock(processManager);
     upperInterpreter(processManager);
     clockUpPC(processManager);
-    processUnblock(processManager);
     printState(processManager->processTable->readyArray);
 
     if (processManager->kill)
@@ -285,25 +302,24 @@ void processExecuting(ProcessManager *processManager)
 
 void processUnblock(ProcessManager *processManager)
 {
-    /// TODO: Blocked has to be a queue.
-    for (int i = 0; i < 10; i++)
-    {
-        if (processManager->processTable->blockedArray->blockTimes[i] == 0)
-        {
-            ProcessTableCell *processToReadyCell = getProcessTableCellByProcessId(
-                    processManager->processTable->processTableCellQueue,
-                    processManager->processTable->blockedArray->ids[i]);
+    //primeiro abaixa o clock
+    blockDownClock(processManager->processTable->blockedArray);
+    //pergunta se é igual a zero
+    if(processManager->processTable->blockedArray->front) {
+        BlockNode *crrblock = processManager->processTable->blockedArray->front;
+        while (crrblock) {
+            BlockNode *nextblock =  crrblock->next;
+            if(crrblock->blocked_time<=0){
+                //coloca em ready
+                ProcessTableCell *cell=  getProcessTableCellByProcessId(
+                        processManager->processTable->processTableCellQueue, crrblock->id);
 
-            removeBlockedId(processManager->processTable->blockedArray, processToReadyCell->id);
-
-            if (!insertToReadyQueue(processManager->processTable->readyArray,
-                                    processToReadyCell->id,
-                                    processToReadyCell->priority))
-            {
-                printFullQueue();
+                insertToReadyQueue(processManager->processTable->readyArray, crrblock->id, cell->priority);
+                cell->state= READY;
+                //tira de block
+                removeBlockedId(processManager->processTable->blockedArray,crrblock->id);
             }
-
-            processToReadyCell->state = READY;
+            crrblock = nextblock;
         }
     }
 }
@@ -313,7 +329,6 @@ void clockUpPC(ProcessManager *processManager)
 {
     timeUp(&processManager->timer);
     timeUp(&processManager->cpu->executing_timer);
-    blockDownClock(processManager->processTable->blockedArray);
 }
 
 
