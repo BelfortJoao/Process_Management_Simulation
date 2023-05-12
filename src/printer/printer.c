@@ -142,12 +142,12 @@ void printReadFile(char *arg1)
 void printState(Ready *ready)
 {
     printf("\n+----------------+\n");
-    printf("| Queue states:  |\n");
+    printf("| %sQueue states:  %s|\n", B_BLACK, RESET);
     printf("+----------------+\n");
 
     for (int i = 0; i < 4; i++)
     {
-        printf("| Queue %d: ",i);
+        printf("| %sQueue %d:%s ",B_BLACK,i, RESET);
 
         if (!ready->queues[i]->front)
         {
