@@ -59,7 +59,19 @@ void printProcessTable(ProcessTable *processTable)
     {
         if (currNode->processTableCell->state == RUNNING)
         {
-            printf("\n|%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|", GREEN,
+            printf("\n|%s%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|",B_BLACK, GREEN,
+                   currNode->processTableCell->id,
+                   currNode->processTableCell->programCounter,
+                   currNode->processTableCell->parentProcessId,
+                   currNode->processTableCell->priority,
+                   getStateString(currNode->processTableCell->state),
+                   currNode->processTableCell->initialTime,
+                   currNode->processTableCell->CPUTime, RESET);
+        }
+
+        else if (currNode->processTableCell->state == BLOCKED)
+        {
+            printf("\n|%s%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|",B_BLACK, RED,
                    currNode->processTableCell->id,
                    currNode->processTableCell->programCounter,
                    currNode->processTableCell->parentProcessId,
@@ -70,7 +82,7 @@ void printProcessTable(ProcessTable *processTable)
         }
         else
         {
-            printf("\n|%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|", MAGENTA,
+            printf("\n|%s%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|",B_BLACK, CYAN,
                    currNode->processTableCell->id,
                    currNode->processTableCell->programCounter,
                    currNode->processTableCell->parentProcessId,
@@ -142,7 +154,7 @@ void printReadFile(char *arg1)
 void printState(Ready *ready)
 {
     printf("\n+----------------+\n");
-    printf("| %sQueue states:  %s|\n", B_BLACK, RESET);
+    printf("| %sReady Queue states:  %s|\n", B_BLACK, RESET);
     printf("+----------------+\n");
 
     for (int i = 0; i < 4; i++)
