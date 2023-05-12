@@ -25,7 +25,7 @@ typedef struct ProcessTable
     int size;
     Ready *readyArray; /**< An array of ready processes. */
     Blocked *blockedArray; /**< An array of blocked processes. */
-    Running running; /**< The process currently being executed. */
+    Running runningId; /**< The process currently being executed. */
 } ProcessTable;
 
 

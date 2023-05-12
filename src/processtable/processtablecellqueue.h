@@ -23,6 +23,8 @@ ProcessTableCellQueue *initializeProcessTableCellQueue();
 bool insertToProcessTableQueue(ProcessTableCellQueue *processTableCellQueue,
                                char *filename, int parentProcessId, int clock);
 
+bool insertCellToProcessTableQueue(ProcessTableCellQueue *processTableCellQueue, ProcessTableCell *processTableCell);
+
 
 bool removeFromProcessTableQueue(ProcessTableCellQueue *processTableCellQueue, int id);
 

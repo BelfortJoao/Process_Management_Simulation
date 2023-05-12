@@ -1,5 +1,5 @@
 /**
- * @file running.h
+ * @file runningId.h
  * @brief Header file for the Running process functionality.
  */
 
@@ -10,7 +10,7 @@
 /**
  * @brief An integer representing a Running process.
  */
-typedef int Running; /**< Stores ID of the running process. */
+typedef int Running; /**< Stores ID of the runningId process. */
 
 
 /**

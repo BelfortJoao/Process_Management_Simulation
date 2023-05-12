@@ -19,10 +19,10 @@ typedef struct ProcessTableCell
 } ProcessTableCell;
 
 
-ProcessTableCell *initializeProcessTableCell();
-
-
 ProcessTableCell *initializeProcessTableCellFromFile(int id, char *filename, int parentProcess, int clock);
+
+ProcessTableCell *copyProcessTableCell(ProcessTableCell *processTableCellToCopy, int id,
+                                       int parentId, int programCounter, Timer timer);
 
 
 void freeProcessTableCell(ProcessTableCell *processTableCell);

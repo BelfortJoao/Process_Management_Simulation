@@ -54,7 +54,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
         printProcessNotFound();
     }
 
-    contextExchange(0, &processManager->processTable->running);
+    contextExchange(0, &processManager->processTable->runningId);
     processManager->processTable->processTableCellQueue->front->processTableCell->state = RUNNING;
     processManager->kill = false;
 
@@ -64,7 +64,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
 
 void blockProcess(ProcessManager *processManager, int blockTime)
 {
-    if (processManager->processTable->running == 0)
+    if (processManager->processTable->runningId == 0)
     {
         return;
     }
@@ -77,7 +77,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
         printEmptyQueue();
     }
 
-    contextExchange(processToRunId, &processManager->processTable->running);
+    contextExchange(processToRunId, &processManager->processTable->runningId);
 
     if (!removeFromReadyQueue(processManager->processTable->readyArray, processToRunId))
     {
@@ -86,7 +86,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
 
     //Operação em tabela-sai de executando e vai para block
     insertBlockedId(processManager->processTable->blockedArray,
-                    processManager->processTable->running,
+                    processManager->processTable->runningId,
                     blockTime);
 
     //Operação real
@@ -95,7 +95,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
             processToRunId);
 
     getProcessTableCellByProcessId(processManager->processTable->processTableCellQueue,
-                                   processManager->processTable->running)->state = BLOCKED;
+                                   processManager->processTable->runningId)->state = BLOCKED;
 
     changeProcess(processManager->cpu,
                   processToRun->process,
@@ -112,7 +112,7 @@ void scheduleProcess(ProcessManager *processManager)
     // Ready array -> Running.
     ProcessTableCell *processToReadyCell = getProcessTableCellByProcessId(
             processManager->processTable->processTableCellQueue,
-            processManager->processTable->running);
+            processManager->processTable->runningId);
     ProcessTableCell *processToRunCell = getProcessTableCellByProcessId(
             processManager->processTable->processTableCellQueue,
             nextProcessReady(
@@ -129,7 +129,7 @@ void scheduleProcess(ProcessManager *processManager)
         processToReadyCell->priority++;
     }
 
-    contextExchange(processToRunCell->id, &processManager->processTable->running);
+    contextExchange(processToRunCell->id, &processManager->processTable->runningId);
 
     if (!removeFromReadyQueue(processManager->processTable->readyArray, processToRunCell->id))
     {
@@ -166,12 +166,12 @@ void scheduleProcess(ProcessManager *processManager)
 
 void endProcess(ProcessManager *processManager)
 {
-    if (processManager->processTable->running == -1)
+    if (processManager->processTable->runningId == -1)
     {
         return;
     }
 
-    int go_excl = processManager->processTable->running;
+    int go_excl = processManager->processTable->runningId;
     int processToRunId = nextProcessReady(processManager->processTable->readyArray);
 
     if (processToRunId == -1)
@@ -180,7 +180,7 @@ void endProcess(ProcessManager *processManager)
     }
     else
     {
-        contextExchange(processToRunId, &processManager->processTable->running);
+        contextExchange(processToRunId, &processManager->processTable->runningId);
 
         if (!removeFromReadyQueue(processManager->processTable->readyArray, processToRunId))
         {
@@ -188,7 +188,7 @@ void endProcess(ProcessManager *processManager)
         }
     }
 
-    //Sai de Ready e vai para running
+    //Sai de Ready e vai para runningId
 
     ProcessTableCell *processToRunCell = getProcessTableCellByProcessId(
             processManager->processTable->processTableCellQueue,
@@ -211,7 +211,7 @@ void endProcess(ProcessManager *processManager)
     }
     else
     {
-        processManager->processTable->running = -1;
+        processManager->processTable->runningId = -1;
         processManager->cpu->runningProcess = NULL;
     }
 
@@ -223,13 +223,13 @@ void execute(ProcessManager *processManager)
 {
     int processToRunId = nextProcessReady(processManager->processTable->readyArray);
 
-    if (processToRunId == -1 || processManager->processTable->running == -1)
+    if (processToRunId == -1 || processManager->processTable->runningId == -1)
     {
         printFinishExe();
         return;
     }
 
-    contextExchange(processToRunId, &processManager->processTable->running);
+    contextExchange(processToRunId, &processManager->processTable->runningId);
 
 
     if (!removeFromReadyQueue(processManager->processTable->readyArray, processToRunId))
@@ -254,7 +254,7 @@ void execute(ProcessManager *processManager)
 
 void processExecuting(ProcessManager *processManager)
 {
-    if (processManager->processTable->running < 0 || processManager->cpu->runningProcess == NULL)
+    if (processManager->processTable->runningId < 0 || processManager->cpu->runningProcess == NULL)
     {
         execute(processManager);
 
@@ -332,7 +332,7 @@ void processCP(ProcessManager *processManager, int PcPlus)
 void processRewind(ProcessManager *processManager, char *filename)
 {
     removeFromProcessTableQueue(processManager->processTable->processTableCellQueue,
-                                processManager->processTable->running);
+                                processManager->processTable->runningId);
 
     insertToProcessTableQueue(processManager->processTable->processTableCellQueue, filename, -1, 0);
 }
@@ -342,7 +342,7 @@ void attExec(ProcessManager *processManager)
 {
     ProcessTableCell *runningProcessCell = getProcessTableCellByProcessId(
             processManager->processTable->processTableCellQueue,
-            processManager->processTable->running);
+            processManager->processTable->runningId);
 
     runningProcessCell->programCounter = processManager->cpu->programCounter;
     runningProcessCell->CPUTime++;

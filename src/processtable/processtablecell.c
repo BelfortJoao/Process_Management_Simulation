@@ -5,32 +5,9 @@
 #include "processtablecell.h"
 
 
-ProcessTableCell *initializeProcessTableCell()
-{
-    ProcessTableCell *processTableCell = (ProcessTableCell *) malloc(sizeof(ProcessTableCell));
-
-    if (!processTableCell)
-    {
-        printf(ALLOCATION_ERROR, "process table cell");
-        return NULL;
-    }
-
-    processTableCell->id = -1;
-    processTableCell->process = initializeProcess();
-    processTableCell->parentProcessId - 1;
-    processTableCell->programCounter = 0;
-    processTableCell->priority = -1;
-    processTableCell->state = BLOCKED;
-    initializeTimer(&processTableCell->initialTime);
-    initializeTimer(&processTableCell->CPUTime);
-
-    return processTableCell;
-}
-
-
 ProcessTableCell *initializeProcessTableCellFromFile(int id, char *filename, int parentProcess, int clock)
 {
-    ProcessTableCell *processTableCell = initializeProcessTableCell();
+    ProcessTableCell *processTableCell = (ProcessTableCell *) malloc(sizeof(ProcessTableCell));
 
     if (!processTableCell)
     {
@@ -45,6 +22,30 @@ ProcessTableCell *initializeProcessTableCellFromFile(int id, char *filename, int
     processTableCell->state = READY;
     processTableCell->initialTime = clock;
     initializeTimer(&processTableCell->CPUTime);
+
+    return processTableCell;
+}
+
+
+ProcessTableCell *copyProcessTableCell(ProcessTableCell *processTableCellToCopy, int id,
+                                       int parentId, int programCounter, Timer timer)
+{
+    ProcessTableCell *processTableCell = (ProcessTableCell *) malloc(sizeof(ProcessTableCell));
+
+    if (!processTableCellToCopy)
+    {
+        return NULL;
+    }
+
+    processTableCell->state = READY;
+    processTableCell->CPUTime = 0;
+    processTableCell->initialTime = timer;
+    processTableCell->id = id;
+    processTableCell->parentProcessId = parentId;
+    processTableCell->priority = 0;
+    processTableCell->state = READY;
+    processTableCell->programCounter = programCounter;
+    processTableCell->process = processTableCellToCopy->process;
 
     return processTableCell;
 }

@@ -16,6 +16,8 @@ ProcessTableCellQueue *initializeProcessTableCellQueue()
 
     processTableCellQueue->front = NULL;
     processTableCellQueue->rear = NULL;
+
+    return processTableCellQueue;
 }
 
 
@@ -49,10 +51,39 @@ bool insertToProcessTableQueue(ProcessTableCellQueue *processTableCellQueue,
 }
 
 
+bool insertCellToProcessTableQueue(ProcessTableCellQueue *processTableCellQueue, ProcessTableCell *processTableCell)
+{
+    // ---------------------------------------- Move it later ----------------------------------------------------------
+    ProcessTableCellNode *processTableCellNode = (ProcessTableCellNode *) malloc(sizeof(ProcessTableCellNode));
+
+    if (!processTableCellNode)
+    {
+        printf(ALLOCATION_ERROR, "process table cell node");
+        return false;
+    }
+
+    processTableCellNode->processTableCell = processTableCell;
+    processTableCellNode->next = NULL;
+    // -----------------------------------------------------------------------------------------------------------------
+
+    if (!processTableCellQueue->front)
+    {
+        processTableCellQueue->front = processTableCellNode;
+        processTableCellQueue->rear = processTableCellNode;
+        return true;
+    }
+
+    processTableCellQueue->rear->next = processTableCellNode;
+    processTableCellQueue->rear = processTableCellNode;
+
+    return true;
+}
+
+
 bool removeFromProcessTableQueue(ProcessTableCellQueue *processTableCellQueue, int id)
 {
 
-if (!processTableCellQueue->front)
+    if (!processTableCellQueue->front)
     {
         printf("ERROR: Process table queue is empty.");
         return false;
@@ -67,7 +98,7 @@ if (!processTableCellQueue->front)
     }
 
     ProcessTableCellNode *currNode = processTableCellQueue->front;
-while (currNode->next)
+    while (currNode->next)
     {
         if (currNode->next->processTableCell->id == id)
         {

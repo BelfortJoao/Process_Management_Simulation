@@ -39,14 +39,14 @@ ProcessTable *initializeProcessTable(int initialCapacity)
         return NULL;
     }
 
-    processTable->running = -1;
+    processTable->runningId = -1;
 
-    if (!processTable->running)
+    if (!processTable->runningId)
     {
         return NULL;
     }
 
-    contextExchange(-1, &processTable->running);
+    contextExchange(-1, &processTable->runningId);
 
     return processTable;
 }
@@ -74,7 +74,6 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
         return;
     }
 
-    //processTable--;
     //removeBlockedId(processTable->blockedArray, id);
 }
 
@@ -91,29 +90,23 @@ void freeProcessTable(ProcessTable *processTable)
 
 bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus)
 {
-    processTable->processTableCellQueue->rear->next = (ProcessTableCellNode *) malloc(sizeof(ProcessTableCellNode));
-    processTable->processTableCellQueue->rear->next->next = NULL;
-    processTable->processTableCellQueue->rear->next->processTableCell = (ProcessTableCell *) malloc(sizeof(ProcessTableCell));
+    ProcessTableCell *processTableCell = getProcessTableCellByProcessId(processTable->processTableCellQueue,
+                                                                        processTable->runningId);
 
-    ProcessTableCell  *processTableCell = getProcessTableCellByProcessId(processTable->processTableCellQueue, processTable->running);
     if (!processTableCell)
     {
         return false;
     }
-    processTable->processTableCellQueue->rear->next->processTableCell->CPUTime = 0;
-    processTable->processTableCellQueue->rear->next->processTableCell->state = READY;
-    processTable->processTableCellQueue->rear->next->processTableCell->CPUTime = 0;
-    processTable->processTableCellQueue->rear->next->processTableCell->initialTime = timer;
-    processTable->processTableCellQueue->rear->next->processTableCell->id = processTable->size;
-    processTable->processTableCellQueue->rear->next->processTableCell->parentProcessId = processTable->running;
-    processTable->processTableCellQueue->rear->next->processTableCell->priority = 0;
-    processTable->processTableCellQueue->rear->next->processTableCell->state = READY;
-    processTable->processTableCellQueue->rear->next->processTableCell->programCounter = processTableCell->programCounter + PcPlus;
-    processTable->processTableCellQueue->rear->next->processTableCell->process = processTableCell->process;
 
-    processTable->processTableCellQueue->rear->next->next = NULL;
-    processTable->processTableCellQueue->rear = processTable->processTableCellQueue->rear->next;
-
+    if (!insertCellToProcessTableQueue(processTable->processTableCellQueue,
+                                       copyProcessTableCell(processTableCell,
+                                                            processTable->size,
+                                                            processTable->runningId,
+                                                            processTableCell->programCounter + PcPlus,
+                                                            timer)))
+    {
+        return false;
+    }
 
     processTable->size++;
 

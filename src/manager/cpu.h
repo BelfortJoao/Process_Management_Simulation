@@ -16,7 +16,7 @@
  */
 typedef struct CPU
 {
-    Process *runningProcess; /**< Pointer to the process that is currently running */
+    Process *runningProcess; /**< Pointer to the process that is currently runningId */
     int programCounter; /**< Program counter */
     Timer executing_timer; /**< Timer for the CPU's executing time */
     Timer program_timer; /**< Timer for the current program's time */
@@ -56,7 +56,7 @@ int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus);
 
 
 /**
- * @brief Replaces the currently running process with a new process
+ * @brief Replaces the currently runningId process with a new process
  * @param cpu Pointer to the CPU that is executing the program
  * @param process Pointer to the new process
  * @param programCounter New value for the program counter
