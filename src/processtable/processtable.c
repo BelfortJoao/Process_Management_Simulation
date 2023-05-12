@@ -74,8 +74,8 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
         return;
     }
 
-    processTable--;
-    removeBlockedId(processTable->blockedArray, id);
+    //processTable--;
+    //removeBlockedId(processTable->blockedArray, id);
 }
 
 
@@ -89,22 +89,35 @@ void freeProcessTable(ProcessTable *processTable)
 }
 
 
-//bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus)
-//{
-//    processTable->size++;
-//
-//    int emptySpace = getProcessTableEmptySpace(processTable);
-//    processTable->emptyArray[emptySpace] = 1;
-//    processTable->priorityIdArray[emptySpace] = 0;
-//    processTable->programCounterArray[emptySpace] =
-//            processTable->programCounterArray[*processTable->running] + PcPlus;
-//    processTable->processStateArray[emptySpace] = READY;
-//    processTable->parentProcessArray[emptySpace] = *processTable->running;
-//    processTable->initialTimerArray[emptySpace] = timer;
-//    processTable->CPUTimerArray[emptySpace] = 0;
-//    processTable->idArray[emptySpace] = nextID(processTable);
-//
-//    return insertToReadyQueue(processTable->readyArray,
-//                              processTable->size - 1,
-//                              0);
-//}
+bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus)
+{
+    processTable->processTableCellQueue->rear->next = (ProcessTableCellNode *) malloc(sizeof(ProcessTableCellNode));
+    processTable->processTableCellQueue->rear->next->next = NULL;
+    processTable->processTableCellQueue->rear->next->processTableCell = (ProcessTableCell *) malloc(sizeof(ProcessTableCell));
+
+    ProcessTableCell  *processTableCell = getProcessTableCellByProcessId(processTable->processTableCellQueue, processTable->running);
+    if (!processTableCell)
+    {
+        return false;
+    }
+    processTable->processTableCellQueue->rear->next->processTableCell->CPUTime = 0;
+    processTable->processTableCellQueue->rear->next->processTableCell->state = READY;
+    processTable->processTableCellQueue->rear->next->processTableCell->CPUTime = 0;
+    processTable->processTableCellQueue->rear->next->processTableCell->initialTime = timer;
+    processTable->processTableCellQueue->rear->next->processTableCell->id = processTable->size;
+    processTable->processTableCellQueue->rear->next->processTableCell->parentProcessId = processTable->running;
+    processTable->processTableCellQueue->rear->next->processTableCell->priority = 0;
+    processTable->processTableCellQueue->rear->next->processTableCell->state = READY;
+    processTable->processTableCellQueue->rear->next->processTableCell->programCounter = processTableCell->programCounter + PcPlus;
+    processTable->processTableCellQueue->rear->next->processTableCell->process = processTableCell->process;
+
+    processTable->processTableCellQueue->rear->next->next = NULL;
+    processTable->processTableCellQueue->rear = processTable->processTableCellQueue->rear->next;
+
+
+    processTable->size++;
+
+    return insertToReadyQueue(processTable->readyArray,
+                              processTable->size - 1,
+                              0);
+}

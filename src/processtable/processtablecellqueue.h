@@ -13,6 +13,7 @@ typedef struct ProcessTableCellNode
 typedef struct ProcessTableCellQueue
 {
     ProcessTableCellNode *front;
+    ProcessTableCellNode *rear;
 } ProcessTableCellQueue;
 
 

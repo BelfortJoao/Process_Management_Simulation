@@ -15,8 +15,7 @@ ProcessTableCellQueue *initializeProcessTableCellQueue()
     }
 
     processTableCellQueue->front = NULL;
-
-    return processTableCellQueue;
+    processTableCellQueue->rear = NULL;
 }
 
 
@@ -36,26 +35,15 @@ bool insertToProcessTableQueue(ProcessTableCellQueue *processTableCellQueue,
     processTableCellNode->next = NULL;
     // -----------------------------------------------------------------------------------------------------------------
 
-    if (processTableCellQueue->front)
-    {
-        ProcessTableCellNode *currNode = processTableCellQueue->front;
-
-        while (currNode)
-        {
-            if (!currNode->next)
-            {
-                break;
-            }
-
-            currNode = currNode->next;
-        }
-
-        currNode->next = processTableCellNode;
-    }
-    else
+    if (!processTableCellQueue->front)
     {
         processTableCellQueue->front = processTableCellNode;
+        processTableCellQueue->rear = processTableCellNode;
+        return true;
     }
+
+    processTableCellQueue->rear->next = processTableCellNode;
+    processTableCellQueue->rear = processTableCellNode;
 
     return true;
 }
@@ -63,35 +51,41 @@ bool insertToProcessTableQueue(ProcessTableCellQueue *processTableCellQueue,
 
 bool removeFromProcessTableQueue(ProcessTableCellQueue *processTableCellQueue, int id)
 {
-    if (processTableCellQueue->front)
+
+if (!processTableCellQueue->front)
     {
-        printf("ERROR: Couldn't find process to delete in process table queue.");
+        printf("ERROR: Process table queue is empty.");
         return false;
     }
 
-    ProcessTableCellNode *currNode = processTableCellQueue->front;
-
-    while (currNode)
+    if (processTableCellQueue->front->processTableCell->id == id)
     {
-        if (currNode->next && currNode->next->processTableCell->id == id)
+        ProcessTableCellNode *nodeToDelete = processTableCellQueue->front;
+        processTableCellQueue->front = processTableCellQueue->front->next;
+        freeProcessTableCellNode(nodeToDelete);
+        return true;
+    }
+
+    ProcessTableCellNode *currNode = processTableCellQueue->front;
+while (currNode->next)
+    {
+        if (currNode->next->processTableCell->id == id)
         {
-            break;
+            ProcessTableCellNode *nodeToDelete = currNode->next;
+            if (currNode->next == processTableCellQueue->rear)
+            {
+                processTableCellQueue->rear = currNode;
+            }
+            currNode->next = currNode->next->next;
+            freeProcessTableCellNode(nodeToDelete);
+            return true;
         }
 
         currNode = currNode->next;
     }
 
-    if (!currNode->next || currNode->next->processTableCell->id != id)
-    {
-        printf("ERROR: Couldn't find process to delete in process table queue.");
-        return false;
-    }
-
-    ProcessTableCellNode *nodeToDelete = currNode->next;
-    currNode->next = currNode->next->next;
-    freeProcessTableCellNode(nodeToDelete);
-
-    return true;
+    printf("ERROR: Couldn't find process to delete in process table queue.");
+    return false;
 }
 
 ProcessTableCell *getProcessTableCellByProcessId(ProcessTableCellQueue *processTableCellQueue, int processId)

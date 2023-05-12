@@ -42,7 +42,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
         return NULL;
     }
 
-    processManager->processTable = initializeProcessTable(10);
+    processManager->processTable = initializeProcessTable(100);
 
     if (!addProcessTableProcess(processManager->processTable, filename, -1, 0))
     {
@@ -196,10 +196,16 @@ void endProcess(ProcessManager *processManager)
 
     if (processToRunCell)
     {
+        int time = 1;
+
+        if (pow(2, (4 - processToRunCell->priority) - 1) >= 1)
+        {
+            time = (int) pow(2, (4 - processToRunCell->priority) - 1);
+        }
         changeProcess(processManager->cpu,
                       processToRunCell->process,
                       processToRunCell->programCounter,
-                      processToRunCell->CPUTime,
+                        time,
                       0);
         processToRunCell->state = RUNNING;
     }
@@ -313,10 +319,13 @@ void clockUpPC(ProcessManager *processManager)
 
 void processCP(ProcessManager *processManager, int PcPlus)
 {
-//    if (!copyProcess(processManager->processTable, processManager->timer, PcPlus))
-//    {
-//        printFullQueue();
-//    }
+   if (!copyProcess(processManager->processTable, processManager->timer, PcPlus))
+   {
+       printFullQueue();
+   }
+  {
+       printFullQueue();
+  }
 }
 
 
@@ -337,9 +346,6 @@ void attExec(ProcessManager *processManager)
 
     runningProcessCell->programCounter = processManager->cpu->programCounter;
     runningProcessCell->CPUTime++;
-
-    // This doesn't make sense.
-    //processManager->processTable->processArray[*processManager->processTable->running] = processManager->cpu->runningProcess;
 }
 
 

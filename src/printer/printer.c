@@ -134,7 +134,7 @@ void printState(Ready *ready)
 
         if (!ready->queues[i]->front)
         {
-            printf("Empty |");
+            printf("Empty ");
         }
         else
         {
@@ -142,7 +142,7 @@ void printState(Ready *ready)
 
             while (currQueueNode)
             {
-                printf("%d     |", currQueueNode->id);
+                printf("%d     ", currQueueNode->id);
                 currQueueNode = currQueueNode->next;
             }
         }
