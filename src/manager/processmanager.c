@@ -85,9 +85,9 @@ void blockProcess(ProcessManager *processManager, int blockTime)
     }
 
     //Operação em tabela-sai de executando e vai para block
-    insertBlockedId(processManager->processTable->blockedArray,
-                    processManager->processTable->runningId,
-                    blockTime);
+//    insertBlockedId(processManager->processTable->blockedArray,
+//                    processManager->processTable->runningId,
+//                    blockTime);
 
     //Operação real
     ProcessTableCell *processToRun = getProcessTableCellByProcessId(
@@ -145,12 +145,20 @@ void scheduleProcess(ProcessManager *processManager)
     {
         printFullQueue();
     }
-
-    int time = 1;
-
-    if (pow(2, (4 - processToRunCell->priority) - 1) >= 1)
-    {
-        time = (int) pow(2, (4 - processToRunCell->priority) - 1);
+    int time=0;
+    switch (processToRunCell->priority) {
+        case 0:
+            time = 8;
+            break;
+        case 1:
+            time = 4;
+            break;
+        case 2:
+            time = 2;
+            break;
+        default:
+            time = 1;
+            break;
     }
 
     changeProcess(processManager->cpu,
@@ -273,7 +281,7 @@ void processExecuting(ProcessManager *processManager)
 
     upperInterpreter(processManager);
     clockUpPC(processManager);
-    processUnblock(processManager);
+//    processUnblock(processManager);
     printState(processManager->processTable->readyArray);
 
     if (processManager->kill)
@@ -282,7 +290,7 @@ void processExecuting(ProcessManager *processManager)
     }
 }
 
-
+/*
 void processUnblock(ProcessManager *processManager)
 {
     /// TODO: Blocked has to be a queue.
@@ -307,13 +315,13 @@ void processUnblock(ProcessManager *processManager)
         }
     }
 }
-
+*/
 
 void clockUpPC(ProcessManager *processManager)
 {
     timeUp(&processManager->timer);
     timeUp(&processManager->cpu->executing_timer);
-    blockDownClock(processManager->processTable->blockedArray);
+//    blockDownClock(processManager->processTable->blockedArray);
 }
 
 

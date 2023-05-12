@@ -25,7 +25,7 @@ ProcessTable *initializeProcessTable(int initialCapacity)
     }
 
     processTable->nextFreeId = 0;
-    processTable->blockedArray = initializeBlocked(initialCapacity);
+//    processTable->blockedArray = initializeBlocked(initialCapacity);
 
     if (!processTable->blockedArray)
     {

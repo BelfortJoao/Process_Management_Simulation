@@ -4,7 +4,7 @@
 
 #include "blocked.h"
 
-
+/*
 Blocked *initializeBlocked(int size)
 {
     Blocked *blockedProcesses = (Blocked *) malloc(sizeof(Blocked));
@@ -101,4 +101,4 @@ void freeBlocked(Blocked *blocked)
 
         free(blocked);
     }
-}
+}*/

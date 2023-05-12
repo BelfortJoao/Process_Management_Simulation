@@ -1,14 +1,21 @@
 #ifndef SRC_BLOCKED_H
 #define SRC_BLOCKED_H
 
+#include <stdbool.h>
+#include "timer.h"
+
+typedef struct blockNode
+{
+    int id;
+    Timer blocked_time;
+    struct QueueNode *next;
+} blockNode;
 
 typedef struct Blocked
 {
-    int *blockTimes;
-    int *ids;
-    int size;
-} Blocked; // Processos que estão atualmente bloqueados
-
+    blockNode *front;
+    blockNode *rear;
+} Blocked;
 
 Blocked *initializeBlocked(int size);
 
