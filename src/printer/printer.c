@@ -3,6 +3,7 @@
 #include "../error/error.h"
 
 #include "printer.h"
+#include "../cores/cores.h"
 
 
 Printer *initializePrinter(int size)
@@ -46,24 +47,40 @@ void printProcessTable(ProcessTable *processTable)
 {
     printf("Current number of processes: %d.\n", processTable->size);
     printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
-    printf("| %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s |\n", "idArray", "PC", "Parent", "Priority",
-           "State", "Start", "Time");
+    printf("|%s %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s %s|\n",B_BLACK, "idArray", "PC", "Parent", "Priority",
+           "State", "Start", "Time", RESET);
     printf("+------------+------------+------------+------------+------------+------------+------------+");
 
     ProcessTableCellNode *currNode = processTable->processTableCellQueue->front;
 
     while (currNode)
     {
-        printf("\n| %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d |",
-               currNode->processTableCell->id,
-               currNode->processTableCell->programCounter,
-               currNode->processTableCell->parentProcessId,
-               currNode->processTableCell->priority,
-               getStateString(currNode->processTableCell->state),
-               currNode->processTableCell->initialTime,
-               currNode->processTableCell->CPUTime);
 
-        currNode = currNode->next;
+
+        if (currNode->processTableCell->state == RUNNING){
+            printf("\n|%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|",GREEN,
+                   currNode->processTableCell->id,
+                   currNode->processTableCell->programCounter,
+                   currNode->processTableCell->parentProcessId,
+                   currNode->processTableCell->priority,
+                   getStateString(currNode->processTableCell->state),
+                   currNode->processTableCell->initialTime,
+                   currNode->processTableCell->CPUTime, RESET);
+
+            currNode = currNode->next;
+        }
+        else{
+            printf("\n|%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|", MAGENTA,
+                   currNode->processTableCell->id,
+                   currNode->processTableCell->programCounter,
+                   currNode->processTableCell->parentProcessId,
+                   currNode->processTableCell->priority,
+                   getStateString(currNode->processTableCell->state),
+                   currNode->processTableCell->initialTime,
+                   currNode->processTableCell->CPUTime, RESET);
+
+            currNode = currNode->next;
+        }
     }
     printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
 }
@@ -130,11 +147,12 @@ void printState(Ready *ready)
 
     for (int i = 0; i < 4; i++)
     {
-        printf("| Queue %d: ", i);
+        printf("| Queue %d: ",i);
 
         if (!ready->queues[i]->front)
         {
-            printf("Empty ");
+            printf("%sEMPTY%s", RED, RESET);
+
         }
         else
         {
@@ -142,7 +160,9 @@ void printState(Ready *ready)
 
             while (currQueueNode)
             {
-                printf("%d     ", currQueueNode->id);
+
+                printf("%s%s%-3d%s", BOLD, GREEN,currQueueNode->id, RESET);
+
                 currQueueNode = currQueueNode->next;
             }
         }

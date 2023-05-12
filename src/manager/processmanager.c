@@ -42,7 +42,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
         return NULL;
     }
 
-    processManager->processTable = initializeProcessTable(100);
+    processManager->processTable = initializeProcessTable(DEFAULT_INITIAL_CAPACITY);
 
     if (!addProcessTableProcess(processManager->processTable, filename, -1, 0))
     {

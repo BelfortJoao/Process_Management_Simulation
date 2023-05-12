@@ -10,6 +10,8 @@
 #include "cpu.h"
 #include "../processtable/processtable.h"
 
+#define DEFAULT_INITIAL_CAPACITY 1000
+
 
 /**
  * @brief Struct containing the necessary data for a Process Manager.
