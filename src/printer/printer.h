@@ -6,14 +6,14 @@
 #ifndef SRC_PRINTER_H
 #define SRC_PRINTER_H
 
-#include "../manager/processtable.h"
+#include "../processtable/processtable.h"
 #include "../manager/ready.h"
 
 
 /**
  * @brief Struct to store data related to printing to the console.
  *
- * This struct contains a two-dimensional array to store response times and a size variable to track the size of the array.
+ * This struct contains a two-dimensional array to store response times and a nextFreeId variable to track the nextFreeId of the array.
  */
 typedef struct
 {
@@ -23,9 +23,9 @@ typedef struct
 
 
 /**
- * Initializes a Printer with the given size.
+ * Initializes a Printer with the given nextFreeId.
  *
- * @param size the size of the Printer
+ * @param size the nextFreeId of the Printer
  * @return a pointer to the newly allocated Printer, or NULL if allocation failed
  */
 Printer *initializePrinter(int size);
@@ -50,7 +50,7 @@ void printProcessTable(ProcessTable *processTable);
 /**
  * Prints a message indicating that memory has been initialized.
  *
- * @param initialMemorySize the size of the initialized memory
+ * @param initialMemorySize the nextFreeId of the initialized memory
  */
 void printInitialMemorySize(int initialMemorySize);
 

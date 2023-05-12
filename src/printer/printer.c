@@ -3,6 +3,7 @@
 #include "../error/error.h"
 
 #include "printer.h"
+#include "../colour/colour.h"
 
 
 Printer *initializePrinter(int size)
@@ -27,30 +28,59 @@ void printAverageResponseTime(Printer *printer)
 }
 
 
+char *getStateString(enum ProcessState processState)
+{
+    switch (processState)
+    {
+        case RUNNING:
+            return "RUNNING";
+        case READY:
+            return "READY";
+        case BLOCKED:
+            return "BLOCKED";
+        default:
+            return "ERROR";
+    }
+}
+
+
 void printProcessTable(ProcessTable *processTable)
 {
-    printf("Next free idArray: %d.\n", processTable->nextFreeId);
-    printf("Current number of processes: %d.\n", processTable->tableSize);
-    printf("Process table's capacity: %d\n", processTable->tableCapacity);
+    printf("Current number of processes: %d.\n", processTable->nextFreeId);
     printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
-    printf("| %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s |\n", "idArray", "PC", "Parent", "Priority",
-           "State", "Start", "Time");
+    printf("|%s %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s %s|\n", B_BLACK, "idArray", "PC", "Parent",
+           "Priority",
+           "State", "Start", "Time", RESET);
     printf("+------------+------------+------------+------------+------------+------------+------------+");
 
-    for (int i = 0; i < processTable->tableCapacity; ++i)
+    ProcessTableCellNode *currNode = processTable->processTableCellQueue->front;
+
+    while (currNode)
     {
-        if (processTable->emptyArray[i] != 0)
+        if (currNode->processTableCell->state == RUNNING)
         {
-            if (i != 0)
-            {
-                printf("\n|            |            |            |            |            |            |            |");
-            }
-            printf("\n| %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d |", processTable->idArray[i],
-                   processTable->programCounterArray[i],
-                   processTable->parentProcessArray[i], processTable->priorityIdArray[i],
-                   processTable->processStateArray[i], processTable->initialTimerArray[i],
-                   processTable->CPUTimerArray[i]);
-        };
+            printf("\n|%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|", GREEN,
+                   currNode->processTableCell->id,
+                   currNode->processTableCell->programCounter,
+                   currNode->processTableCell->parentProcessId,
+                   currNode->processTableCell->priority,
+                   getStateString(currNode->processTableCell->state),
+                   currNode->processTableCell->initialTime,
+                   currNode->processTableCell->CPUTime, RESET);
+        }
+        else
+        {
+            printf("\n|%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|", MAGENTA,
+                   currNode->processTableCell->id,
+                   currNode->processTableCell->programCounter,
+                   currNode->processTableCell->parentProcessId,
+                   currNode->processTableCell->priority,
+                   getStateString(currNode->processTableCell->state),
+                   currNode->processTableCell->initialTime,
+                   currNode->processTableCell->CPUTime, RESET);
+        }
+
+        currNode = currNode->next;
     }
     printf("\n+------------+------------+------------+------------+------------+------------+------------+\n");
 }
@@ -58,7 +88,7 @@ void printProcessTable(ProcessTable *processTable)
 
 void printInitialMemorySize(int initialMemorySize)
 {
-    printf("Memory initialized with size %d.\n", initialMemorySize);
+    printf("Memory initialized with nextFreeId %d.\n", initialMemorySize);
 }
 
 
@@ -112,16 +142,17 @@ void printReadFile(char *arg1)
 void printState(Ready *ready)
 {
     printf("\n+----------------+\n");
-    printf("| Queue states:  |\n");
+    printf("| %sQueue states:  %s|\n", B_BLACK, RESET);
     printf("+----------------+\n");
 
     for (int i = 0; i < 4; i++)
     {
-        printf("| Queue %d: ", i);
+        printf("| %sQueue %d:%s ", B_BLACK, i, RESET);
 
         if (!ready->queues[i]->front)
         {
-            printf("Empty |");
+            printf("%sEMPTY%s", RED, RESET);
+
         }
         else
         {
@@ -129,7 +160,9 @@ void printState(Ready *ready)
 
             while (currQueueNode)
             {
-                printf("%d     |", currQueueNode->id);
+
+                printf("%s%s%-3d%s", BOLD, GREEN, currQueueNode->id, RESET);
+
                 currQueueNode = currQueueNode->next;
             }
         }

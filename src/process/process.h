@@ -9,21 +9,22 @@
 
 #include <stdio.h>
 
-#define RUNNING "RUNNING"
-#define BLOCKED "BLOCKED"
-#define READY "READY"
+enum ProcessState
+{
+    RUNNING, BLOCKED, READY
+};
 
 
-typedef int *Memory;
+typedef int Memory;
 typedef char **Program;
 
 
 typedef struct
 {
-    Memory memory; /**< Pointer to the memory allocated for the process */
+    Memory *memory; /**< Pointer to the memory allocated for the process */
     Program program; /**< The program code as an array of strings */
     int numLines; /**< The number of lines in the program */
-    int memorySize; /**< The size of the memory allocated for the process */
+    int memorySize; /**< The nextFreeId of the memory allocated for the process */
 } Process;
 
 
@@ -71,7 +72,7 @@ Process *generateProcessCopy(Process *processToCopy);
 
 /**
  * @brief Initializes the memory for a process.
- * Takes a process pointer and a memory size as input, allocates memory for the process,
+ * Takes a process pointer and a memory nextFreeId as input, allocates memory for the process,
  * then initializes each memory location to 0.
  *
  * @param process Pointer to the process to initialize memory for.
