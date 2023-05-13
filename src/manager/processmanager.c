@@ -76,6 +76,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
     if (processToRunId == -1)
     {
         printEmptyQueue();
+        return;
     }
 
     contextExchange(processToRunId, &processManager->processTable->runningId);
