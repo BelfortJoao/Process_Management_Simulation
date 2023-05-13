@@ -59,7 +59,7 @@ void printProcessTable(ProcessTable *processTable)
     {
         if (currNode->processTableCell->state == RUNNING)
         {
-            printf("\n|%s%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|",B_BLACK, GREEN,
+            printf("\n|%s%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|", B_BLACK, GREEN,
                    currNode->processTableCell->id,
                    currNode->processTableCell->programCounter,
                    currNode->processTableCell->parentProcessId,
@@ -71,7 +71,7 @@ void printProcessTable(ProcessTable *processTable)
 
         else if (currNode->processTableCell->state == BLOCKED)
         {
-            printf("\n|%s%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|",B_BLACK, RED,
+            printf("\n|%s%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|", B_BLACK, RED,
                    currNode->processTableCell->id,
                    currNode->processTableCell->programCounter,
                    currNode->processTableCell->parentProcessId,
@@ -82,7 +82,7 @@ void printProcessTable(ProcessTable *processTable)
         }
         else
         {
-            printf("\n|%s%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|",B_BLACK, CYAN,
+            printf("\n|%s%s %-10d | %-10d | %-10d | %-10d | %-10s | %-10d | %-10d %s|", B_BLACK, CYAN,
                    currNode->processTableCell->id,
                    currNode->processTableCell->programCounter,
                    currNode->processTableCell->parentProcessId,
@@ -173,7 +173,7 @@ void printState(Ready *ready)
             while (currQueueNode)
             {
 
-                printf("%s%s%-3d%s", BOLD, GREEN, currQueueNode->id, RESET);
+                printf("%s%s%-4d%s", BOLD, GREEN, currQueueNode->id, RESET);
 
                 currQueueNode = currQueueNode->next;
             }

@@ -63,7 +63,7 @@ Process *initializeProcessFromFile(char *filename)
 
     if (!file)
     {
-        printf(ERROR_FILE, filePath);
+        printf(FILE_ERROR, filePath);
         return NULL;
     }
 
