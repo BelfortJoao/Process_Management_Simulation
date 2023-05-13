@@ -11,11 +11,13 @@
 #ifndef SRC_ERROR_H
 #define SRC_ERROR_H
 
-#define INVALID_COMMAND "Invalid command: '%c'."
-#define INVALID_LINE "\nERROR: Invalid line in file. Please make sure that the file is correct.\n"
-#define CONVERSION_ERROR "\nERROR: Couldn't convert string to integer.\n"
-#define ALLOCATION_ERROR "\nERROR: Couldn't allocate memory correctly for %s.\n"
-#define ERROR_FILE "\nERROR: Couldn't open the file at '%s'.\n"
+#include "../colour/colour.h"
+
+#define INVALID_COMMAND "%sInvalid command: '%c'.", RED
+#define INVALID_LINE "%s\nERROR: Invalid line in file. Please make sure that the file is correct.\n", RED
+#define CONVERSION_ERROR "%s\nERROR: Couldn't convert string to integer.\n", RED
+#define ALLOCATION_ERROR "%s\nERROR: Couldn't allocate memory correctly for %s.\n", RED
+#define ERROR_FILE "%s\nERROR: Couldn't open the file at '%s'.\n", RED
 
 
 #endif /* SRC_ERROR_H */

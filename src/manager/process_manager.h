@@ -3,12 +3,12 @@
  * @brief Header file containing function declarations and struct definitions for the ProcessManager module.
  */
 
-#ifndef SRC_PROCESSMANAGER_H
-#define SRC_PROCESSMANAGER_H
+#ifndef SRC_PROCESS_MANAGER_H
+#define SRC_PROCESS_MANAGER_H
 
 #include <stdbool.h>
 #include "cpu.h"
-#include "../processtable/processtable.h"
+#include "../processtable/process_table.h"
 
 #define DEFAULT_INITIAL_CAPACITY 1000
 
@@ -142,4 +142,4 @@ void upperInterpreter(ProcessManager *processManager);
 void freeProcessManager(ProcessManager *processManager);
 
 
-#endif /* SRC_PROCESSMANAGER_H */
+#endif /* SRC_PROCESS_MANAGER_H */

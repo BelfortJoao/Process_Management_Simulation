@@ -6,8 +6,8 @@
 #ifndef SRC_PRINTER_H
 #define SRC_PRINTER_H
 
-#include "../processtable/processtable.h"
-#include "../manager/ready.h"
+#include "../processtable/process_table.h"
+#include "../ready/ready.h"
 
 
 /**

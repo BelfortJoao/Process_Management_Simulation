@@ -81,7 +81,7 @@ int runControl(Control *control)
                 break;
             case 'I':
                 printProcessTable(control->processManager->processTable);
-                printState(control->processManager->processTable->readyArray);
+                printState(control->processManager->processTable->ready);
                 break;
             default:
                 printf(INVALID_COMMAND, command);

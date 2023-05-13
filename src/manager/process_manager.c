@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
-#include "../input/input.h"
 #include "../error/error.h"
 #include "../printer/printer.h"
 
-#include "processmanager.h"
+#include "process_manager.h"
 
 
 ProcessManager *initializeProcessManager()
@@ -32,8 +30,6 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
         return NULL;
     }
 
-    int size = 0;
-
     initializeTimer(&processManager->timer);
     processManager->cpu = initializeCPU(filename);
 
@@ -49,7 +45,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
         printFullQueue();
     }
 
-    if (!removeFromReadyQueue(processManager->processTable->readyArray, 0))
+    if (!removeFromReady(processManager->processTable->ready, 0))
     {
         printProcessNotFound();
     }
@@ -69,8 +65,8 @@ void blockProcess(ProcessManager *processManager, int blockTime)
         return;
     }
 
-    //Operação em tabela-sai de readyArray e vai para executando
-    int processToRunId = nextProcessReady(processManager->processTable->readyArray);
+    //Operação em tabela-sai de ready e vai para executando
+    int processToRunId = nextProcessReady(processManager->processTable->ready);
     int processToBlock = processManager->processTable->runningId;
 
     if (processToRunId == -1)
@@ -81,15 +77,15 @@ void blockProcess(ProcessManager *processManager, int blockTime)
 
     contextExchange(processToRunId, &processManager->processTable->runningId);
 
-    if (!removeFromReadyQueue(processManager->processTable->readyArray, processToRunId))
+    if (!removeFromReady(processManager->processTable->ready, processToRunId))
     {
         printProcessNotFound();
     }
 
     //Operação em tabela-sai de executando e vai para block
-    insertBlockedId(processManager->processTable->blockedArray,
-                    processToBlock,
-                    blockTime);
+    insertToBlockedQueue(processManager->processTable->blockedQueue,
+                         processToBlock,
+                         blockTime);
 
     //Operação real
     ProcessTableCell *processToRun = getProcessTableCellByProcessId(
@@ -118,7 +114,7 @@ void scheduleProcess(ProcessManager *processManager)
     ProcessTableCell *processToRunCell = getProcessTableCellByProcessId(
             processManager->processTable->processTableCellQueue,
             nextProcessReady(
-                    processManager->processTable->readyArray));
+                    processManager->processTable->ready));
 
     if (!processToRunCell)
     {
@@ -133,7 +129,7 @@ void scheduleProcess(ProcessManager *processManager)
 
     contextExchange(processToRunCell->id, &processManager->processTable->runningId);
 
-    if (!removeFromReadyQueue(processManager->processTable->readyArray, processToRunCell->id))
+    if (!removeFromReady(processManager->processTable->ready, processToRunCell->id))
     {
         printProcessNotFound();
     }
@@ -141,14 +137,17 @@ void scheduleProcess(ProcessManager *processManager)
     /// Remove when in production mode.
     printProcessTable(processManager->processTable);
 
-    if (!insertToReadyQueue(processManager->processTable->readyArray,
-                            processToReadyCell->id,
-                            processToReadyCell->priority))
+    if (!insertToReady(processManager->processTable->ready,
+                       processToReadyCell->id,
+                       processToReadyCell->priority))
     {
         printFullQueue();
     }
-    int time=0;
-    switch (processToRunCell->priority) {
+
+    int time;
+
+    switch (processToRunCell->priority)
+    {
         case 0:
             time = 1;
             break;
@@ -181,8 +180,8 @@ void endProcess(ProcessManager *processManager)
         return;
     }
 
-    int go_excl = processManager->processTable->runningId;
-    int processToRunId = nextProcessReady(processManager->processTable->readyArray);
+    int processIdToDelete = processManager->processTable->runningId;
+    int processToRunId = nextProcessReady(processManager->processTable->ready);
 
     if (processToRunId == -1)
     {
@@ -192,7 +191,7 @@ void endProcess(ProcessManager *processManager)
     {
         contextExchange(processToRunId, &processManager->processTable->runningId);
 
-        if (!removeFromReadyQueue(processManager->processTable->readyArray, processToRunId))
+        if (!removeFromReady(processManager->processTable->ready, processToRunId))
         {
             printProcessNotFound();
         }
@@ -206,8 +205,10 @@ void endProcess(ProcessManager *processManager)
 
     if (processToRunCell)
     {
-        int time=0;
-        switch (processToRunCell->priority) {
+        int time;
+
+        switch (processToRunCell->priority)
+        {
             case 0:
                 time = 1;
                 break;
@@ -221,11 +222,13 @@ void endProcess(ProcessManager *processManager)
                 time = 8;
                 break;
         }
+
         changeProcess(processManager->cpu,
                       processToRunCell->process,
                       processToRunCell->programCounter,
-                        time,
+                      time,
                       0);
+
         processToRunCell->state = RUNNING;
     }
     else
@@ -234,15 +237,15 @@ void endProcess(ProcessManager *processManager)
         processManager->cpu->runningProcess = NULL;
     }
 
-    deleteProcessTableProcess(go_excl, processManager->processTable);
+    deleteProcessTableProcess(processIdToDelete, processManager->processTable);
 }
 
 
 void execute(ProcessManager *processManager)
 {
-    int processToRunId = nextProcessReady(processManager->processTable->readyArray);
+    int processToRunId = nextProcessReady(processManager->processTable->ready);
 
-    if (processToRunId == -1 )
+    if (processToRunId == -1)
     {
         printFinishExe();
         return;
@@ -251,7 +254,7 @@ void execute(ProcessManager *processManager)
     contextExchange(processToRunId, &processManager->processTable->runningId);
 
 
-    if (!removeFromReadyQueue(processManager->processTable->readyArray, processToRunId))
+    if (!removeFromReady(processManager->processTable->ready, processToRunId))
     {
         printProcessNotFound();
     }
@@ -292,7 +295,7 @@ void processExecuting(ProcessManager *processManager)
     processUnblock(processManager);
     upperInterpreter(processManager);
     clockUpPC(processManager);
-    printState(processManager->processTable->readyArray);
+    printState(processManager->processTable->ready);
 
     if (processManager->kill)
     {
@@ -304,22 +307,29 @@ void processExecuting(ProcessManager *processManager)
 void processUnblock(ProcessManager *processManager)
 {
     //primeiro abaixa o clock
-    blockDownClock(processManager->processTable->blockedArray);
+    blockDownClock(processManager->processTable->blockedQueue);
+
     //pergunta se é igual a zero
-    if(processManager->processTable->blockedArray->front) {
-        BlockNode *crrblock = processManager->processTable->blockedArray->front;
-        while (crrblock) {
-            BlockNode *nextblock =  crrblock->next;
-            if(crrblock->blocked_time<=0){
+    if (processManager->processTable->blockedQueue->front)
+    {
+        BlockedNode *crrblock = processManager->processTable->blockedQueue->front;
+
+        while (crrblock)
+        {
+            BlockedNode *nextblock = crrblock->next;
+
+            if (crrblock->blockTime <= 0)
+            {
                 //coloca em ready
-                ProcessTableCell *cell=  getProcessTableCellByProcessId(
+                ProcessTableCell *cell = getProcessTableCellByProcessId(
                         processManager->processTable->processTableCellQueue, crrblock->id);
 
-                insertToReadyQueue(processManager->processTable->readyArray, crrblock->id, cell->priority);
-                cell->state= READY;
+                insertToReady(processManager->processTable->ready, crrblock->id, cell->priority);
+                cell->state = READY;
                 //tira de block
-                removeBlockedId(processManager->processTable->blockedArray,crrblock->id);
+                removeFromBlockedQueue(processManager->processTable->blockedQueue, crrblock->id);
             }
+
             crrblock = nextblock;
         }
     }
@@ -335,13 +345,13 @@ void clockUpPC(ProcessManager *processManager)
 
 void processCP(ProcessManager *processManager, int PcPlus)
 {
-   if (!copyProcess(processManager->processTable, processManager->timer, PcPlus))
-   {
-       printFullQueue();
-   }
-  {
-       printFullQueue();
-  }
+    if (!copyProcess(processManager->processTable, processManager->timer, PcPlus))
+    {
+        printFullQueue();
+    }
+    {
+        printFullQueue();
+    }
 }
 
 

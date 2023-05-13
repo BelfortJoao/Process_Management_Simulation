@@ -1,5 +1,5 @@
-#ifndef SRC_PROCESSTABLECELL_H
-#define SRC_PROCESSTABLECELL_H
+#ifndef SRC_PROCESS_TABLE_CELL_H
+#define SRC_PROCESS_TABLE_CELL_H
 
 
 #include "../process/process.h"
@@ -21,6 +21,7 @@ typedef struct ProcessTableCell
 
 ProcessTableCell *initializeProcessTableCellFromFile(int id, char *filename, int parentProcess, int clock);
 
+
 ProcessTableCell *copyProcessTableCell(ProcessTableCell *processTableCellToCopy, int id,
                                        int parentId, int programCounter, Timer timer);
 
@@ -28,4 +29,4 @@ ProcessTableCell *copyProcessTableCell(ProcessTableCell *processTableCellToCopy,
 void freeProcessTableCell(ProcessTableCell *processTableCell);
 
 
-#endif //SRC_PROCESSTABLECELL_H ll
+#endif //SRC_PROCESS_TABLE_CELL_H ll

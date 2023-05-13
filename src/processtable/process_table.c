@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "../error/error.h"
 
-#include "processtable.h"
+#include "process_table.h"
 
 
 ProcessTable *initializeProcessTable(int initialCapacity)
@@ -25,16 +25,16 @@ ProcessTable *initializeProcessTable(int initialCapacity)
     }
 
     processTable->nextFreeId = 0;
-    processTable->blockedArray = initializeBlocked();
+    processTable->blockedQueue = initializeBlockedQueue();
 
-    if (!processTable->blockedArray)
+    if (!processTable->blockedQueue)
     {
         return NULL;
     }
 
-    processTable->readyArray = initializeReady(initialCapacity);
+    processTable->ready = initializeReady(initialCapacity);
 
-    if (!processTable->readyArray)
+    if (!processTable->ready)
     {
         return NULL;
     }
@@ -61,9 +61,9 @@ bool addProcessTableProcess(ProcessTable *processTable, char *filename, int pare
 
     processTable->nextFreeId++;
 
-    return insertToReadyQueue(processTable->readyArray,
-                              processTable->nextFreeId - 1,
-                              0);
+    return insertToReady(processTable->ready,
+                         processTable->nextFreeId - 1,
+                         0);
 }
 
 
@@ -74,7 +74,7 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
         return;
     }
 
-    removeBlockedId(processTable->blockedArray, id);
+    removeFromBlockedQueue(processTable->blockedQueue, id);
 }
 
 
@@ -100,9 +100,9 @@ bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus)
 
     processTable->nextFreeId++;
 
-    return insertToReadyQueue(processTable->readyArray,
-                              processTable->nextFreeId - 1,
-                              0);
+    return insertToReady(processTable->ready,
+                         processTable->nextFreeId - 1,
+                         0);
 }
 
 
@@ -111,6 +111,8 @@ void freeProcessTable(ProcessTable *processTable)
     if (processTable)
     {
         freeProcessTableCellQueue(processTable->processTableCellQueue);
+        freeReady(processTable->ready);
+        freeBlockedQueue(processTable->blockedQueue);
         free(processTable);
     }
 }

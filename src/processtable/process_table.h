@@ -3,16 +3,16 @@
  * @brief This file contains the ProcessTable data structure and its functions.
  */
 
-#ifndef SRC_PROCESSTABLE_H
-#define SRC_PROCESSTABLE_H
+#ifndef SRC_PROCESS_TABLE_H
+#define SRC_PROCESS_TABLE_H
 
 #include <stdbool.h>
 #include "../process/process.h"
 #include "../manager/timer.h"
-#include "../manager/ready.h"
-#include "../manager/blocked.h"
-#include "../manager/running.h"
-#include "processtablecellqueue.h"
+#include "../ready/ready.h"
+#include "../blocked/blocked_queue.h"
+#include "../running/running.h"
+#include "process_table_cell_queue.h"
 
 
 /**
@@ -23,8 +23,8 @@ typedef struct ProcessTable
 {
     ProcessTableCellQueue *processTableCellQueue;
     int nextFreeId;
-    Ready *readyArray; /**< An array of ready processes. */
-    Blocked *blockedArray; /**< An array of blocked processes. */
+    Ready *ready; /**< An array of ready processes. */
+    BlockedQueue *blockedQueue; /**< An array of blocked processes. */
     Running runningId; /**< The process currently being executed. */
 } ProcessTable;
 
@@ -79,4 +79,4 @@ bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus);
 void freeProcessTable(ProcessTable *processTable);
 
 
-#endif /* SRC_PROCESSTABLE_H */
+#endif /* SRC_PROCESS_TABLE_H */

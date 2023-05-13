@@ -2,7 +2,7 @@
 #define SRC_READY_H
 
 #include <stdbool.h>
-#include "../datastruct/queue.h"
+#include "queue.h"
 
 
 typedef struct Ready
@@ -16,10 +16,10 @@ typedef struct Ready
 Ready *initializeReady(int size);
 
 
-bool insertToReadyQueue(Ready *ready, int processId, int priority);
+bool insertToReady(Ready *ready, int processId, int priority);
 
 
-bool removeFromReadyQueue(Ready *ready, int processId);
+bool removeFromReady(Ready *ready, int processId);
 
 
 int nextProcessReady(Ready *ready);

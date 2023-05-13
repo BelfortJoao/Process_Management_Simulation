@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../error/error.h"
 
-#include "processtablecell.h"
+#include "process_table_cell.h"
 
 
 ProcessTableCell *initializeProcessTableCellFromFile(int id, char *filename, int parentProcess, int clock)
@@ -45,7 +44,7 @@ ProcessTableCell *copyProcessTableCell(ProcessTableCell *processTableCellToCopy,
     processTableCell->priority = 0;
     processTableCell->state = READY;
     processTableCell->programCounter = programCounter;
-    processTableCell->process = processTableCellToCopy->process;
+    processTableCell->process = generateProcessCopy(processTableCellToCopy->process);
 
     return processTableCell;
 }

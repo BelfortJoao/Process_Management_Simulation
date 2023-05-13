@@ -51,7 +51,7 @@ int nextProcessReady(Ready *ready)
 }
 
 
-bool insertToReadyQueue(Ready *ready, int id, int priority)
+bool insertToReady(Ready *ready, int id, int priority)
 {
     if (priority > 3)
     {
@@ -73,7 +73,7 @@ bool insertToReadyQueue(Ready *ready, int id, int priority)
 }
 
 
-bool removeFromReadyQueue(Ready *ready, int id)
+bool removeFromReady(Ready *ready, int id)
 {
     for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++)
     {
