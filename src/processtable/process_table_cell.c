@@ -44,7 +44,7 @@ ProcessTableCell *copyProcessTableCell(ProcessTableCell *processTableCellToCopy,
     processTableCell->priority = 0;
     processTableCell->state = READY;
     processTableCell->programCounter = programCounter;
-    processTableCell->process = processTableCellToCopy->process;
+    processTableCell->process = generateProcessCopy(processTableCellToCopy->process);
 
     return processTableCell;
 }

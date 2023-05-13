@@ -20,6 +20,8 @@ Process *initializeProcess()
         return NULL;
     }
 
+    process->memory = NULL;
+
     return process;
 }
 
@@ -68,9 +70,21 @@ Process *initializeProcessFromFile(char *filename)
     process->numLines = getNumberOfLinesInFile(file);
     process->program = (char **) malloc(process->numLines * sizeof(char *));
 
+    if (!process->program)
+    {
+        printf(ALLOCATION_ERROR, "process program");
+        return NULL;
+    }
+
     for (int i = 0; i < process->numLines; i++)
     {
         process->program[i] = (char *) malloc(CHAR_MAX);
+
+        if (!process->program[i])
+        {
+            printf(ALLOCATION_ERROR, "process program line");
+            return NULL;
+        }
 
         if (!fscanf(file, "%[^\r\n]\n", process->program[i]))
         {
@@ -169,27 +183,27 @@ void freeProcess(Process *process)
 {
     if (process)
     {
-//        if (process->program)
-//        {
-//            for (int i = 0; i < process->numLines; i++)
-//            {
-//                if (process->program[i])
-//                {
-//                    free(process->program[i]);
-//                }
-//            }
-//        }
+        if (process->program)
+        {
+            for (int i = 0; i < process->numLines; i++)
+            {
+                if (process->program[i])
+                {
+                    free(process->program[i]);
+                }
+            }
+        }
 
-//        if (process->program)
-//        {
-//            free(process->program);
-//        }
+        if (process->program)
+        {
+            free(process->program);
+        }
 
-//        if (process->memory)
-//        {
-//            free(process->memory);
-//        }
+        if (process->memory)
+        {
+            free(process->memory);
+        }
 
-//        free(process);
+        free(process);
     }
 }
