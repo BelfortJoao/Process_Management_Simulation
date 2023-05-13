@@ -8,30 +8,59 @@
 
 #define DEFAULT_QUANTUM 8
 
-
-CPU *initializeCPU(char *filename)
+CPU *initializeCPU()
 {
-    CPU *cpu = (CPU *) malloc(sizeof(CPU));
+    CPU *cpu = (CPU*)malloc(sizeof(CPU));
 
-    if (!cpu)
-    {
-        printf(ALLOCATION_ERROR, "CPU");
+    if(!cpu){
+        printf(ALLOCATION_ERROR, "queue");
         return NULL;
     }
-
-    cpu->runningProcess = initializeProcessFromFile(filename);
-
-    if (!cpu->runningProcess)
-    {
-        return NULL;
-    }
-
-    cpu->programCounter = 0;
-    initializeTimer(&cpu->executing_timer);
-    initializeTimer(&cpu->program_timer);
-    cpu->program_timer = DEFAULT_QUANTUM;
+    cpu->front = NULL;
+    cpu->rear = NULL;
 
     return cpu;
+}
+
+CPUNode *initializeCPU_Node(char *filename, int numberCores)
+{
+    CPUNode *cpuNODE = (CPUNode*)malloc(sizeof(CPUNode));
+
+    if(!cpuNODE){
+        printf(ALLOCATION_ERROR, "queue cpu_node");
+        return NULL;
+    }
+
+    cpuNODE->runningProcess = initializeProcessFromFile(filename);
+
+    if(!cpuNODE->runningProcess){
+        return NULL;
+    }
+
+    cpuNODE->runningProcess = (Process**) malloc(numberCores * sizeof(Process*));
+    cpuNODE->programCounters = (int*) malloc(numberCores * sizeof(int));
+    cpuNODE->executing_timer = (Timer*) malloc(numberCores * sizeof(Timer));
+    cpuNODE->program_timer = (Timer*) malloc(numberCores * sizeof(Timer));
+    cpuNODE->numCores = numberCores;
+
+    if (!cpuNODE->runningProcess || !cpuNODE->programCounters || !cpuNODE->executing_timer || !cpuNODE->program_timer)
+    {
+        printf(ALLOCATION_ERROR, "CPU arrays");
+        free(cpuNODE);
+        return NULL;
+    }
+
+    for (int i = 0; i < numberCores; i++)
+    {
+        cpuNODE->runningProcess[i] = initializeProcessFromFile(filename);
+        cpuNODE->programCounters[i] = 0;
+        initializeTimer(&cpuNODE->executing_timer[i]);
+        initializeTimer(&cpuNODE->program_timer[i]);
+        cpuNODE->program_timer[i] = DEFAULT_QUANTUM;
+    }
+
+    return cpuNODE;
+
 }
 
 
@@ -51,9 +80,9 @@ int convertStringToInt(char *string)
 }
 
 
-int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus)
+int interpreter(CPUNode *cpuNode, int *blk, char **file, int *PCPlus)
 {
-    char *input = strdup(cpu->runningProcess->program[cpu->programCounter]);
+    char *input = strdup(cpuNode->runningProcess->program[cpu->programCounter]);
     char *token = strsep(&input, " ");
 
     if (!token)
@@ -122,32 +151,37 @@ int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus)
 }
 
 
-void changeProcess(CPU *cpu, Process *process, int programCounter, Timer program_timer, Timer executing_timer)
+void changeProcess(CPUNode *cpuNode, Process *process, int programCounter, Timer program_timer, Timer executing_timer)
 {
     for (int i = 0; i < process->numLines; i++)
     {
-        if(!cpu->runningProcess){
-            cpu->runningProcess=process;
+        if(!cpuNode->runningProcess){
+            cpuNode->runningProcess=process;
         }
-        strcpy(cpu->runningProcess->program[i], process->program[i]);
+        strcpy(cpuNode->runningProcess->program[i], process->program[i]);
     }
 
     for (int i = 0; i < process->memorySize; i++)
     {
-        cpu->runningProcess->memory[i] = process->memory[i];
+        cpuNode->runningProcess->memory[i] = process->memory[i];
     }
 
-    cpu->programCounter = programCounter;
-    cpu->program_timer = program_timer;
-    cpu->executing_timer = executing_timer;
-
+    cpuNode->programCounters = programCounter;
+    cpuNode->program_timer = program_timer;
+    cpuNode->executing_timer = executing_timer;
 }
-
 
 void freeCPU(CPU *cpu)
 {
-    cpu->runningProcess = NULL;
-    cpu->programCounter = 0;
-    cpu->executing_timer = 0;
-    cpu->executing_timer = 0;
+    if(cpu){
+        CPUNode *currentQueueNode = cpu->front;
+
+        while(currentQueueNode){
+            CPUNode *nextQueueNode = currentQueueNode->nextCPU;
+            free(currentQueueNode);
+            currentQueueNode = nextQueueNode;
+        }
+
+        free(cpu);
+    }
 }

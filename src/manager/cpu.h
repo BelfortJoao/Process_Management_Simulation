@@ -14,13 +14,20 @@
  * @struct CPU
  * @brief Struct for the CPU module
  */
-typedef struct CPU
-{
-    Process *runningProcess; /**< Pointer to the process that is currently runningId */
-    int programCounter; /**< Program counter */
-    Timer executing_timer; /**< Timer for the CPU's executing time */
-    Timer program_timer; /**< Timer for the current program's time */
-} CPU;
+
+typedef struct cpuNode{
+    Process **runningProcess; // Pointer to the process that is currently runningId
+    int numCores; //number of cores
+    int *programCounters; //Program counter
+    Timer *executing_timer; //Timer for the CPU's executing time
+    Timer *program_timer; //Timer for the current program's time
+    struct QueueNode *nextCPU;
+}CPUNode;
+
+typedef struct CPU{
+    CPUNode *front;
+    CPUNode *rear;
+}CPU;
 
 
 /**
@@ -28,8 +35,8 @@ typedef struct CPU
  * @param filename Name of the file containing the program to load
  * @return Pointer to the new CPU, or NULL if there was an error
  */
-CPU *initializeCPU(char *filename);
-
+CPU *initializeCPU();
+CPUNode *initializeCPU_Node(char *filename, int numberCores);
 
 /**
  * @brief Converts a string to an integer
@@ -37,7 +44,6 @@ CPU *initializeCPU(char *filename);
  * @return The integer representation of the string, or 0 if the conversion failed
  */
 int convertStringToInt(char *string);
-
 
 /**
  * @brief Interprets a single line of the program
@@ -63,7 +69,7 @@ int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus);
  * @param program_timer New value for the program timer
  * @param executing_timer New value for the executing timer
  */
-void changeProcess(CPU *cpu, Process *process, int programCounter, Timer program_timer, Timer executing_timer);
+void changeProcess(CPUNode *cpuNode,Process *process, int programCounter, Timer program_timer, Timer executing_timer);
 
 
 /**
