@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../error/error.h"
 
-#include "processtablecell.h"
+#include "process_table_cell.h"
 
 
 ProcessTableCell *initializeProcessTableCellFromFile(int id, char *filename, int parentProcess, int clock)

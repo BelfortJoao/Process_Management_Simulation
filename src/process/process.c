@@ -167,11 +167,29 @@ void printProcessInfo(Process *process)
 
 void freeProcess(Process *process)
 {
-    /*for (int i = 0; i < process->numLines; i++)
+    if (process)
     {
-        free(process->program[i]);
-    }
+//        if (process->program)
+//        {
+//            for (int i = 0; i < process->numLines; i++)
+//            {
+//                if (process->program[i])
+//                {
+//                    free(process->program[i]);
+//                }
+//            }
+//        }
 
-    free(process->program);
-    free(process->memory);*/
+//        if (process->program)
+//        {
+//            free(process->program);
+//        }
+
+//        if (process->memory)
+//        {
+//            free(process->memory);
+//        }
+
+//        free(process);
+    }
 }

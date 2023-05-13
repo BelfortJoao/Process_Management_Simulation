@@ -2,7 +2,7 @@
 #define SRC_QUEUE_H
 
 #include <stdbool.h>
-#include "queuenode.h"
+#include "queue_node.h"
 
 
 typedef struct Queue
@@ -18,10 +18,10 @@ Queue *initializeQueue();
 bool insertToQueue(Queue *queue, int id);
 
 
-bool removeFromQueue(Queue *queue, int id);
+bool removeFromQueue(Queue *blockedQueue, int id);
 
 
-void freeQueue(Queue *queue);
+void freeQueue(Queue *blockedQueue);
 
 
-#endif //SRC_QUEUE_H
+#endif // SRC_QUEUE_H

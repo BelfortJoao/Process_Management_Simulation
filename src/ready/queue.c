@@ -29,7 +29,7 @@ bool insertToQueue(Queue *queue, int id)
         return false;
     }
 
-    QueueNode *newQueueNode = initializeQueueNode(id);
+    QueueNode *newQueueNode = initializeNode(id);
 
     if (!newQueueNode)
     {

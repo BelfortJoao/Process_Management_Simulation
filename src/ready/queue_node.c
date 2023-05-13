@@ -3,10 +3,10 @@
 #include <stddef.h>
 #include "../error/error.h"
 
-#include "queuenode.h"
+#include "queue_node.h"
 
 
-QueueNode *initializeQueueNode(int id)
+QueueNode *initializeNode(int id)
 {
     QueueNode *queueNode = (QueueNode *) malloc(sizeof(QueueNode));
 

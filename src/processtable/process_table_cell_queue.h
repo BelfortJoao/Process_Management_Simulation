@@ -1,8 +1,8 @@
-#ifndef SRC_PROCESSTABLECELLQUEUE_H
-#define SRC_PROCESSTABLECELLQUEUE_H
+#ifndef SRC_PROCESS_TABLE_CELL_QUEUE_H
+#define SRC_PROCESS_TABLE_CELL_QUEUE_H
 
 #include <stdbool.h>
-#include "processtablecell.h"
+#include "process_table_cell.h"
 
 typedef struct ProcessTableCellNode
 {
@@ -38,4 +38,4 @@ void freeProcessTableCellNode(ProcessTableCellNode *processTableCellNode);
 void freeProcessTableCellQueue(ProcessTableCellQueue *processTableCellQueue);
 
 
-#endif //SRC_PROCESSTABLECELLQUEUE_H
+#endif //SRC_PROCESS_TABLE_CELL_QUEUE_H
