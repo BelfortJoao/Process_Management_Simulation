@@ -6,6 +6,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include <wait.h>
+#include <string.h>
 #include "../error/error.h"
 #include "../printer/printer.h"
 
@@ -15,27 +16,23 @@
 #define PRINTER_DEFAULT_SIZE 10
 
 
-Control *initializeControl()
-{
+Control *initializeControl() {
     Control *control = (Control *) malloc(sizeof(Control));
 
-    if (!control)
-    {
+    if (!control) {
         printf(ALLOCATION_ERROR, "control");
         return NULL;
     }
 
     control->processManager = initializeProcessManager();
 
-    if (!control->processManager)
-    {
+    if (!control->processManager) {
         return NULL;
     }
 
     control->printer = initializePrinter(PRINTER_DEFAULT_SIZE);
 
-    if (!control->printer)
-    {
+    if (!control->printer) {
         return NULL;
     }
 
@@ -43,8 +40,7 @@ Control *initializeControl()
 }
 
 
-int runControl(Control *control)
-{
+int runControl(Control *control) {
     char file[CHAR_MAX];
 
     printf("Type the name of the file (under '/files/'): ");
@@ -52,15 +48,13 @@ int runControl(Control *control)
 
     control->processManager = initializeProcessManagerFromFile(file);
 
-    if (!control->processManager)
-    {
+    if (!control->processManager) {
         return -1;
     }
 
 // Cria um pipe para comunicação entre pai e filho
     int fd[2];
-    if (pipe(fd) == -1)
-    {
+    if (pipe(fd) == -1) {
         printf("Error: pipe failed\n");
         return -1;
     }
@@ -72,19 +66,16 @@ int runControl(Control *control)
     {
         printf("Error: fork failed\n");
         return -1;
-    }
-    else if (pid == 0) // Processo filho
+    } else if (pid == 0) // Processo filho
     {
         char buf;
         close(fd[1]); // Fecha o lado de escrita do pipe
 
-        while (true)
-        {
-            if (read(fd[0], &buf, 1) == 1 && buf == 'u') // Se receber um 'u' do pipe, executa o processo
+        while (read(fd[0], &buf, 1)) {
+            if (buf == 'u') // Se receber um 'u' do pipe, executa o processo
             {
                 processExecuting(control->processManager);
-            }
-            else if (read(fd[0], &buf, 1) == 1 && buf == 'i') // Se receber um 'i' do pipe, cria um processo e imprime "PRINT"
+            } else if (buf == 'i') // Se receber um 'i' do pipe, cria um processo e imprime "PRINT"
             {
                 int new_pid = fork();
 
@@ -92,19 +83,16 @@ int runControl(Control *control)
                 {
                     printf("Error: fork failed\n");
                     return -1;
-                }
-                else if (new_pid == 0) // Processo filho
+                } else if (new_pid == 0) // Processo filho
                 {
                     printProcessTable(control->processManager->processTable);
                     printState(control->processManager->processTable->ready);
                     exit(2);
-                }
-                else // Processo pai
+                } else // Processo pai
                 {
                     wait(NULL);
                 }
-            }
-            else if (read(fd[0], &buf, 1) == 1 && buf == 'm') // Se receber um 'm' do pipe, cria um processo e imprime "TEMPO DE RESPOSTA"
+            } else if (buf == 'm') // Se receber um 'm' do pipe, cria um processo e imprime "TEMPO DE RESPOSTA"
             {
                 int new_pid = fork();
 
@@ -112,36 +100,34 @@ int runControl(Control *control)
                 {
                     printf("Error: fork failed\n");
                     return -1;
-                }
-                else if (new_pid == 0) // Processo filho
+                } else if (new_pid == 0) // Processo filho
                 {
                     printAverageResponseTime(control->printer);
                     printf("TEMPO DE RESPOSTA\n");
                     exit(3);
-                }
-                else // Processo pai
+                } else // Processo pai
                 {
                     wait(NULL);
                 }
             }
+
         }
-    }
-    else // Processo pai
+    } else // Processo pai
     {
         close(fd[0]); // Fecha o lado de leitura do pipe
 
-        while (true)
-        {
+        int j = 0;
+
+        while (true) {
             char command = (char) getchar();
 
-            if (!printFlag)
-            {
+            if (!printFlag) {
+
                 printf("\nType a command (U, I or M): ");
                 printFlag = true;
             }
 
-            if (command == '\n')
-            {
+            if (command == '\n') {
                 continue;
             }
 
@@ -160,10 +146,13 @@ int runControl(Control *control)
                     printf(INVALID_COMMAND, command);
                     break;
             }
-
             fflush(stdout);
             printf("\nType a command (U, I or M): ");
         }
     }
 }
+
+
+
+
 
