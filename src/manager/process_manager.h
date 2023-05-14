@@ -7,7 +7,7 @@
 #define SRC_PROCESS_MANAGER_H
 
 #include <stdbool.h>
-#include "cpu.h"
+#include "../CPU/CPU_queue.h"
 #include "../processtable/process_table.h"
 
 #define DEFAULT_INITIAL_CAPACITY 1000
@@ -18,7 +18,7 @@
  */
 typedef struct ProcessManager
 {
-    CPU *cpu; /**< Pointer to the CPU struct. */
+    CPUNode *cpu; /**< Pointer to the CPU struct. */
     Timer timer; /**< Struct containing the current time. */
     bool kill; /**< Flag indicating if the manager should stop execution. */
     ProcessTable *processTable; /**< Pointer to the Process Table struct. */
