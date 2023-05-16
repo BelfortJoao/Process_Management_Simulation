@@ -4,7 +4,7 @@
 
 #include "../error/error.h"
 
-CPUqueue *initializeCPU()
+CPUqueue *initializeCPU(char *filename, int numberCores)
 {
     CPUqueue *cpu_queue = (CPUqueue *)malloc(sizeof(CPUqueue));
 
@@ -12,6 +12,9 @@ CPUqueue *initializeCPU()
         printf(ALLOCATION_ERROR, "queue");
         return NULL;
     }
+
+    CPUNode *newCPUNode = initializeCPU_Node(filename, numberCores);
+
     cpu_queue->front = NULL;
     cpu_queue->rear = NULL;
 

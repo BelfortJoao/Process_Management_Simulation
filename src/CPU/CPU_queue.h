@@ -9,7 +9,7 @@ typedef struct CPUqueue{
     CPUNode *rear;
 }CPUqueue;
 
-CPUqueue *initializeCPU();
+CPUqueue *initializeCPU(char *filename, int numberCores);
 
 int convertStringToInt(char *string);
 

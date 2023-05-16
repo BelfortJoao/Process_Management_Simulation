@@ -39,7 +39,7 @@ ProcessManager *initializeProcessManager();
  * @param filename The name of the file containing the CPU and process information.
  * @return A pointer to the Process Manager struct if successful, NULL otherwise.
  */
-ProcessManager *initializeProcessManagerFromFile(char *filename);
+ProcessManager *initializeProcessManagerFromFile(char *filename, int numberCores);
 
 
 /**

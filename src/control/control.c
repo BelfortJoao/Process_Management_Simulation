@@ -43,11 +43,15 @@ Control *initializeControl()
 int runControl(Control *control)
 {
     char file[CHAR_MAX];
+    int numberCores;
 
     printf("Type the name of the file (under '/files/'): ");
     scanf("%s", file);
+    fflush(stdin);
+    printf("Now type the number of cores: ");
+    scanf("%d", &numberCores);
 
-    control->processManager = initializeProcessManagerFromFile(file);
+    control->processManager = initializeProcessManagerFromFile(file, numberCores);
 
     if (!control->processManager)
     {

@@ -21,7 +21,7 @@ ProcessManager *initializeProcessManager()
 }
 
 
-ProcessManager *initializeProcessManagerFromFile(char *filename)
+ProcessManager *initializeProcessManagerFromFile(char *filename, int numberCores)
 {
     ProcessManager *processManager = initializeProcessManager();
 
@@ -31,7 +31,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
     }
 
     initializeTimer(&processManager->timer);
-    processManager->cpu = initializeCPU(filename);
+    processManager->cpu = initializeCPU(filename, numberCores);
 
     if (!processManager->cpu)
     {
