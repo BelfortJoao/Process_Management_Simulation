@@ -23,6 +23,8 @@
 #define I "i"
 
 
+#define MAX_COMMANDS 100000
+
 Control *initializeControl()
 {
     Control *control = (Control *) malloc(sizeof(Control));
@@ -61,7 +63,7 @@ int runControl(Control *control) {
     printf("Type the name of the file (under '/files/'): ");
     scanf("%s", file);
 
-    printf("Inputs by file or command line? (1-file, 2-command line): ");
+    printf("Inputs by file or command line? ( 1 - file | Other - command line): ");
     scanf("%d", &input_type);
 
 
@@ -109,6 +111,7 @@ int runControl(Control *control) {
                 } else if (newPid == CHILD) {
                     printProcessTable(control->processManager->processTable);
                     printState(control->processManager->processTable->ready);
+                    printBlocked(control->processManager->processTable->blockedQueue);
                     exit(2);
                 } else if (newPid == PARENT) {
                     wait(NULL);
@@ -135,9 +138,9 @@ int runControl(Control *control) {
     else// Processo pai
     {
         close(fd[0]); // Close pipe's read.
-        char command[CHAR_MAX];
+        char command[MAX_COMMANDS];
 
-
+        // Se o input for por arquivo
         if (input_type == 1) {
 
             printf("Type the file name (under '/files/'): ");
@@ -153,26 +156,46 @@ int runControl(Control *control) {
                 printf(FILE_ERROR);
                 return ERROR;
             }
+            char character;
+            int index = 0;
 
-            //Pegar linha por linha e inderir no vetor command
+            while ((character = fgetc(inputFile)) != EOF) {
+                //se for /n ou /r, ignora
+                if (character == '\n' || character == '\r') {
+                    continue;
+                }
 
-            while (fgets(command, CHAR_MAX, inputFile)) {
-                for (int i = 0; i < strlen(command); i++) {
-                    switch (toupper(command[i])) {
-                        case 'M':
-                            write(fd[1], "m", 1); // Envia um 'm' para o pipe do filho
-                            kill(processType, SIGTERM); // Mata o processo filho
-                            return 0;
-                        case 'U':
-                            write(fd[1], "u", 1); // Envia um 'u' para o pipe do filho
-                            break;
-                        case 'I':
-                            write(fd[1], "i", 1); // Envia um 'i' para o pipe do filho
-                            break;
-                        default:
-                            printf(INVALID_COMMAND, command[i]);
-                            break;
-                    }
+                command[index] = character;
+                index++;
+
+                if (index >= MAX_COMMANDS - 1) {
+                    break;
+                }
+            }
+
+            command[index] = '\0';
+
+            fclose(inputFile);
+
+            for (int i = 0; i < strlen(command); i++) {
+                switch (toupper(command[i])) {
+                    case 'M':
+                        sleep(1);
+                        printf("ENCERRANDO PROCESSO");
+                        write(fd[1], "m", 1); // Envia um 'm' para o pipe do filho
+                        kill(processType, SIGTERM); // Mata o processo filho
+                        return 0;
+                    case 'U':
+                        write(fd[1], "u", 1); // Envia um 'u' para o pipe do filho
+                        break;
+                    case 'I':
+                        sleep(1);
+                        write(fd[1], "i", 1); // Envia um 'i' para o pipe do filho
+                        getchar();
+                        break;
+                    default:
+                        printf(INVALID_COMMAND, command[i]);
+                        break;
                 }
             }
 
@@ -180,7 +203,9 @@ int runControl(Control *control) {
 
 
         }
+        // Se o input for por linha de comando
         else{
+            printf("Type the commands: :)");
             while(true){
 
                 if (!scanf("%s", command)){
