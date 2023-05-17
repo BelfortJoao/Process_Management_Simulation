@@ -8,6 +8,7 @@
 
 #include "../processtable/process_table.h"
 #include "../ready/ready.h"
+#include "../blocked/blocked_queue.h"
 
 
 /**
@@ -124,6 +125,8 @@ void printReadFile(char *arg1);
  * @param ready a pointer to the Ready queue to print
  */
 void printState(Ready *ready);
+
+void printBlocked(BlockedQueue *blocked);
 
 
 /**

@@ -135,7 +135,7 @@ void scheduleProcess(ProcessManager *processManager)
     }
 
     /// Remove when in production mode.
-    printProcessTable(processManager->processTable);
+    //printProcessTable(processManager->processTable);
 
     if (!insertToReady(processManager->processTable->ready,
                        processToReadyCell->id,
@@ -295,7 +295,7 @@ void processExecuting(ProcessManager *processManager)
     processUnblock(processManager);
     upperInterpreter(processManager);
     clockUpPC(processManager);
-    printState(processManager->processTable->ready);
+    //printState(processManager->processTable->ready);
 
     if (processManager->kill)
     {
@@ -346,9 +346,6 @@ void clockUpPC(ProcessManager *processManager)
 void processCP(ProcessManager *processManager, int PcPlus)
 {
     if (!copyProcess(processManager->processTable, processManager->timer, PcPlus))
-    {
-        printFullQueue();
-    }
     {
         printFullQueue();
     }
