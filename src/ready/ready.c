@@ -4,7 +4,7 @@
 
 #include "ready.h"
 
-#define DEFAULT_QUEUE_SIZE 4
+#define DEFAULT_QUEUE_SIZE 1
 
 
 Ready *initializeReady(int size)
@@ -39,15 +39,42 @@ Ready *initializeReady(int size)
 
 int nextProcessReady(Ready *ready)
 {
-    for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++)
-    {
-        if (ready->queues[i]->front)
-        {
-            return ready->queues[i]->front->id;
+    int filaSelecionada = -1;
+    int tamanhoFila = 0;
+
+    // Encontra a primeira fila não vazia e obtém o tamanho
+    for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++) {
+        if (ready->queues[i]->front) {
+            filaSelecionada = i;
+            break;
         }
     }
 
-    return -1;
+    if (filaSelecionada != -1) {
+        // Calcula o tamanho da fila selecionada
+        QueueNode *id = ready->queues[filaSelecionada]->front;
+        while (id != NULL) {
+            tamanhoFila++;
+            id = id->next;
+        }
+
+        if (tamanhoFila > 0) {
+            // Gera um índice aleatório com base no tamanho da fila
+            int indiceAleatorio = rand() % tamanhoFila;
+
+            // Localiza o ID do processo no índice aleatório da fila selecionada
+            QueueNode *idSelecionado = ready->queues[filaSelecionada]->front;
+            for (int i = 0; i < indiceAleatorio; i++) {
+                idSelecionado = idSelecionado->next;
+            }
+
+            printf("O ID SELECIONADO FOI: %d\n", idSelecionado->id);
+
+            return idSelecionado->id;
+        }
+    }
+
+    // Caso nenhum processo esteja disponível ou tipo de escalonamento inválido
 }
 
 

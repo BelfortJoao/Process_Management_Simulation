@@ -5,6 +5,8 @@
 #include "printer.h"
 #include "../colour/colour.h"
 
+#define DEFAULT_QUEUE_SIZE 1
+
 
 Printer *initializePrinter(int size)
 {
@@ -157,7 +159,7 @@ void printState(Ready *ready)
     printf("| %sReady Queue states:  %s|\n", B_BLACK, RESET);
     printf("+----------------+\n");
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++)
     {
         printf("| %sQueue %d:%s ", B_BLACK, i, RESET);
 
