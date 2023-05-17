@@ -7,8 +7,9 @@
 
 CPUNode *initializeCPU_Node(char *filename, int numberCores)
 {
-    CPUNode *cpuNODE = (CPUNode*)malloc(numberCores * sizeof(CPUNode));
 
+    CPUNode *cpuNODE = (CPUNode*)malloc(numberCores * sizeof(CPUNode));
+    
     if(!cpuNODE){
         printf(ALLOCATION_ERROR, "queue cpu_node");
         return NULL;

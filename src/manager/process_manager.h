@@ -18,7 +18,7 @@
  */
 typedef struct ProcessManager
 {
-    CPUNode *cpu; /**< Pointer to the CPU struct. */
+    CPUqueue *cpuQueue; /**< Pointer to the CPU struct. */
     Timer timer; /**< Struct containing the current time. */
     bool kill; /**< Flag indicating if the manager should stop execution. */
     ProcessTable *processTable; /**< Pointer to the Process Table struct. */

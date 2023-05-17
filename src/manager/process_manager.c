@@ -31,9 +31,9 @@ ProcessManager *initializeProcessManagerFromFile(char *filename, int numberCores
     }
 
     initializeTimer(&processManager->timer);
-    processManager->cpu = initializeCPU(filename, numberCores);
+    processManager->cpuQueue = initializeCPU(filename, numberCores);
 
-    if (!processManager->cpu)
+    if (!processManager->cpuQueue)
     {
         return NULL;
     }
@@ -95,7 +95,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
     getProcessTableCellByProcessId(processManager->processTable->processTableCellQueue,
                                    processToBlock)->state = BLOCKED;
 
-    changeProcess(processManager->cpu,
+    changeProcess(processManager->cpuQueue->front,
                   processToRun->process,
                   processToRun->programCounter,
                   processToRun->CPUTime,
@@ -162,7 +162,7 @@ void scheduleProcess(ProcessManager *processManager)
             break;
     }
 
-    changeProcess(processManager->cpu,
+    changeProcess(processManager->cpuQueue->front,
                   processToRunCell->process,
                   processToRunCell->programCounter,
                   time,
@@ -223,7 +223,7 @@ void endProcess(ProcessManager *processManager)
                 break;
         }
 
-        changeProcess(processManager->cpu,
+        changeProcess(processManager->cpuQueue->front,
                       processToRunCell->process,
                       processToRunCell->programCounter,
                       time,
@@ -234,7 +234,7 @@ void endProcess(ProcessManager *processManager)
     else
     {
         processManager->processTable->runningId = -1;
-        processManager->cpu->runningProcess = NULL;
+        processManager->cpuQueue->front->runningProcess = NULL;
     }
 
     deleteProcessTableProcess(processIdToDelete, processManager->processTable);
@@ -264,7 +264,7 @@ void execute(ProcessManager *processManager)
             processManager->processTable->processTableCellQueue,
             processToRunId);
 
-    changeProcess(processManager->cpu,
+    changeProcess(processManager->cpuQueue->front,
                   processToRunCell->process,
                   processToRunCell->programCounter,
                   processToRunCell->CPUTime,
@@ -276,7 +276,7 @@ void execute(ProcessManager *processManager)
 
 void processExecuting(ProcessManager *processManager)
 {
-    if (processManager->processTable->runningId < 0 || processManager->cpu->runningProcess == NULL)
+    if (processManager->processTable->runningId < 0 || processManager->cpuQueue->front->runningProcess == NULL)
     {
         execute(processManager);
         processUnblock(processManager);
@@ -288,7 +288,7 @@ void processExecuting(ProcessManager *processManager)
         return;
     }
 
-    if (processManager->cpu->executing_timer >= processManager->cpu->program_timer)
+    if (processManager->cpuQueue->front->executing_timer >= processManager->cpuQueue->front->program_timer)
     {
         scheduleProcess(processManager);
     }
@@ -339,7 +339,7 @@ void processUnblock(ProcessManager *processManager)
 void clockUpPC(ProcessManager *processManager)
 {
     timeUp(&processManager->timer);
-    timeUp(&processManager->cpu->executing_timer);
+    timeUp(&processManager->cpuQueue->front->executing_timer);
 }
 
 
@@ -370,7 +370,7 @@ void attExec(ProcessManager *processManager)
             processManager->processTable->processTableCellQueue,
             processManager->processTable->runningId);
 
-    runningProcessCell->programCounter = processManager->cpu->programCounter;
+    runningProcessCell->programCounter = processManager->cpuQueue->front->programCounter;
     runningProcessCell->CPUTime++;
 }
 
@@ -380,9 +380,9 @@ void upperInterpreter(ProcessManager *processManager)
     int blockTime;
     int PcPlus;
     char **filename;
-    int cpuResp = interpreter(processManager->cpu, &blockTime, filename, &PcPlus);
+    int cpuResp = interpreter(processManager->cpuQueue->front, &blockTime, filename, &PcPlus);
 
-    processManager->cpu->programCounter++;
+    processManager->cpuQueue->front->programCounter++;
     attExec(processManager);
 
     switch (cpuResp)
@@ -411,7 +411,7 @@ void freeProcessManager(ProcessManager *processManager)
 {
     if (processManager)
     {
-        freeCPU(processManager->cpu);
+        freeCPU(processManager->cpuQueue);
         freeProcessTable(processManager->processTable);
         free(processManager);
     }

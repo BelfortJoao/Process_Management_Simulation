@@ -15,7 +15,7 @@ CPUqueue *initializeCPU(char *filename, int numberCores)
 
     CPUNode *newCPUNode = initializeCPU_Node(filename, numberCores);
 
-    cpu_queue->front = NULL;
+    cpu_queue->front = newCPUNode;
     cpu_queue->rear = NULL;
 
     return cpu_queue;
