@@ -22,9 +22,16 @@ Printer *initializePrinter(int size)
 }
 
 
-void printAverageResponseTime(Printer *printer)
+void printAverageResponseTime(double averageResponseTime)
 {
-    printf("\nTODO: Average response time. Good luck Alan.\n");
+    if(averageResponseTime > 0)
+    {
+        printf("\nAverage Response Time: %f\n", averageResponseTime);
+    }
+    else
+    {
+        printf("No finished processes\n");
+    }
 }
 
 

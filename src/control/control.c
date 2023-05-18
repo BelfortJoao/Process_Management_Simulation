@@ -114,7 +114,7 @@ int runControl(Control *control)
                     wait(NULL);
                 }
             }
-            else if (command == 'M') // Se receber um 'm' do pipe, cria um processo e imprime "TEMPO DE RESPOSTA"
+            else if (command == 'm') // Se receber um 'm' do pipe, cria um processo e imprime "TEMPO DE RESPOSTA"
             {
                 int newPid = fork();
 
@@ -125,7 +125,7 @@ int runControl(Control *control)
                 }
                 else if (newPid == CHILD)
                 {
-                    printAverageResponseTime(control->printer);
+                    printAverageResponseTime(calcAverageResponseTime(control->processManager->artCounter));
                     exit(3);
                 }
                 else // Processo pai
@@ -157,6 +157,7 @@ int runControl(Control *control)
                 {
                     case 'M':
                         write(fd[1], "m", 1); // Envia um 'm' para o pipe do filho
+                        sleep(1);
                         kill(processType, SIGTERM); // Mata o processo filho
                         return 0;
                     case 'U':

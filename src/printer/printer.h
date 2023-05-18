@@ -34,9 +34,9 @@ Printer *initializePrinter(int size);
 /**
  * Prints a message indicating the average response time.
  *
- * @param printer a pointer to the Printer to use for printing
+ * @param averageResponseTime average response time.
  */
-void printAverageResponseTime(Printer *printer);
+void printAverageResponseTime(double averageResponseTime);
 
 
 /**
