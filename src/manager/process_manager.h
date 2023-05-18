@@ -1,5 +1,5 @@
 /**
- * @file processmanager.h
+ * @file process_manager.h
  * @brief Header file containing function declarations and struct definitions for the ProcessManager module.
  */
 
@@ -8,6 +8,7 @@
 
 #include <stdbool.h>
 #include "cpu.h"
+#include "art_counter.h"
 #include "../processtable/process_table.h"
 
 #define DEFAULT_INITIAL_CAPACITY 1000
@@ -20,6 +21,7 @@ typedef struct ProcessManager
 {
     CPU *cpu; /**< Pointer to the CPU struct. */
     Timer timer; /**< Struct containing the current time. */
+    ArtCounter *artCounter; /**< Pointer to the average return time struct. */
     bool kill; /**< Flag indicating if the manager should stop execution. */
     ProcessTable *processTable; /**< Pointer to the Process Table struct. */
 } ProcessManager;

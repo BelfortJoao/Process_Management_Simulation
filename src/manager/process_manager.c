@@ -31,6 +31,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
     }
 
     initializeTimer(&processManager->timer);
+    processManager->artCounter = initializeArtCounter();
     processManager->cpu = initializeCPU(filename);
 
     if (!processManager->cpu)
@@ -40,7 +41,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
 
     processManager->processTable = initializeProcessTable(DEFAULT_INITIAL_CAPACITY);
 
-    if (!addProcessTableProcess(processManager->processTable, filename, -1, 0))
+    if (!addProcessTableProcess(processManager->processTable, filename, -1, processManager->timer))
     {
         printFullQueue();
     }
@@ -179,9 +180,14 @@ void endProcess(ProcessManager *processManager)
     {
         return;
     }
-
+    
     int processIdToDelete = processManager->processTable->runningId;
     int processToRunId = nextProcessReady(processManager->processTable->ready);
+
+    ProcessTableCell *processToFinishCell = getProcessTableCellByProcessId(
+            processManager->processTable->processTableCellQueue,
+            processIdToDelete);
+    addFinishedProcess(processManager->artCounter, processToFinishCell->initialTime, processManager->timer);
 
     if (processToRunId == -1)
     {
@@ -357,7 +363,7 @@ void processRewind(ProcessManager *processManager, char *filename)
     removeFromProcessTableQueue(processManager->processTable->processTableCellQueue,
                                 processManager->processTable->runningId);
 
-    insertToProcessTableQueue(processManager->processTable->processTableCellQueue, filename, -1, 0);
+    insertToProcessTableQueue(processManager->processTable->processTableCellQueue, filename, -1, processManager->timer);
 }
 
 

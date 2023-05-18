@@ -7,7 +7,7 @@
 
 #include "process.h"
 
-#define FILES_FOLDER "../files/"
+#define FILES_FOLDER "files/"
 
 
 Process *initializeProcess()

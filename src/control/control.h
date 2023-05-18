@@ -7,6 +7,7 @@
 #define SRC_CONTROL_H
 
 #include "../manager/process_manager.h"
+#include "../manager/art_counter.h"
 #include "../printer/printer.h"
 
 
