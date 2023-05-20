@@ -53,7 +53,7 @@ int runControl(Control *control)
 {
     char file[CHAR_MAX];
     char fileCommand[CHAR_MAX];
-    int input_type;
+    int inputType;
 
     printf("Type the name of the file (under '/files/'): ");
     if (!scanf("%s", file))
@@ -63,7 +63,7 @@ int runControl(Control *control)
     }
 
     printf("Inputs by file or command line? ( 1 - file | Other - command line): ");
-    if (!scanf("%d", &input_type))
+    if (!scanf("%d", &inputType))
     {
         cleanStdin();
         return -1;
@@ -153,7 +153,7 @@ int runControl(Control *control)
         char command[MAX_COMMANDS];
 
         // Se o input for por arquivo
-        if (input_type == 1)
+        if (inputType == 1)
         {
 
             printf("Type the file name (under '/files/'): ");
@@ -172,19 +172,13 @@ int runControl(Control *control)
             }
 
             char character;
-            int index = 0;
 
             while ((character = (char) fgetc(inputFile)) != EOF)
             {
                 //se for /n ou /r, ignora
-                if (character == '\n' || character == '\r')
+                if (character == '\n' || character == '\r' || character == ' ')
                 {
                     continue;
-                }
-
-                if (index >= MAX_COMMANDS - 1)
-                {
-                    break;
                 }
 
                 switch (toupper(character))
@@ -208,8 +202,6 @@ int runControl(Control *control)
                         printf(INVALID_COMMAND, character);
                         break;
                 }
-
-                index++;
             }
 
             fclose(inputFile);
