@@ -170,6 +170,7 @@ int runControl(Control *control)
                 printf(FILE_ERROR, filePath);
                 return ERROR;
             }
+
             char character;
             int index = 0;
 
@@ -181,22 +182,12 @@ int runControl(Control *control)
                     continue;
                 }
 
-                command[index] = character;
-                index++;
-
                 if (index >= MAX_COMMANDS - 1)
                 {
                     break;
                 }
-            }
 
-            command[index] = '\0';
-
-            fclose(inputFile);
-
-            for (int i = 0; i < strlen(command); i++)
-            {
-                switch (toupper(command[i]))
+                switch (toupper(character))
                 {
                     case 'M':
                         sleep(1);
@@ -214,20 +205,21 @@ int runControl(Control *control)
                         getchar();
                         break;
                     default:
-                        printf(INVALID_COMMAND, command[i]);
+                        printf(INVALID_COMMAND, character);
                         break;
                 }
+
+                index++;
             }
 
-
+            fclose(inputFile);
         }
-            // Se o input for por linha de comando
-        else
+        else // Se o input for por linha de comando
         {
             printf("Type the commands: :)");
+
             while (true)
             {
-
                 if (!scanf("%s", command))
                 {
                     cleanStdin();
