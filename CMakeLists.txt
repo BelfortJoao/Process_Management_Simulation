@@ -37,6 +37,8 @@ add_executable(src src/main.c
         src/blocked/blocked_queue.c
         src/blocked/blocked_queue.h
         src/blocked/blocked_node.c
-        src/blocked/blocked_node.h)
+        src/blocked/blocked_node.h
+        src/manager/art_counter.c
+        src/manager/art_counter.h)
 
 target_link_libraries(src m)

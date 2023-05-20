@@ -18,12 +18,8 @@
 #define PARENT 1
 #define CHILD 0
 #define FILES_FOLDER "../files/"
-#define U "u"
-#define M "m"
-#define I "i"
-
-
 #define MAX_COMMANDS 100000
+
 
 Control *initializeControl()
 {
@@ -53,30 +49,38 @@ Control *initializeControl()
 }
 
 
-
-
-int runControl(Control *control) {
+int runControl(Control *control)
+{
     char file[CHAR_MAX];
-    char file_command[CHAR_MAX];
+    char fileCommand[CHAR_MAX];
     int input_type;
 
     printf("Type the name of the file (under '/files/'): ");
-    scanf("%s", file);
+    if (!scanf("%s", file))
+    {
+        cleanStdin();
+        return -1;
+    }
 
     printf("Inputs by file or command line? ( 1 - file | Other - command line): ");
-    scanf("%d", &input_type);
-
+    if (!scanf("%d", &input_type))
+    {
+        cleanStdin();
+        return -1;
+    }
 
     control->processManager = initializeProcessManagerFromFile(file);
 
-    if (!control->processManager) {
+    if (!control->processManager)
+    {
         return ERROR;
     }
 
     // Cria um pipe para comunicação entre pai e filho
     int fd[2];
 
-    if (pipe(fd) == ERROR) {
+    if (pipe(fd) == ERROR)
+    {
         printf("Error: pipe failed\n");
         return ERROR;
     }
@@ -91,16 +95,16 @@ int runControl(Control *control) {
 
     if (processType == CHILD) // Processo filho
     {
-
-
         char command;
         close(fd[1]); // Fecha o lado de escrita do pipe
 
-        while (read(fd[0], &command, 1)) {
+        while (read(fd[0], &command, 1))
+        {
             if (command == 'u') // Se receber um 'u' do pipe, executa o processo
             {
                 processExecuting(control->processManager);
-            } else if (command == 'i') // Se receber um 'i' do pipe, cria um processo e imprime "PRINT"
+            }
+            else if (command == 'i') // Se receber um 'i' do pipe, cria um processo e imprime "PRINT"
             {
                 int newPid = fork();
 
@@ -108,12 +112,16 @@ int runControl(Control *control) {
                 {
                     printf(FORK_ERROR);
                     return ERROR;
-                } else if (newPid == CHILD) {
+                }
+                else if (newPid == CHILD)
+                {
                     printProcessTable(control->processManager->processTable);
                     printState(control->processManager->processTable->ready);
                     printBlocked(control->processManager->processTable->blockedQueue);
                     exit(2);
-                } else if (newPid == PARENT) {
+                }
+                else if (newPid == PARENT)
+                {
                     wait(NULL);
                 }
             }
@@ -130,7 +138,8 @@ int runControl(Control *control) {
                 {
                     printAverageResponseTime(calcAverageResponseTime(control->processManager->artCounter));
                     exit(3);
-                } else // Processo pai
+                }
+                else // Processo pai
                 {
                     wait(NULL);
                 }
@@ -144,34 +153,39 @@ int runControl(Control *control) {
         char command[MAX_COMMANDS];
 
         // Se o input for por arquivo
-        if (input_type == 1) {
+        if (input_type == 1)
+        {
 
             printf("Type the file name (under '/files/'): ");
-            scanf("%s", file_command);
+            scanf("%s", fileCommand);
 
-            char filePath[strlen(FILES_FOLDER) + strlen(file_command) + 1];
+            char filePath[strlen(FILES_FOLDER) + strlen(fileCommand) + 1];
             strcpy(filePath, FILES_FOLDER);
-            strcat(filePath, file_command);
+            strcat(filePath, fileCommand);
 
             FILE *inputFile = fopen(filePath, "r");
 
-            if (!inputFile) {
-                printf(FILE_ERROR);
+            if (!inputFile)
+            {
+                printf(FILE_ERROR, filePath);
                 return ERROR;
             }
             char character;
             int index = 0;
 
-            while ((character = fgetc(inputFile)) != EOF) {
+            while ((character = (char) fgetc(inputFile)) != EOF)
+            {
                 //se for /n ou /r, ignora
-                if (character == '\n' || character == '\r') {
+                if (character == '\n' || character == '\r')
+                {
                     continue;
                 }
 
                 command[index] = character;
                 index++;
 
-                if (index >= MAX_COMMANDS - 1) {
+                if (index >= MAX_COMMANDS - 1)
+                {
                     break;
                 }
             }
@@ -180,8 +194,10 @@ int runControl(Control *control) {
 
             fclose(inputFile);
 
-            for (int i = 0; i < strlen(command); i++) {
-                switch (toupper(command[i])) {
+            for (int i = 0; i < strlen(command); i++)
+            {
+                switch (toupper(command[i]))
+                {
                     case 'M':
                         sleep(1);
                         printf("ENCERRANDO PROCESSO");
@@ -204,26 +220,29 @@ int runControl(Control *control) {
             }
 
 
-
-
         }
-        // Se o input for por linha de comando
-        else{
+            // Se o input for por linha de comando
+        else
+        {
             printf("Type the commands: :)");
-            while(true){
+            while (true)
+            {
 
-                if (!scanf("%s", command)){
+                if (!scanf("%s", command))
+                {
                     cleanStdin();
                     continue;
                 }
 
-                for (int i = 0; i < strlen(command); i++) {
-                    switch (toupper(command[i])) {
+                for (int i = 0; i < strlen(command); i++)
+                {
+                    switch (toupper(command[i]))
+                    {
                         case 'M':
-                        write(fd[1], "m", 1); // Envia um 'm' para o pipe do filho
-                        sleep(1);
-                        kill(processType, SIGTERM); // Mata o processo filho
-                        return 0;
+                            write(fd[1], "m", 1); // Envia um 'm' para o pipe do filho
+                            sleep(1);
+                            kill(processType, SIGTERM); // Mata o processo filho
+                            return 0;
                         case 'U':
                             write(fd[1], "u", 1); // Envia um 'u' para o pipe do filho
                             break;
@@ -238,9 +257,6 @@ int runControl(Control *control) {
             }
         }
     }
+
     return 0;
 }
-
-
-
-
