@@ -59,7 +59,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
 }
 
 
-void blockProcess(ProcessManager *processManager, int blockTime)
+void blockProcess(ProcessManager *processManager, int blockTime, int typeOfScheduler)
 {
     if (processManager->processTable->runningId < 0)
     {
@@ -67,7 +67,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
     }
 
     //Operação em tabela-sai de ready e vai para executando
-    int processToRunId = nextProcessReady(processManager->processTable->ready);
+    int processToRunId = nextProcessReady(processManager->processTable->ready, typeOfScheduler);
     int processToBlock = processManager->processTable->runningId;
 
     if (processToRunId == -1)
@@ -106,7 +106,7 @@ void blockProcess(ProcessManager *processManager, int blockTime)
 }
 
 
-void scheduleProcess(ProcessManager *processManager)
+void scheduleProcess(ProcessManager *processManager, int typeOfScheduler)
 {
     // Ready array -> Running.
     ProcessTableCell *processToReadyCell = getProcessTableCellByProcessId(
@@ -115,7 +115,7 @@ void scheduleProcess(ProcessManager *processManager)
     ProcessTableCell *processToRunCell = getProcessTableCellByProcessId(
             processManager->processTable->processTableCellQueue,
             nextProcessReady(
-                    processManager->processTable->ready));
+                    processManager->processTable->ready, typeOfScheduler));
 
     if (!processToRunCell)
     {
@@ -174,7 +174,7 @@ void scheduleProcess(ProcessManager *processManager)
 }
 
 
-void endProcess(ProcessManager *processManager)
+void endProcess(ProcessManager *processManager, int typeOfScheduler)
 {
     if (processManager->processTable->runningId == -1)
     {
@@ -182,7 +182,7 @@ void endProcess(ProcessManager *processManager)
     }
     
     int processIdToDelete = processManager->processTable->runningId;
-    int processToRunId = nextProcessReady(processManager->processTable->ready);
+    int processToRunId = nextProcessReady(processManager->processTable->ready, typeOfScheduler);
 
     ProcessTableCell *processToFinishCell = getProcessTableCellByProcessId(
             processManager->processTable->processTableCellQueue,
@@ -247,9 +247,9 @@ void endProcess(ProcessManager *processManager)
 }
 
 
-void execute(ProcessManager *processManager)
+void execute(ProcessManager *processManager, int typeOfScheduler)
 {
-    int processToRunId = nextProcessReady(processManager->processTable->ready);
+    int processToRunId = nextProcessReady(processManager->processTable->ready, typeOfScheduler);
 
     if (processToRunId == -1)
     {
@@ -280,11 +280,11 @@ void execute(ProcessManager *processManager)
 }
 
 
-void processExecuting(ProcessManager *processManager)
+void processExecuting(ProcessManager *processManager, int typeOfScheduler)
 {
     if (processManager->processTable->runningId < 0 || processManager->cpu->runningProcess == NULL)
     {
-        execute(processManager);
+        execute(processManager, typeOfScheduler);
         processUnblock(processManager);
         if (processManager->kill)
         {
@@ -296,10 +296,10 @@ void processExecuting(ProcessManager *processManager)
 
     if (processManager->cpu->executing_timer >= processManager->cpu->program_timer)
     {
-        scheduleProcess(processManager);
+        scheduleProcess(processManager, typeOfScheduler);
     }
     processUnblock(processManager);
-    upperInterpreter(processManager);
+    upperInterpreter(processManager, typeOfScheduler);
     clockUpPC(processManager);
     //printState(processManager->processTable->ready);
 
@@ -378,7 +378,7 @@ void attExec(ProcessManager *processManager)
 }
 
 
-void upperInterpreter(ProcessManager *processManager)
+void upperInterpreter(ProcessManager *processManager, int typeOfScheduler)
 {
     int blockTime;
     int PcPlus;
@@ -393,10 +393,10 @@ void upperInterpreter(ProcessManager *processManager)
         case 0:
             break;
         case 1://Bloqueia esse processo simulado por n unidades de tempo.
-            blockProcess(processManager, blockTime);
+            blockProcess(processManager, blockTime, typeOfScheduler);
             break;
         case 2://Acaba com o processo atual e coloca outro no lugar
-            endProcess(processManager);
+            endProcess(processManager, typeOfScheduler);
             break;
         case 3://Crian um novo processo com base no atual do CPU
             processCP(processManager, PcPlus);

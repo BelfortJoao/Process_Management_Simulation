@@ -50,7 +50,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename);
  * @param processManager Pointer to the Process Manager struct.
  * @param blockTime The amount of time to block the process for.
  */
-void blockProcess(ProcessManager *processManager, int blockTime);
+void blockProcess(ProcessManager *processManager, int blockTime, int typeOfScheduler);
 
 
 /**
@@ -58,7 +58,7 @@ void blockProcess(ProcessManager *processManager, int blockTime);
  *
  * @param processManager Pointer to the process manager.
  */
-void scheduleProcess(ProcessManager *processManager);
+void scheduleProcess(ProcessManager *processManager, int typeOfScheduler);
 
 
 /**
@@ -66,7 +66,7 @@ void scheduleProcess(ProcessManager *processManager);
  *
  * @param processManager Pointer to the process manager.
  */
-void endProcess(ProcessManager *processManager);
+void endProcess(ProcessManager *processManager, int typeOfScheduler);
 
 
 /**
@@ -74,7 +74,7 @@ void endProcess(ProcessManager *processManager);
  *
  * @param processManager Pointer to the process manager.
  */
-void execute(ProcessManager *processManager);
+void execute(ProcessManager *processManager, int typeOfScheduler);
 
 
 /**
@@ -83,7 +83,7 @@ void execute(ProcessManager *processManager);
  *
  * @param processManager Pointer to the process manager.
  */
-void processExecuting(ProcessManager *processManager);
+void processExecuting(ProcessManager *processManager, int typeOfScheduler);
 
 
 /**
@@ -133,7 +133,7 @@ void attExec(ProcessManager *processManager);
  *
  * @param processManager Pointer to the process manager struct.
  */
-void upperInterpreter(ProcessManager *processManager);
+void upperInterpreter(ProcessManager *processManager, int typeOfScheduler);
 
 
 /**

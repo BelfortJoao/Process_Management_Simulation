@@ -22,7 +22,7 @@ bool insertToReady(Ready *ready, int processId, int priority);
 bool removeFromReady(Ready *ready, int processId);
 
 
-int nextProcessReady(Ready *ready);
+int nextProcessReady(Ready *ready, int typeOfSheduler);
 
 
 void freeReady(Ready *ready);

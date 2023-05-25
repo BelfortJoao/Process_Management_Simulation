@@ -53,9 +53,17 @@ int runControl(Control *control)
     char file[CHAR_MAX];
     char fileCommand[CHAR_MAX];
     int inputType;
+    int typeOfScheduler;
 
     printf("Type the name of the file (under '/files/'): ");
     if (!scanf("%s", file))
+    {
+        cleanStdin();
+        return -1;
+    }
+
+    printf("Qual escalonamento? ( 1 - Prioridade FIFO, 2 - Prioridade Loteria): ");
+    if(!scanf("%d", &typeOfScheduler))
     {
         cleanStdin();
         return -1;
@@ -104,7 +112,7 @@ int runControl(Control *control)
 
             if (command == 'u') // Se receber um 'u' do pipe, executa o processo
             {
-                processExecuting(control->processManager);
+                processExecuting(control->processManager, typeOfScheduler);
                 write(fdFlag[1], "F", 1);
             }
             else if (command == 'i') // Se receber um 'i' do pipe, cria um processo e imprime "PRINT"
