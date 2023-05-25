@@ -207,3 +207,22 @@ void freeProcess(Process *process)
         free(process);
     }
 }
+
+
+void reallocateProgram(Process *process, int newNumLines)
+{
+    if (process == NULL || process->program == NULL)
+    {
+        printf("Invalid process or program.\n");
+        return;
+    }
+
+    process->program = realloc(process->program, newNumLines * sizeof(char *));
+    if (process->program == NULL)
+    {
+        printf("Memory reallocation failed.\n");
+        return;
+    }
+
+    process->numLines = newNumLines;
+}

@@ -58,6 +58,7 @@ int getNumberOfLinesInFile(FILE *file);
  */
 Process *initializeProcessFromFile(char *filename);
 
+void reallocateProgram(Process *process, int newNumLines);
 
 /**
  * @brief Creates a copy of an existing process.

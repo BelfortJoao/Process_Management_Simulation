@@ -52,6 +52,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename);
  */
 void blockProcess(ProcessManager *processManager, int blockTime);
 
+char** ReadArchive(char *filename);
 
 /**
  * @brief Schedules a process to run on the CPU.

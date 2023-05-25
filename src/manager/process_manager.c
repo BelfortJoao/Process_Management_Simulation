@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "../error/error.h"
 #include "../printer/printer.h"
 
@@ -357,13 +358,100 @@ void processCP(ProcessManager *processManager, int PcPlus)
     }
 }
 
+char** ReadArchive(char* filename) {
+    char** lines = NULL;
+    char buffer[256];
+    int lineCount = 0;
 
-void processRewind(ProcessManager *processManager, char *filename)
-{
-    removeFromProcessTableQueue(processManager->processTable->processTableCellQueue,
-                                processManager->processTable->runningId);
+    char cleanedFilename[256];
+    int cleanedIndex = 0;
 
-    insertToProcessTableQueue(processManager->processTable->processTableCellQueue, filename, -1, processManager->timer);
+    for (int i = 0; filename[i] != '\0'; i++) {
+        if (isalnum(filename[i]) || filename[i] == '.' || filename[i] == '/') {
+            cleanedFilename[cleanedIndex++] = filename[i];
+        }
+    }
+    cleanedFilename[cleanedIndex] = '\0';
+
+    char filePath[256];
+    sprintf(filePath, "../files/%s", cleanedFilename);
+    printf("%s\n",filePath);
+    FILE* file = fopen(filePath, "r");
+    if (file == NULL) {
+        printf("Failed to open the file.\n");
+        return NULL;
+    }
+
+    // Count the number of lines in the file
+    while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        lineCount++;
+    }
+
+    // Allocate memory for the lines
+    lines = (char**)malloc(lineCount * sizeof(char*));
+    if (lines == NULL) {
+        printf("Memory allocation failed.\n");
+        fclose(file);
+        return NULL;
+    }
+
+    // Reset the file position
+    fseek(file, 0, SEEK_SET);
+
+    // Read each line and store it in the array
+    for (int i = 0; i < lineCount; i++) {
+        fgets(buffer, sizeof(buffer), file);
+        int length = strlen(buffer);
+        buffer[length - 1] = '\0'; // Remove the newline character
+        lines[i] = (char*)malloc(length * sizeof(char));
+        strcpy(lines[i], buffer);
+    }
+
+    fclose(file);
+
+    return lines;
+}
+
+
+
+int numLines(char** newArchive) {
+    int count = 0;
+
+    if (newArchive == NULL) {
+        printf("Invalid archive.\n");
+        return count;
+    }
+
+    while (newArchive[count] != NULL) {
+        count++;
+    }
+    printf("%d\n", count);
+    return count;
+}
+
+
+void processRewind(ProcessManager* processManager, char* filename) {
+    if (processManager == NULL || processManager->cpu == NULL ||
+        processManager->cpu->runningProcess == NULL) {
+        printf("Invalid process manager or running process.\n");
+        return;
+    }
+
+    char** newArchive;
+    int numlines;
+
+    newArchive = ReadArchive(filename);
+    if (newArchive == NULL) {
+        printf("Failed to read the archive.\n");
+        return;
+    }
+
+    numlines = numLines(newArchive);
+
+    reallocateProgram(processManager->cpu->runningProcess, numlines);
+
+    processManager->cpu->runningProcess->program = newArchive;
+    processManager->cpu->runningProcess->numLines = numlines;
 }
 
 
