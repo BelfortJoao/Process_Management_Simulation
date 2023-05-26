@@ -37,16 +37,53 @@ Ready *initializeReady(int size)
 }
 
 
-int nextProcessReady(Ready *ready)
+int nextProcessReady(Ready *ready, int typeOfScheduler)
 {
-    for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++)
-    {
-        if (ready->queues[i]->front)
+    if (typeOfScheduler == 1){
+        for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++)
         {
-            return ready->queues[i]->front->id;
+            if (ready->queues[i]->front)
+            {
+                return ready->queues[i]->front->id;
+            }
         }
     }
 
+    else if (typeOfScheduler == 2){
+        int filaSelecionada = -1;
+        int tamanhoFila = 0;
+
+        // Encontra a primeira fila não vazia e obtém o tamanho
+        for (int i = 0; i < DEFAULT_QUEUE_SIZE; i++) {
+            if (ready->queues[i]->front) {
+                filaSelecionada = i;
+                break;
+            }
+        }
+
+        if (filaSelecionada != -1) {
+            // Calcula o tamanho da fila selecionada
+            QueueNode *id = ready->queues[filaSelecionada]->front;
+            while (id != NULL) {
+                tamanhoFila++;
+                id = id->next;
+            }
+
+            if (tamanhoFila > 0) {
+                // Gera um índice aleatório com base no tamanho da fila
+                int indiceAleatorio = rand() % tamanhoFila;
+
+                // Localiza o ID do processo no índice aleatório da fila selecionada
+                QueueNode *idSelecionado = ready->queues[filaSelecionada]->front;
+                for (int i = 0; i < indiceAleatorio; i++) {
+                    idSelecionado = idSelecionado->next;
+                }
+
+                return idSelecionado->id;
+            }
+        }
+
+    }
     return -1;
 }
 

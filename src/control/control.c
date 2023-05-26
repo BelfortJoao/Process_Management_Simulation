@@ -54,6 +54,7 @@ int runControl(Control *control)
     char file[CHAR_MAX];
     char fileCommand[CHAR_MAX];
     int input_type;
+    int typeOfScheduler;
 
     printf("Type the name of the file (under '/files/'): ");
     if (!scanf("%s", file))
@@ -62,7 +63,14 @@ int runControl(Control *control)
         return -1;
     }
 
-    printf("Inputs by file or command line? ( 1 - file | Other - command line): ");
+    printf("\nWhat type of scheduling? (1 - FIFO Priority, 2 - Lottery Priority): ");
+    if(!scanf("%d", &typeOfScheduler))
+    {
+        cleanStdin();
+        return -1;
+    }
+
+    printf("\nInputs by file or command line? ( 1 - file | 2 - command line): ");
     if (!scanf("%d", &input_type))
     {
         cleanStdin();
@@ -102,7 +110,7 @@ int runControl(Control *control)
         {
             if (command == 'u') // Se receber um 'u' do pipe, executa o processo
             {
-                processExecuting(control->processManager);
+                processExecuting(control->processManager, typeOfScheduler);
             }
             else if (command == 'i') // Se receber um 'i' do pipe, cria um processo e imprime "PRINT"
             {
@@ -156,7 +164,7 @@ int runControl(Control *control)
         if (input_type == 1)
         {
 
-            printf("Type the file name (under '/files/'): ");
+            printf("\nType the file name (under '/files/'): ");
             scanf("%s", fileCommand);
 
             char filePath[strlen(FILES_FOLDER) + strlen(fileCommand) + 1];
@@ -216,7 +224,7 @@ int runControl(Control *control)
         }
         else // Se o input for por linha de comando
         {
-            printf("Type the commands: :)");
+            printf("\nType the commands: ");
 
             while (true)
             {
