@@ -53,10 +53,18 @@ int runControl(Control *control)
 {
     char file[CHAR_MAX];
     char fileCommand[CHAR_MAX];
-    int input_type;
+    int inputType;
+    int typeOfScheduler;
 
     printf("Type the name of the file (under '/files/'): ");
     if (!scanf("%s", file))
+    {
+        cleanStdin();
+        return -1;
+    }
+
+    printf("Qual escalonamento? ( 1 - Prioridade FIFO, 2 - Prioridade Loteria): ");
+    if(!scanf("%d", &typeOfScheduler))
     {
         cleanStdin();
         return -1;
