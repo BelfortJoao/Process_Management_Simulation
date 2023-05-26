@@ -207,12 +207,15 @@ int runControl(Control *control)
                         break;
                 }
 
+                close(fdFlag[1]);
                 char comm = 'R';
 
                 while (comm != 'F')
                 {
                     read(fdFlag[0], &comm, 1);
                 }
+
+                close(fdFlag[0]);
             }
 
             fclose(inputFile);
