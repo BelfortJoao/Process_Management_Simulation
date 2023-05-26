@@ -18,6 +18,7 @@
 #define PARENT 1
 #define CHILD 0
 #define FILES_FOLDER "../files/"
+#define MAX_COMMANDS 100000
 
 
 Control *initializeControl()
@@ -97,7 +98,7 @@ int runControl(Control *control)
         char command;
         close(fd[1]); // Fecha o lado de escrita do pipe
 
-        while (read(fd[0], &command, 1) > 0)
+        while (read(fd[0], &command, 1))
         {
             if (command == 'u') // Se receber um 'u' do pipe, executa o processo
             {
@@ -117,6 +118,7 @@ int runControl(Control *control)
                     printProcessTable(control->processManager->processTable);
                     printState(control->processManager->processTable->ready);
                     printBlocked(control->processManager->processTable->blockedQueue);
+                    exit(2);
                 }
                 else if (newPid == PARENT)
                 {
@@ -135,28 +137,25 @@ int runControl(Control *control)
                 else if (newPid == CHILD)
                 {
                     printAverageResponseTime(calcAverageResponseTime(control->processManager->artCounter));
-                    return 0;
+                    exit(3);
                 }
                 else // Processo pai
                 {
                     wait(NULL);
                 }
-
-                close(fd[0]);
-                return 0;
             }
         }
-
-        close(fd[0]);
     }
 
     else// Processo pai
     {
         close(fd[0]); // Close pipe's read.
+        char command[MAX_COMMANDS];
 
         // Se o input for por arquivo
         if (inputType == 1)
         {
+
             printf("Type the file name (under '/files/'): ");
             scanf("%s", fileCommand);
 
@@ -185,14 +184,17 @@ int runControl(Control *control)
                 switch (toupper(character))
                 {
                     case 'M':
+                        sleep(1);
+                        printf("ENCERRANDO PROCESSO");
                         write(fd[1], "m", 1); // Envia um 'm' para o pipe do filho
-                        close(fd[1]); // Close pipe's write.
-                        wait(NULL);
+                        sleep(1);
+                        kill(processType, SIGTERM); // Mata o processo filho
                         return 0;
                     case 'U':
                         write(fd[1], "u", 1); // Envia um 'u' para o pipe do filho
                         break;
                     case 'I':
+                        sleep(1);
                         write(fd[1], "i", 1); // Envia um 'i' para o pipe do filho
                         getchar();
                         break;
@@ -206,20 +208,24 @@ int runControl(Control *control)
         }
         else // Se o input for por linha de comando
         {
-            char command;
-
             printf("Type the commands: :)");
 
             while (true)
             {
-                while ((command = (char) getchar()) != EOF && command != '\n' && command != '\r')
+                if (!scanf("%s", command))
                 {
-                    switch (toupper(command))
+                    cleanStdin();
+                    continue;
+                }
+
+                for (int i = 0; i < strlen(command); i++)
+                {
+                    switch (toupper(command[i]))
                     {
                         case 'M':
                             write(fd[1], "m", 1); // Envia um 'm' para o pipe do filho
-                            close(fd[1]); // Close pipe's write.
-                            wait(NULL);
+                            sleep(1);
+                            kill(processType, SIGTERM); // Mata o processo filho
                             return 0;
                         case 'U':
                             write(fd[1], "u", 1); // Envia um 'u' para o pipe do filho
@@ -228,7 +234,7 @@ int runControl(Control *control)
                             write(fd[1], "i", 1); // Envia um 'i' para o pipe do filho
                             break;
                         default:
-                            printf(INVALID_COMMAND, command);
+                            printf(INVALID_COMMAND, command[i]);
                             break;
                     }
                 }
