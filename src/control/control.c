@@ -18,6 +18,7 @@
 #define PARENT 1
 #define CHILD 0
 #define FILES_FOLDER "../files/"
+#define MAX_COMMANDS 100000
 
 
 Control *initializeControl()
@@ -70,7 +71,7 @@ int runControl(Control *control)
     }
 
     printf("Inputs by file or command line? ( 1 - file | Other - command line): ");
-    if (!scanf("%d", &inputType))
+    if (!scanf("%d", &input_type))
     {
         cleanStdin();
         return -1;
@@ -85,9 +86,8 @@ int runControl(Control *control)
 
     // Cria um pipe para comunicação entre pai e filho
     int fd[2];
-    int fdFlag[2];
 
-    if (pipe(fd) == ERROR || pipe(fdFlag) == ERROR)
+    if (pipe(fd) == ERROR)
     {
         printf("Error: pipe failed\n");
         return ERROR;
@@ -106,14 +106,11 @@ int runControl(Control *control)
         char command;
         close(fd[1]); // Fecha o lado de escrita do pipe
 
-        while (read(fd[0], &command, 1) > 0)
+        while (read(fd[0], &command, 1))
         {
-            write(fdFlag[1], "R", 1);
-
             if (command == 'u') // Se receber um 'u' do pipe, executa o processo
             {
-                processExecuting(control->processManager, typeOfScheduler);
-                write(fdFlag[1], "F", 1);
+                processExecuting(control->processManager);
             }
             else if (command == 'i') // Se receber um 'i' do pipe, cria um processo e imprime "PRINT"
             {
@@ -129,7 +126,7 @@ int runControl(Control *control)
                     printProcessTable(control->processManager->processTable);
                     printState(control->processManager->processTable->ready);
                     printBlocked(control->processManager->processTable->blockedQueue);
-                    write(fdFlag[1], "F", 1);
+                    exit(2);
                 }
                 else if (newPid == PARENT)
                 {
@@ -148,29 +145,25 @@ int runControl(Control *control)
                 else if (newPid == CHILD)
                 {
                     printAverageResponseTime(calcAverageResponseTime(control->processManager->artCounter));
-                    write(fdFlag[1], "F", 1);
-                    return 0;
+                    exit(3);
                 }
                 else // Processo pai
                 {
                     wait(NULL);
                 }
-
-                close(fd[0]);
-                return 0;
             }
         }
-
-        close(fd[0]);
     }
 
     else// Processo pai
     {
         close(fd[0]); // Close pipe's read.
+        char command[MAX_COMMANDS];
 
         // Se o input for por arquivo
-        if (inputType == 1)
+        if (input_type == 1)
         {
+
             printf("Type the file name (under '/files/'): ");
             scanf("%s", fileCommand);
 
@@ -187,26 +180,35 @@ int runControl(Control *control)
             }
 
             char character;
+            int index = 0;
 
             while ((character = (char) fgetc(inputFile)) != EOF)
             {
                 //se for /n ou /r, ignora
-                if (character == '\n' || character == '\r' || character == ' ')
+                if (character == '\n' || character == '\r')
                 {
                     continue;
+                }
+
+                if (index >= MAX_COMMANDS - 1)
+                {
+                    break;
                 }
 
                 switch (toupper(character))
                 {
                     case 'M':
+                        sleep(1);
+                        printf("ENCERRANDO PROCESSO");
                         write(fd[1], "m", 1); // Envia um 'm' para o pipe do filho
-                        close(fd[1]); // Close pipe's write.
-                        wait(NULL);
+                        sleep(1);
+                        kill(processType, SIGTERM); // Mata o processo filho
                         return 0;
                     case 'U':
                         write(fd[1], "u", 1); // Envia um 'u' para o pipe do filho
                         break;
                     case 'I':
+                        sleep(1);
                         write(fd[1], "i", 1); // Envia um 'i' para o pipe do filho
                         getchar();
                         break;
@@ -215,33 +217,31 @@ int runControl(Control *control)
                         break;
                 }
 
-                char comm = 'R';
-
-                while (comm != 'F')
-                {
-                    read(fdFlag[0], &comm, 1);
-                }
+                index++;
             }
 
             fclose(inputFile);
         }
         else // Se o input for por linha de comando
         {
-            cleanStdin();
+            printf("Type the commands: :)");
 
-            char command;
             while (true)
             {
-                printf("\nType the commands: ");
-
-                while ((command = (char) getchar()) != EOF && command != '\n' && command != '\r')
+                if (!scanf("%s", command))
                 {
-                    switch (toupper(command))
+                    cleanStdin();
+                    continue;
+                }
+
+                for (int i = 0; i < strlen(command); i++)
+                {
+                    switch (toupper(command[i]))
                     {
                         case 'M':
                             write(fd[1], "m", 1); // Envia um 'm' para o pipe do filho
-                            close(fd[1]); // Close pipe's write.
-                            wait(NULL);
+                            sleep(1);
+                            kill(processType, SIGTERM); // Mata o processo filho
                             return 0;
                         case 'U':
                             write(fd[1], "u", 1); // Envia um 'u' para o pipe do filho
@@ -250,15 +250,8 @@ int runControl(Control *control)
                             write(fd[1], "i", 1); // Envia um 'i' para o pipe do filho
                             break;
                         default:
-                            printf(INVALID_COMMAND, command);
+                            printf(INVALID_COMMAND, command[i]);
                             break;
-                    }
-
-                    char comm = 'R';
-
-                    while (comm != 'F')
-                    {
-                        read(fdFlag[0], &comm, 1);
                     }
                 }
             }
