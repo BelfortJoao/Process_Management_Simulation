@@ -79,8 +79,6 @@ int nextProcessReady(Ready *ready, int typeOfScheduler)
                     idSelecionado = idSelecionado->next;
                 }
 
-                printf("O ID SELECIONADO FOI: %d\n", idSelecionado->id);
-
                 return idSelecionado->id;
             }
         }
