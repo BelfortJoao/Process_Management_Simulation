@@ -425,12 +425,6 @@ Arquivo lerArquivo(const char* nomeArquivo) {
 
 void processRewind(ProcessManager *processManager, char *filename)
 {
-<<<<<<< Updated upstream:src/manager/process_manager.c
-    removeFromProcessTableQueue(processManager->processTable->processTableCellQueue,
-                                processManager->processTable->runningId);
-
-    insertToProcessTableQueue(processManager->processTable->processTableCellQueue, filename, -1, processManager->timer);
-=======
     //erro no filename
     if (filename == NULL)
     {
@@ -445,7 +439,6 @@ void processRewind(ProcessManager *processManager, char *filename)
     processManager->cpu->runningProcess->program = arq.linhas;
     processManager->cpu->runningProcess->numLines = arq.tamanho;
     processManager->cpu->programCounter = 0;
->>>>>>> Stashed changes:src/manager/processmanager.c
 }
 
 
