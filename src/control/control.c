@@ -48,19 +48,33 @@ Control *initializeControl()
     return control;
 }
 
-
 int runControl(Control *control)
 {
-    char file[CHAR_MAX];
+    char *file = (char*) malloc(sizeof(char) * CHAR_MAX);
     char fileCommand[CHAR_MAX];
+    int file_type;
     int input_type;
     int typeOfScheduler;
 
-    printf("Type the name of the file (under '/files/'): ");
-    if (!scanf("%s", file))
+    printf("External file or random file? (1 - External file, 2 - Random file): ");
+    if (!scanf("%d", &file_type))
     {
         cleanStdin();
         return -1;
+    }
+
+    if(file_type == 1)
+    {
+        printf("Type the name of the file (under '/files/'): ");
+        if (!scanf("%s", file))
+        {
+            cleanStdin();
+            return -1;
+        }
+    }
+    else
+    {
+        strcpy(file, " ");
     }
 
     printf("\nWhat type of scheduling? (1 - FIFO Priority, 2 - Lottery Priority): ");
