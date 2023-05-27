@@ -3,5 +3,6 @@ D 0
 D 1
 V 0 1000
 V 1 500
+V 0 1
 R fileR.txt
 T
