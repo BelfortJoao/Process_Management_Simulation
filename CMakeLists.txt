@@ -6,8 +6,8 @@ set(CMAKE_C_STANDARD 99)
 add_executable(src src/main.c
         src/manager/timer.c
         src/manager/timer.h
-        src/manager/cpu.c
-        src/manager/cpu.h
+        src/cpu/core.c
+        src/cpu/core.h
         src/running/running.c
         src/running/running.h
         src/ready/ready.c
@@ -39,6 +39,6 @@ add_executable(src src/main.c
         src/blocked/blocked_node.c
         src/blocked/blocked_node.h
         src/manager/art_counter.c
-        src/manager/art_counter.h)
+        src/manager/art_counter.h src/cpu/cpu.c src/cpu/cpu.h)
 
 target_link_libraries(src m)

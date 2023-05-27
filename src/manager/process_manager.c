@@ -21,7 +21,7 @@ ProcessManager *initializeProcessManager()
 }
 
 
-ProcessManager *initializeProcessManagerFromFile(char *filename)
+ProcessManager *initializeProcessManagerFromFile(char *filename, int numberOfCores)
 {
     ProcessManager *processManager = initializeProcessManager();
 
@@ -32,16 +32,20 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
 
     initializeTimer(&processManager->timer);
     processManager->artCounter = initializeArtCounter();
-    processManager->cpu = initializeCPU(filename);
+    processManager->cpu = initializeCPU(numberOfCores);
+
+    Core *core = nextIdleCore(processManager->cpu);
+
+    initializeCoreFromFile(core, filename);
 
     if (!processManager->cpu)
     {
         return NULL;
     }
 
-    processManager->processTable = initializeProcessTable(DEFAULT_INITIAL_CAPACITY);
+    processManager->processTable = initializeProcessTable(DEFAULT_INITIAL_CAPACITY, numberOfCores);
 
-    if (!addProcessTableProcess(processManager->processTable, filename, -1, processManager->timer))
+    if (!addProcessTableProcess(processManager->processTable, core->runningProcess, -1, processManager->timer))
     {
         printFullQueue();
     }
@@ -96,7 +100,7 @@ void blockProcess(ProcessManager *processManager, int blockTime, int typeOfSched
     getProcessTableCellByProcessId(processManager->processTable->processTableCellQueue,
                                    processToBlock)->state = BLOCKED;
 
-    changeProcess(processManager->cpu,
+    changeProcess(nextIdleCore(processManager->cpu),
                   processToRun->process,
                   processToRun->programCounter,
                   processToRun->CPUTime,
@@ -122,7 +126,6 @@ void scheduleProcess(ProcessManager *processManager, int typeOfScheduler)
         return;
     }
 
-    // WTF
     if (processToReadyCell->priority < 3)
     {
         processToReadyCell->priority++;
@@ -134,9 +137,6 @@ void scheduleProcess(ProcessManager *processManager, int typeOfScheduler)
     {
         printProcessNotFound();
     }
-
-    /// Remove when in production mode.
-    //printProcessTable(processManager->processTable);
 
     if (!insertToReady(processManager->processTable->ready,
                        processToReadyCell->id,
@@ -163,7 +163,7 @@ void scheduleProcess(ProcessManager *processManager, int typeOfScheduler)
             break;
     }
 
-    changeProcess(processManager->cpu,
+    changeProcess(nextIdleCore(processManager->cpu),
                   processToRunCell->process,
                   processToRunCell->programCounter,
                   time,
@@ -180,7 +180,7 @@ void endProcess(ProcessManager *processManager, int typeOfScheduler)
     {
         return;
     }
-    
+
     int processIdToDelete = processManager->processTable->runningId;
     int processToRunId = nextProcessReady(processManager->processTable->ready, typeOfScheduler);
 
@@ -229,18 +229,23 @@ void endProcess(ProcessManager *processManager, int typeOfScheduler)
                 break;
         }
 
-        changeProcess(processManager->cpu,
-                      processToRunCell->process,
-                      processToRunCell->programCounter,
-                      time,
-                      0);
-
-        processToRunCell->state = RUNNING;
+        if (!changeProcess(nextIdleCore(processManager->cpu),
+                           processToRunCell->process,
+                           processToRunCell->programCounter,
+                           time,
+                           0))
+        {
+            processToRunCell->state = READY;
+        }
+        else
+        {
+            processToRunCell->state = RUNNING;
+        }
     }
     else
     {
         processManager->processTable->runningId = -1;
-        processManager->cpu->runningProcess = NULL;
+        endCPU(processManager->cpu);
     }
 
     deleteProcessTableProcess(processIdToDelete, processManager->processTable);
@@ -270,7 +275,7 @@ void execute(ProcessManager *processManager, int typeOfScheduler)
             processManager->processTable->processTableCellQueue,
             processToRunId);
 
-    changeProcess(processManager->cpu,
+    changeProcess(nextIdleCore(processManager->cpu),
                   processToRunCell->process,
                   processToRunCell->programCounter,
                   processToRunCell->CPUTime,
@@ -282,7 +287,7 @@ void execute(ProcessManager *processManager, int typeOfScheduler)
 
 void processExecuting(ProcessManager *processManager, int typeOfScheduler)
 {
-    if (processManager->processTable->runningId < 0 || processManager->cpu->runningProcess == NULL)
+    if (processManager->processTable->runningId < 0)
     {
         execute(processManager, typeOfScheduler);
         processUnblock(processManager);
@@ -294,14 +299,19 @@ void processExecuting(ProcessManager *processManager, int typeOfScheduler)
         return;
     }
 
-    if (processManager->cpu->executing_timer >= processManager->cpu->program_timer)
+    ProcessTableCell *processTableCell = getProcessTableCellByProcessId(
+            processManager->processTable->processTableCellQueue,
+            processManager->processTable->runningId);
+
+    Core *core = getCoreByRunningProcess(processManager->cpu, processTableCell->process);
+
+    if (core->executing_timer >= core->program_timer)
     {
         scheduleProcess(processManager, typeOfScheduler);
     }
     processUnblock(processManager);
     upperInterpreter(processManager, typeOfScheduler);
     clockUpPC(processManager);
-    //printState(processManager->processTable->ready);
 
     if (processManager->kill)
     {
@@ -345,7 +355,7 @@ void processUnblock(ProcessManager *processManager)
 void clockUpPC(ProcessManager *processManager)
 {
     timeUp(&processManager->timer);
-    timeUp(&processManager->cpu->executing_timer);
+    timeUpCPU(processManager->cpu);
 }
 
 
@@ -355,6 +365,7 @@ void processCP(ProcessManager *processManager, int PcPlus)
     {
         printFullQueue();
     }
+    // coloca o processo na cpu se estiver livre
 }
 
 
@@ -373,39 +384,57 @@ void attExec(ProcessManager *processManager)
             processManager->processTable->processTableCellQueue,
             processManager->processTable->runningId);
 
-    runningProcessCell->programCounter = processManager->cpu->programCounter;
+    Core *core = getCoreByRunningProcess(processManager->cpu, runningProcessCell->process);
+
+    runningProcessCell->programCounter = core->programCounter;
     runningProcessCell->CPUTime++;
 }
 
+void upCPU(CPU *cpu)
+{
+    for (int i = 0; i < cpu->numberOfCores; i++)
+    {
+        if (cpu->coreArray[i]->coreState == WORKING)
+        {
+            cpu->coreArray[i]->programCounter++;
+        }
+    }
+}
 
 void upperInterpreter(ProcessManager *processManager, int typeOfScheduler)
 {
     int blockTime;
     int PcPlus;
     char **filename;
-    int cpuResp = interpreter(processManager->cpu, &blockTime, filename, &PcPlus);
 
-    processManager->cpu->programCounter++;
+    upCPU(processManager->cpu);
     attExec(processManager);
 
-    switch (cpuResp)
+    for (int i = 0; i < processManager->cpu->numberOfCores; i++)
     {
-        case 0:
-            break;
-        case 1://Bloqueia esse processo simulado por n unidades de tempo.
-            blockProcess(processManager, blockTime, typeOfScheduler);
-            break;
-        case 2://Acaba com o processo atual e coloca outro no lugar
-            endProcess(processManager, typeOfScheduler);
-            break;
-        case 3://Crian um novo processo com base no atual do CPU
-            processCP(processManager, PcPlus);
-            break;
-        case 4://Recria o processo atual com base em um arquivo
-            processRewind(processManager, *filename);
-            break;
-        default:
-            break;
+        if (processManager->cpu->coreArray[i]->coreState == WORKING)
+        {
+            switch (interpreter(processManager->cpu->coreArray[i], &blockTime, filename, &PcPlus))
+            {
+                case 0:
+                    break;
+                case 1://Bloqueia esse processo simulado por n unidades de tempo.
+                    blockProcess(processManager, blockTime, typeOfScheduler);
+                    break;
+                case 2://Acaba com o processo atual e coloca outro no lugar
+                    endProcess(processManager, typeOfScheduler);
+                    break;
+                case 3://Crian um novo processo com base no atual do Core
+                    processManager->cpu->coreArray[i]->programCounter += PcPlus;
+                    processCP(processManager, PcPlus);
+                    break;
+                case 4://Recria o processo atual com base em um arquivo
+                    processRewind(processManager, *filename);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
 

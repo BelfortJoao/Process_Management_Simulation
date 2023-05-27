@@ -12,15 +12,12 @@
  */
 typedef int Running; /**< Stores ID of the runningId process. */
 
-
 /**
- * @brief Initializes a new Running process.
+ * @brief Initializes an array of running processes.
  *
- * @return A pointer to the initialized Running process.
- * @retval NULL If there was an error allocating memory.
+ * @param numberOfRunning The maximum number of processes that can be running at the same time.
  */
-Running *initializeRunningProcess();
-
+Running *initializeRunning(int numberOfRunning);
 
 /**
  * @brief Exchanges the context of the given process ID with the provided Running process.

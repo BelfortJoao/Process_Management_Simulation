@@ -7,7 +7,7 @@
 #include "process_table.h"
 
 
-ProcessTable *initializeProcessTable(int initialCapacity)
+ProcessTable *initializeProcessTable(int initialCapacity, int numberOfRunning)
 {
     ProcessTable *processTable = (ProcessTable *) malloc(sizeof(ProcessTable));
 
@@ -39,22 +39,20 @@ ProcessTable *initializeProcessTable(int initialCapacity)
         return NULL;
     }
 
-    processTable->runningId = -1;
+    processTable->runningId = initializeRunning(numberOfRunning);
 
     if (!processTable->runningId)
     {
         return NULL;
     }
 
-    contextExchange(-1, &processTable->runningId);
-
     return processTable;
 }
 
 
-bool addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcessId, int clock)
+bool addProcessTableProcess(ProcessTable *processTable, Process *process, int parentProcessId, int clock)
 {
-    if (!insertToProcessTableQueue(processTable->processTableCellQueue, filename, parentProcessId, clock))
+    if (!insertToProcessTableQueue(processTable->processTableCellQueue, process, parentProcessId, clock))
     {
         return false;
     }
@@ -92,7 +90,7 @@ bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus)
                                        copyProcessTableCell(processTableCell,
                                                             processTable->nextFreeId,
                                                             processTable->runningId,
-                                                            processTableCell->programCounter + PcPlus,
+                                                            processTableCell->programCounter + 1,
                                                             timer)))
     {
         return false;

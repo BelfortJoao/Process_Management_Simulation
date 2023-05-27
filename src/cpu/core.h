@@ -1,34 +1,46 @@
 /**
  * @file cpu.h
- * @brief Header file for the CPU module
+ * @brief Header file for the Core module
  */
 
-#ifndef SRC_CPU_H
-#define SRC_CPU_H
+#ifndef SRC_CORE_H
+#define SRC_CORE_H
+
+#include <stdbool.h>
 
 #include "../process/process.h"
-#include "timer.h"
+#include "../manager/timer.h"
+
+
+enum CoreState
+{
+    WORKING, IDLE
+};
 
 
 /**
- * @struct CPU
- * @brief Struct for the CPU module
+ * @struct Core
+ * @brief Struct for the Core module
  */
-typedef struct CPU
+typedef struct Core
 {
     Process *runningProcess; /**< Pointer to the process that is currently runningId */
     int programCounter; /**< Program counter */
-    Timer executing_timer; /**< Timer for the CPU's executing time */
+    Timer executing_timer; /**< Timer for the Core's executing time */
     Timer program_timer; /**< Timer for the current program's time */
-} CPU;
+    enum CoreState coreState;
+} Core;
+
+
+Core *initializeCore();
 
 
 /**
- * @brief Initializes a new CPU with the program stored in the specified file
+ * @brief Initializes a new Core with the program stored in the specified file
  * @param filename Name of the file containing the program to load
- * @return Pointer to the new CPU, or NULL if there was an error
+ * @return Pointer to the new Core, or NULL if there was an error
  */
-CPU *initializeCPU(char *filename);
+void initializeCoreFromFile(Core *core, char *filename);
 
 
 /**
@@ -41,7 +53,7 @@ int convertStringToInt(char *string);
 
 /**
  * @brief Interprets a single line of the program
- * @param cpu Pointer to the CPU that is executing the program
+ * @param core Pointer to the Core that is executing the program
  * @param blk Pointer to an integer that will be set to the ID of the block that the program should jump to, if applicable
  * @param file Pointer to a string that will be set to the name of the file that the program should read from, if applicable
  * @param PCPlus Pointer to an integer that will be set to the number of lines to skip after executing a "F" instruction, if applicable
@@ -52,25 +64,26 @@ int convertStringToInt(char *string);
  *     - 3: Skip a specified number of lines in the program
  *     - 4: Read input from a file
  */
-int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus);
+int interpreter(Core *core, int *blk, char **file, int *PCPlus);
 
 
 /**
  * @brief Replaces the currently runningId process with a new process
- * @param cpu Pointer to the CPU that is executing the program
+ * @param core Pointer to the Core that is executing the program
  * @param process Pointer to the new process
  * @param programCounter New value for the program counter
  * @param program_timer New value for the program timer
  * @param executing_timer New value for the executing timer
+ * @return Weather if it found a free core to run the process
  */
-void changeProcess(CPU *cpu, Process *process, int programCounter, Timer program_timer, Timer executing_timer);
+bool changeProcess(Core *core, Process *process, int programCounter, Timer program_timer, Timer executing_timer);
 
 
 /**
- * @brief Frees the memory used by a CPU
- * @param cpu Pointer to the CPU to free
+ * @brief Frees the memory used by a Core
+ * @param core Pointer to the Core to free
  */
-void freeCPU(CPU *cpu);
+void freeCore(Core *core);
 
 
-#endif /* SRC_CPU_H */
+#endif /* SRC_CORE_H */

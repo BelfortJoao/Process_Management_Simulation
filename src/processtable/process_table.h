@@ -25,7 +25,7 @@ typedef struct ProcessTable
     int nextFreeId;
     Ready *ready; /**< An array of ready processes. */
     BlockedQueue *blockedQueue; /**< An array of blocked processes. */
-    Running runningId; /**< The process currently being executed. */
+    Running *runningId; /**< An array of the processes currently being executed. */
 } ProcessTable;
 
 
@@ -35,7 +35,7 @@ typedef struct ProcessTable
  * @param initialCapacity the initial capacity of the table
  * @return a pointer to the new ProcessTable, or NULL if initialization failed
  */
-ProcessTable *initializeProcessTable(int initialCapacity);
+ProcessTable *initializeProcessTable(int initialCapacity, int numberOfRunning);
 
 
 /**
@@ -47,7 +47,7 @@ ProcessTable *initializeProcessTable(int initialCapacity);
  * @param clock the current value of the system clock
  * @return true if the process was successfully added, false otherwise
  */
-bool addProcessTableProcess(ProcessTable *processTable, char *filename, int parentProcessId, int clock);
+bool addProcessTableProcess(ProcessTable *processTable, Process *process, int parentProcessId, int clock);
 
 
 /**

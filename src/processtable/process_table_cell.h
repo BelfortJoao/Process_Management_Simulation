@@ -19,7 +19,7 @@ typedef struct ProcessTableCell
 } ProcessTableCell;
 
 
-ProcessTableCell *initializeProcessTableCellFromFile(int id, char *filename, int parentProcess, int clock);
+ProcessTableCell *initializeProcessTableCellFromFile(int id, Process *process, int parentProcess, int clock);
 
 
 ProcessTableCell *copyProcessTableCell(ProcessTableCell *processTableCellToCopy, int id,

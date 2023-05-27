@@ -22,7 +22,7 @@ ProcessTableCellQueue *initializeProcessTableCellQueue()
 
 
 bool insertToProcessTableQueue(ProcessTableCellQueue *processTableCellQueue,
-                               char *filename, int parentProcessId, int clock)
+                               Process *process, int parentProcessId, int clock)
 {
     // ---------------------------------------- Move it later ----------------------------------------------------------
     ProcessTableCellNode *processTableCellNode = (ProcessTableCellNode *) malloc(sizeof(ProcessTableCellNode));
@@ -33,7 +33,7 @@ bool insertToProcessTableQueue(ProcessTableCellQueue *processTableCellQueue,
         return false;
     }
 
-    processTableCellNode->processTableCell = initializeProcessTableCellFromFile(0, filename, parentProcessId, clock);
+    processTableCellNode->processTableCell = initializeProcessTableCellFromFile(0, process, parentProcessId, clock);
     processTableCellNode->next = NULL;
     // -----------------------------------------------------------------------------------------------------------------
 

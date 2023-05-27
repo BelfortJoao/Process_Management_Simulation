@@ -29,8 +29,8 @@ ArtCounter *initializeArtCounter();
  * @brief Adds the time when the process was finished to the total time and 1(one) to the number of finished processes.
  *
  * @param artCounter Pointer to the average return time counter.
- * @param processInitTime CPU time when the process that is beeing finished started.
- * @param currTime Current time of the CPU.
+ * @param processInitTime Core time when the process that is being finished started.
+ * @param currTime Current time of the Core.
  */
 void addFinishedProcess(ArtCounter *artCounter, int processInitTime, int currTime);
 

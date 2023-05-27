@@ -4,7 +4,7 @@
 #include "process_table_cell.h"
 
 
-ProcessTableCell *initializeProcessTableCellFromFile(int id, char *filename, int parentProcess, int clock)
+ProcessTableCell *initializeProcessTableCellFromFile(int id, Process *process, int parentProcess, int clock)
 {
     ProcessTableCell *processTableCell = (ProcessTableCell *) malloc(sizeof(ProcessTableCell));
 
@@ -14,7 +14,7 @@ ProcessTableCell *initializeProcessTableCellFromFile(int id, char *filename, int
     }
 
     processTableCell->id = id;
-    processTableCell->process = initializeProcessFromFile(filename);
+    processTableCell->process = process;
     processTableCell->parentProcessId = parentProcess;
     processTableCell->programCounter = 0;
     processTableCell->priority = 0;

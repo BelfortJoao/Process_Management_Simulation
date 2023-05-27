@@ -4,34 +4,46 @@
 #include "../error/error.h"
 #include "../printer/printer.h"
 
-#include "cpu.h"
+#include "core.h"
 
 #define DEFAULT_QUANTUM 8
 
 
-CPU *initializeCPU(char *filename)
+Core *initializeCore()
 {
-    CPU *cpu = (CPU *) malloc(sizeof(CPU));
+    Core *core = (Core *) malloc(sizeof(Core));
 
-    if (!cpu)
+    if (!core)
     {
-        printf(ALLOCATION_ERROR, "CPU");
+        printf(ALLOCATION_ERROR, "Core");
         return NULL;
     }
 
-    cpu->runningProcess = initializeProcessFromFile(filename);
+    core->runningProcess = NULL;
+    core->coreState = IDLE;
+    core->programCounter = 0;
+    initializeTimer(&core->executing_timer);
+    initializeTimer(&core->program_timer);
+    core->program_timer = DEFAULT_QUANTUM;
 
-    if (!cpu->runningProcess)
+    return core;
+}
+
+
+void initializeCoreFromFile(Core *core, char *filename)
+{
+    core->runningProcess = initializeProcessFromFile(filename);
+
+    if (!core->runningProcess)
     {
-        return NULL;
+        return;
     }
 
-    cpu->programCounter = 0;
-    initializeTimer(&cpu->executing_timer);
-    initializeTimer(&cpu->program_timer);
-    cpu->program_timer = DEFAULT_QUANTUM;
-
-    return cpu;
+    core->coreState = WORKING;
+    core->programCounter = -1;
+    initializeTimer(&core->executing_timer);
+    initializeTimer(&core->program_timer);
+    core->program_timer = DEFAULT_QUANTUM;
 }
 
 
@@ -51,9 +63,9 @@ int convertStringToInt(char *string)
 }
 
 
-int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus)
+int interpreter(Core *core, int *blk, char **file, int *PCPlus)
 {
-    char *input = strdup(cpu->runningProcess->program[cpu->programCounter]);
+    char *input = strdup(core->runningProcess->program[core->programCounter]);
     char *token = strsep(&input, " ");
 
     if (!token)
@@ -68,30 +80,30 @@ int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus)
     switch (token[0])
     {
         case 'N':
-            initializeProcessMemory(cpu->runningProcess, convertStringToInt(firstArgument));
+            initializeProcessMemory(core->runningProcess, convertStringToInt(firstArgument));
             printInitialMemorySize(convertStringToInt(firstArgument));
             free(input);
             return 0;
         case 'D':
-            clearProcessMemory(cpu->runningProcess, convertStringToInt(firstArgument));
+            clearProcessMemory(core->runningProcess, convertStringToInt(firstArgument));
             printClearMemory(convertStringToInt(firstArgument));
             free(input);
             return 0;
         case 'V':
-            changeValueInProcessMemory(cpu->runningProcess, convertStringToInt(firstArgument),
+            changeValueInProcessMemory(core->runningProcess, convertStringToInt(firstArgument),
                                        convertStringToInt(secondArgument));
 
             printMemoryChange(convertStringToInt(firstArgument), convertStringToInt(secondArgument));
             free(input);
             return 0;
         case 'A':
-            increaseValueInProcessMemory(cpu->runningProcess, convertStringToInt(firstArgument),
+            increaseValueInProcessMemory(core->runningProcess, convertStringToInt(firstArgument),
                                          convertStringToInt(secondArgument));
             printMemoryIncrease(convertStringToInt(firstArgument), convertStringToInt(secondArgument));
             free(input);
             return 0;
         case 'S':
-            reduceValueInProcessMemory(cpu->runningProcess, convertStringToInt(firstArgument),
+            reduceValueInProcessMemory(core->runningProcess, convertStringToInt(firstArgument),
                                        convertStringToInt(secondArgument));
             printDecreaseMemory(convertStringToInt(firstArgument), convertStringToInt(secondArgument));
             free(input);
@@ -122,33 +134,41 @@ int interpreter(CPU *cpu, int *blk, char **file, int *PCPlus)
 }
 
 
-void changeProcess(CPU *cpu, Process *process, int programCounter, Timer program_timer, Timer executing_timer)
+bool changeProcess(Core *core, Process *process, int programCounter, Timer program_timer, Timer executing_timer)
 {
+    if (!core)
+    {
+        return false;
+    }
+
     for (int i = 0; i < process->numLines; i++)
     {
-        if (!cpu->runningProcess)
+        if (!core->runningProcess)
         {
-            cpu->runningProcess = process;
+            core->runningProcess = process;
         }
 
-        strcpy(cpu->runningProcess->program[i], process->program[i]);
+        strcpy(core->runningProcess->program[i], process->program[i]);
     }
 
     for (int i = 0; i < process->memorySize; i++)
     {
-        cpu->runningProcess->memory[i] = process->memory[i];
+        core->runningProcess->memory[i] = process->memory[i];
     }
 
-    cpu->programCounter = programCounter;
-    cpu->program_timer = program_timer;
-    cpu->executing_timer = executing_timer;
+    core->coreState = WORKING;
+    core->programCounter = programCounter;
+    core->program_timer = program_timer;
+    core->executing_timer = executing_timer;
+
+    return true;
 }
 
 
-void freeCPU(CPU *cpu)
+void freeCore(Core *core)
 {
-    cpu->runningProcess = NULL;
-    cpu->programCounter = 0;
-    cpu->executing_timer = 0;
-    cpu->program_timer = 0;
+    core->runningProcess = NULL;
+    core->programCounter = 0;
+    core->executing_timer = 0;
+    core->program_timer = 0;
 }

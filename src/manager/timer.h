@@ -26,12 +26,4 @@ void initializeTimer(Timer *timer);
 void timeUp(Timer *time);
 
 
-/**
- * @brief Decreases the given Timer by 1.
- *
- * @param time A pointer to the Timer to decrement.
- */
-void timeDown(Timer *time);
-
-
 #endif /* SRC_TIMER_H */

@@ -7,9 +7,10 @@
 #define SRC_PROCESS_MANAGER_H
 
 #include <stdbool.h>
-#include "cpu.h"
+#include "../cpu/core.h"
 #include "art_counter.h"
 #include "../processtable/process_table.h"
+#include "../cpu/cpu.h"
 
 #define DEFAULT_INITIAL_CAPACITY 1000
 
@@ -38,10 +39,11 @@ ProcessManager *initializeProcessManager();
 /**
  * @brief Initializes a Process Manager with the given filename.
  *
- * @param filename The name of the file containing the CPU and process information.
+ * @param filename The name of the file containing the Core and process information.
+ * @param numberOfCores The number of cores in the CPU.
  * @return A pointer to the Process Manager struct if successful, NULL otherwise.
  */
-ProcessManager *initializeProcessManagerFromFile(char *filename);
+ProcessManager *initializeProcessManagerFromFile(char *filename, int numberOfCores);
 
 
 /**
@@ -54,7 +56,7 @@ void blockProcess(ProcessManager *processManager, int blockTime, int typeOfSched
 
 
 /**
- * @brief Schedules a process to run on the CPU.
+ * @brief Schedules a process to run on the Core.
  *
  * @param processManager Pointer to the process manager.
  */
@@ -78,7 +80,7 @@ void execute(ProcessManager *processManager, int typeOfScheduler);
 
 
 /**
- * @brief Continues executing the current process if the CPU is not empty,
+ * @brief Continues executing the current process if the Core is not empty,
  * or executes the next process on the ready queue if it is.
  *
  * @param processManager Pointer to the process manager.
@@ -127,6 +129,12 @@ void processRewind(ProcessManager *processManager, char *filename);
  */
 void attExec(ProcessManager *processManager);
 
+/**
+ * @brief Adds 1 to the Program
+ *
+ * @param processManager Pointer to the process manager struct.
+ */
+void upCPU(CPU *cpu);
 
 /**
  * @brief Interprets the instruction of the current process and executes the appropriate action.

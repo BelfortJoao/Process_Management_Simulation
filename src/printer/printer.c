@@ -3,7 +3,6 @@
 #include "../error/error.h"
 
 #include "printer.h"
-#include "../colour/colour.h"
 
 
 Printer *initializePrinter(int size) {

@@ -21,7 +21,7 @@ ProcessTableCellQueue *initializeProcessTableCellQueue();
 
 
 bool insertToProcessTableQueue(ProcessTableCellQueue *processTableCellQueue,
-                               char *filename, int parentProcessId, int clock);
+                               Process *process, int parentProcessId, int clock);
 
 bool insertCellToProcessTableQueue(ProcessTableCellQueue *processTableCellQueue, ProcessTableCell *processTableCell);
 
