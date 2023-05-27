@@ -7,7 +7,7 @@
 #define SRC_PROCESS_MANAGER_H
 
 #include <stdbool.h>
-#include "cpu.h"
+#include "../CPU/CPU_queue.h"
 #include "art_counter.h"
 #include "../processtable/process_table.h"
 
@@ -19,7 +19,7 @@
  */
 typedef struct ProcessManager
 {
-    CPU *cpu; /**< Pointer to the CPU struct. */
+    CPUQueue *cpu; /**< Pointer to the CPU struct. */
     Timer timer; /**< Struct containing the current time. */
     ArtCounter *artCounter; /**< Pointer to the average return time struct. */
     bool kill; /**< Flag indicating if the manager should stop execution. */
@@ -41,7 +41,7 @@ ProcessManager *initializeProcessManager();
  * @param filename The name of the file containing the CPU and process information.
  * @return A pointer to the Process Manager struct if successful, NULL otherwise.
  */
-ProcessManager *initializeProcessManagerFromFile(char *filename);
+ProcessManager *initializeProcessManagerFromFile(char *filename, int numberCores);
 
 
 /**

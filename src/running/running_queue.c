@@ -1,3 +1,6 @@
-//
-// Created by matt on 27/05/23.
-//
+#include "running.h"
+
+void contextExchange(int id, Running *runningProcess)
+{
+    *runningProcess = id;
+}

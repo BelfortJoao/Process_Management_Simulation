@@ -13,6 +13,7 @@
 #include "../blocked/blocked_queue.h"
 #include "../running/running.h"
 #include "process_table_cell_queue.h"
+#include "../running/running_queue.h"
 
 
 /**
@@ -25,7 +26,7 @@ typedef struct ProcessTable
     int nextFreeId;
     Ready *ready; /**< An array of ready processes. */
     BlockedQueue *blockedQueue; /**< An array of blocked processes. */
-    Running runningId; /**< The process currently being executed. */
+    RunningQueue *runningQueue; /**< The process currently being executed. */
 } ProcessTable;
 
 
@@ -35,7 +36,7 @@ typedef struct ProcessTable
  * @param initialCapacity the initial capacity of the table
  * @return a pointer to the new ProcessTable, or NULL if initialization failed
  */
-ProcessTable *initializeProcessTable(int initialCapacity);
+ProcessTable *initializeProcessTable(int initialCapacity, int numCPU);
 
 
 /**

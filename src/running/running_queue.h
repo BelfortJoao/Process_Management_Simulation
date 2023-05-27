@@ -1,8 +1,25 @@
-//
-// Created by matt on 27/05/23.
-//
+/**
+ * @file runningId.h
+ * @brief Header file for the Running process functionality.
+ */
 
-#ifndef SRC_RUNNING_QUEUE_H
-#define SRC_RUNNING_QUEUE_H
+#ifndef SRC_RUNNING_H
+#define SRC_RUNNING_H
 
-#endif //SRC_RUNNING_QUEUE_H
+
+/**
+ * @brief An integer representing a Running process.
+ */
+typedef int Running; /**< Stores ID of the runningId process. */
+
+
+/**
+ * @brief Exchanges the context of the given process ID with the provided Running process.
+ *
+ * @param id The ID of the process to exchange the context with.
+ * @param runningProcess The Running process to use for the context exchange.
+ */
+void contextExchange(int id, Running *runningProcess);
+
+
+#endif /* SRC_RUNNING_H */

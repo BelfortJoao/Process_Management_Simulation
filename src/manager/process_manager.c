@@ -5,6 +5,7 @@
 #include "../printer/printer.h"
 
 #include "process_manager.h"
+#include "../running/running_queue.h"
 
 
 ProcessManager *initializeProcessManager()
@@ -21,7 +22,7 @@ ProcessManager *initializeProcessManager()
 }
 
 
-ProcessManager *initializeProcessManagerFromFile(char *filename)
+ProcessManager *initializeProcessManagerFromFile(char *filename, int numberCores)
 {
     ProcessManager *processManager = initializeProcessManager();
 
@@ -32,7 +33,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
 
     initializeTimer(&processManager->timer);
     processManager->artCounter = initializeArtCounter();
-    processManager->cpu = initializeCPU(filename);
+    processManager->cpu = initializeCPU(filename, numberCores);
 
     if (!processManager->cpu)
     {
@@ -51,7 +52,7 @@ ProcessManager *initializeProcessManagerFromFile(char *filename)
         printProcessNotFound();
     }
 
-    contextExchange(0, &processManager->processTable->runningId);
+    insertToRunningQueue(, &processManager->processTable->runningId);
     processManager->processTable->processTableCellQueue->front->processTableCell->state = RUNNING;
     processManager->kill = false;
 
@@ -96,7 +97,7 @@ void blockProcess(ProcessManager *processManager, int blockTime, int typeOfSched
     getProcessTableCellByProcessId(processManager->processTable->processTableCellQueue,
                                    processToBlock)->state = BLOCKED;
 
-    changeProcess(processManager->cpu,
+    changeProcess(processManager->cpu->front,
                   processToRun->process,
                   processToRun->programCounter,
                   processToRun->CPUTime,
@@ -163,7 +164,7 @@ void scheduleProcess(ProcessManager *processManager, int typeOfScheduler)
             break;
     }
 
-    changeProcess(processManager->cpu,
+    changeProcess(processManager->cpu->front,
                   processToRunCell->process,
                   processToRunCell->programCounter,
                   time,
@@ -180,7 +181,7 @@ void endProcess(ProcessManager *processManager, int typeOfScheduler)
     {
         return;
     }
-    
+
     int processIdToDelete = processManager->processTable->runningId;
     int processToRunId = nextProcessReady(processManager->processTable->ready, typeOfScheduler);
 
@@ -229,7 +230,7 @@ void endProcess(ProcessManager *processManager, int typeOfScheduler)
                 break;
         }
 
-        changeProcess(processManager->cpu,
+        changeProcess(processManager->cpu->front,
                       processToRunCell->process,
                       processToRunCell->programCounter,
                       time,
@@ -240,7 +241,7 @@ void endProcess(ProcessManager *processManager, int typeOfScheduler)
     else
     {
         processManager->processTable->runningId = -1;
-        processManager->cpu->runningProcess = NULL;
+        processManager->cpu->front->runningProcess = NULL;
     }
 
     deleteProcessTableProcess(processIdToDelete, processManager->processTable);
@@ -270,7 +271,7 @@ void execute(ProcessManager *processManager, int typeOfScheduler)
             processManager->processTable->processTableCellQueue,
             processToRunId);
 
-    changeProcess(processManager->cpu,
+    changeProcess(processManager->cpu->front,
                   processToRunCell->process,
                   processToRunCell->programCounter,
                   processToRunCell->CPUTime,
@@ -282,7 +283,7 @@ void execute(ProcessManager *processManager, int typeOfScheduler)
 
 void processExecuting(ProcessManager *processManager, int typeOfScheduler)
 {
-    if (processManager->processTable->runningId < 0 || processManager->cpu->runningProcess == NULL)
+    if (processManager->processTable->runningId < 0 || processManager->cpu->front->runningProcess == NULL)
     {
         execute(processManager, typeOfScheduler);
         processUnblock(processManager);
@@ -294,7 +295,7 @@ void processExecuting(ProcessManager *processManager, int typeOfScheduler)
         return;
     }
 
-    if (processManager->cpu->executing_timer >= processManager->cpu->program_timer)
+    if (processManager->cpu->front->executing_timer >= processManager->cpu->front->program_timer)
     {
         scheduleProcess(processManager, typeOfScheduler);
     }
@@ -345,7 +346,7 @@ void processUnblock(ProcessManager *processManager)
 void clockUpPC(ProcessManager *processManager)
 {
     timeUp(&processManager->timer);
-    timeUp(&processManager->cpu->executing_timer);
+    timeUp(&processManager->cpu->front->executing_timer);
 }
 
 
@@ -373,7 +374,7 @@ void attExec(ProcessManager *processManager)
             processManager->processTable->processTableCellQueue,
             processManager->processTable->runningId);
 
-    runningProcessCell->programCounter = processManager->cpu->programCounter;
+    runningProcessCell->programCounter = processManager->cpu->front->programCounter;
     runningProcessCell->CPUTime++;
 }
 
@@ -382,10 +383,10 @@ void upperInterpreter(ProcessManager *processManager, int typeOfScheduler)
 {
     int blockTime;
     int PcPlus;
-    char **filename;
-    int cpuResp = interpreter(processManager->cpu, &blockTime, filename, &PcPlus);
+    char **filename = NULL;
+    int cpuResp = interpreter(processManager->cpu->front, &blockTime, filename, &PcPlus);
 
-    processManager->cpu->programCounter++;
+    processManager->cpu->front->programCounter++;
     attExec(processManager);
 
     switch (cpuResp)
