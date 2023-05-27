@@ -116,7 +116,7 @@ char *generateRandomFile(char *filename)
                         break;
                     case 2:
                         strcpy(line, "B ");
-                        sprintf(numString, "%d", (random() % 6) + 1);1
+                        sprintf(numString, "%d", (random() % 6) + 1);
                         strcat(line, numString);
                         fputs(line, file);
                         fputc('\n', file);
@@ -127,7 +127,7 @@ char *generateRandomFile(char *filename)
                         break;
                     case 4:
                         strcpy(line, "F ");
-                        sprintf(numString, "%d", (random() % 6) + 1);
+                        sprintf(numString, "%d", 1);
                         strcat(line, numString);
                         fputs(line, file);
                         fputc('\n', file);
