@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <wait.h>
+#include <time.h>
 #include "../error/error.h"
 #include "../printer/printer.h"
 
@@ -48,34 +49,111 @@ Control *initializeControl()
     return control;
 }
 
+char *generateRandomFile(char *filename)
+{
+    srandom(time(NULL));
+    int fileCount = 1;
+    int randomCommand = random() % 5;
+    int numberOfVariables = random() % 10;
+    char filePath[strlen(FILES_FOLDER) + 11];
+    char numString[9];
+    char line[256];
+    FILE *file;
+
+    while(1)
+    {
+        sprintf(filename, "file%d.txt", fileCount);
+        strcpy(filePath, FILES_FOLDER);
+        strcat(filePath, filename);
+        file = fopen(filePath, "r");
+
+        if(file == NULL)
+        {
+            file = fopen(filePath, "w");
+
+            if(file == NULL)
+            {
+                return NULL;
+            }
+
+            strcpy(line, "N ");
+            sprintf(numString, "%d", numberOfVariables);
+            strcat(line, numString);
+            fputs(line, file);
+            fputc('\n', file);
+
+            for(int i = 0; i < numberOfVariables; i++)
+            {
+                strcpy(line, "D ");
+                sprintf(numString, "%d", i);
+                strcat(line, numString);
+                fputs(line, file);
+                fputc('\n', file);
+                strcpy(line, "V ");
+                sprintf(numString, "%d %d", i, random() % 1000);
+                strcat(line, numString);
+                fputs(line, file);
+                fputc('\n', file);
+            }
+
+            do
+            {
+                switch (randomCommand)
+                {
+                    case 0:
+                        strcpy(line, "A ");
+                        sprintf(numString, "%d %d", random() % numberOfVariables, random() % 1000);
+                        strcat(line, numString);
+                        fputs(line, file);
+                        fputc('\n', file);
+                        break;
+                    case 1:
+                        strcpy(line, "S ");
+                        sprintf(numString, "%d %d", random() % numberOfVariables, random() % 1000);
+                        strcat(line, numString);
+                        fputs(line, file);
+                        fputc('\n', file);
+                        break;
+                    case 2:
+                        strcpy(line, "B ");
+                        sprintf(numString, "%d", (random() % 6) + 1);1
+                        strcat(line, numString);
+                        fputs(line, file);
+                        fputc('\n', file);
+                        break;
+                    case 3:
+                        strcpy(line, "T");
+                        fputs(line, file);
+                        break;
+                    case 4:
+                        strcpy(line, "F ");
+                        sprintf(numString, "%d", (random() % 6) + 1);
+                        strcat(line, numString);
+                        fputs(line, file);
+                        fputc('\n', file);
+                        break;
+                    default:
+                        break;
+                }
+                randomCommand = random() % 5;
+            }while (strcmp(line, "T"));
+            break;
+        }
+        fileCount++;
+        fclose(file);
+    }
+
+    fclose(file);
+    return filename;
+}
+
 int runControl(Control *control)
 {
-    char *file = (char*) malloc(sizeof(char) * CHAR_MAX);
+    char *filename = (char*) malloc(sizeof(char) * CHAR_MAX);
     char fileCommand[CHAR_MAX];
-    int file_type;
     int input_type;
     int typeOfScheduler;
-
-    printf("External file or random file? (1 - External file, 2 - Random file): ");
-    if (!scanf("%d", &file_type))
-    {
-        cleanStdin();
-        return -1;
-    }
-
-    if(file_type == 1)
-    {
-        printf("Type the name of the file (under '/files/'): ");
-        if (!scanf("%s", file))
-        {
-            cleanStdin();
-            return -1;
-        }
-    }
-    else
-    {
-        strcpy(file, " ");
-    }
+    filename = generateRandomFile(filename);
 
     printf("\nWhat type of scheduling? (1 - FIFO Priority, 2 - Lottery Priority): ");
     if(!scanf("%d", &typeOfScheduler))
@@ -91,7 +169,7 @@ int runControl(Control *control)
         return -1;
     }
 
-    control->processManager = initializeProcessManagerFromFile(file);
+    control->processManager = initializeProcessManagerFromFile(filename);
 
     if (!control->processManager)
     {

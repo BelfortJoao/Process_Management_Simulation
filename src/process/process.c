@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stddef.h>
 #include <limits.h>
-#include <time.h>
 #include "../error/error.h"
 
 #include "process.h"
@@ -45,90 +44,6 @@ int getNumberOfLinesInFile(FILE *file)
     return numLines;
 }
 
-FILE *generateRandomFile()
-{
-    srandom(time(NULL));
-    int randomCommand = random() % 5;
-    int numberOfVariables = random() % 100;
-    char filePath[strlen(FILES_FOLDER) + 11];
-    char numString[9];
-    char line[256];
-
-    strcpy(filePath, FILES_FOLDER);
-    strcat(filePath, "random.txt");
-
-    FILE *file = fopen(filePath, "w+");
-
-    strcpy(line, "N ");
-    sprintf(numString, "%d", numberOfVariables);
-    strcat(line, numString);
-    fputs(line, file);
-    fputc('\n', file);
-
-    for(int i = 0; i < numberOfVariables; i++)
-    {
-        strcpy(line, "D ");
-        sprintf(numString, "%d", i);
-        strcat(line, numString);
-        fputs(line, file);
-        fputc('\n', file);
-    }
-
-    for(int i = 0; i < numberOfVariables; i++)
-    {
-        strcpy(line, "V ");
-        sprintf(numString, "%d %d", i, random() % 10000);
-        strcat(line, numString);
-        fputs(line, file);
-        fputc('\n', file);
-    }
-
-    do
-    {
-        switch (randomCommand)
-        {
-            case 0:
-                strcpy(line, "A ");
-                sprintf(numString, "%d %d", random() % numberOfVariables, random() % 10000);
-                strcat(line, numString);
-                fputs(line, file);
-                fputc('\n', file);
-                break;
-            case 1:
-                strcpy(line, "S ");
-                sprintf(numString, "%d %d", random() % numberOfVariables, random() % 10000);
-                strcat(line, numString);
-                fputs(line, file);
-                fputc('\n', file);
-                break;
-            case 2:
-                strcpy(line, "B ");
-                sprintf(numString, "%d", random() % 10000);
-                strcat(line, numString);
-                fputs(line, file);
-                fputc('\n', file);
-                break;
-            case 3:
-                strcpy(line, "T");
-                fputs(line, file);
-                break;
-            case 4:
-                strcpy(line, "F ");
-                sprintf(numString, "%d", random() % 10000);
-                strcat(line, numString);
-                fputs(line, file);
-                fputc('\n', file);
-                break;
-            default:
-                break;
-        }
-        randomCommand = random() % 5;
-    }while (strcmp(line, "T"));
-
-    fclose(file);
-    return fopen("../files/random.txt", "r");
-}
-
 Process *initializeProcessFromFile(char *filename)
 {
     Process *process = initializeProcess();
@@ -141,18 +56,10 @@ Process *initializeProcessFromFile(char *filename)
     FILE *file;
     char filePath[strlen(FILES_FOLDER) + strlen(filename) + 1];
 
-    if(strcmp(filename, " "))
-    {
-        strcpy(filePath, FILES_FOLDER);
-        strcat(filePath, filename);
+    strcpy(filePath, FILES_FOLDER);
+    strcat(filePath, filename);
 
-        file = fopen(filePath, "r");
-    }
-    else
-    {
-        file = generateRandomFile();
-    }
-
+    file = fopen(filePath, "r");
 
     if (!file)
     {

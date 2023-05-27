@@ -48,13 +48,6 @@ Process *initializeProcess();
 int getNumberOfLinesInFile(FILE *file);
 
 /**
- * @brief Generates a random instructions file.
- *
- * @return FILE* Pointer to the newly created random instructions file.
- */
-FILE *generateRandomFile();
-
-/**
  * @brief Initializes a new process by reading a program from a file.
  * Takes a filename as input, reads the program from the file,
  * then returns a pointer to the new process.

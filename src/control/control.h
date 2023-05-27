@@ -29,6 +29,12 @@ typedef struct Control
  */
 Control *initializeControl();
 
+/**
+ * @brief Generates a random instructions file.
+ *
+ * @return char* Name of the random file.
+ */
+char *generateRandomFile();
 
 /**
  * @brief Runs the control loop for the simulation.
