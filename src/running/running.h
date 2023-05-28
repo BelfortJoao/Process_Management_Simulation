@@ -24,8 +24,9 @@ Running *initializeRunning(int numberOfRunning);
  *
  * @param id The ID of the process to exchange the context with.
  * @param runningProcess The Running process to use for the context exchange.
+ * @param The core which the context exchange will occur.
  */
-void contextExchange(int id, Running *runningProcess);
+void contextExchange(int id, Running *runningProcess, int coreNum);
 
 
 #endif /* SRC_RUNNING_H */

@@ -65,10 +65,11 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable);
  * @param processTable The process table to copy the process into.
  * @param timer The initial timer value for the process.
  * @param PcPlus The amount to add to the program counter of the new process.
+ * @param cpuNum The core in which
  *
  * @return True if the process was successfully copied, false otherwise.
  */
-bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus);
+bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus, int cpuNum);
 
 
 /**

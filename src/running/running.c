@@ -13,7 +13,7 @@ Running *initializeRunning(int numberOfRunning)
     return running;
 }
 
-void contextExchange(int id, Running *runningProcess)
+void contextExchange(int id, Running *runningProcess, int coreNum)
 {
-    *runningProcess = id;
+    runningProcess[coreNum] = id;
 }

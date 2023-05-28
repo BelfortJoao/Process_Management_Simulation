@@ -51,32 +51,37 @@ ProcessManager *initializeProcessManagerFromFile(char *filename, int numberOfCor
  *
  * @param processManager Pointer to the Process Manager struct.
  * @param blockTime The amount of time to block the process for.
+ * @param coreNum The core in witch the process is running.
  */
-void blockProcess(ProcessManager *processManager, int blockTime, int typeOfScheduler);
+void blockProcess(ProcessManager *processManager, int blockTime, int typeOfScheduler, int coreNum);
 
 
 /**
  * @brief Schedules a process to run on the Core.
  *
  * @param processManager Pointer to the process manager.
+ * @param coreNum The core which the process is running.
  */
-void scheduleProcess(ProcessManager *processManager, int typeOfScheduler);
+void scheduleProcess(ProcessManager *processManager, int typeOfScheduler, int coreNum);
 
 
 /**
  * @brief Ends the currently executing process.
  *
  * @param processManager Pointer to the process manager.
+ *
+ * @param coreNum The core in which the process is running.
  */
-void endProcess(ProcessManager *processManager, int typeOfScheduler);
+void endProcess(ProcessManager *processManager, int typeOfScheduler, int coreNum);
 
 
 /**
  * @brief Executes the next process on the ready queue.
  *
  * @param processManager Pointer to the process manager.
+ * @param coreNum The core which the process is running.
  */
-void execute(ProcessManager *processManager, int typeOfScheduler);
+void execute(ProcessManager *processManager, int typeOfScheduler, int coreNum);
 
 
 /**
@@ -109,8 +114,9 @@ void clockUpPC(ProcessManager *processManager);
  *
  * @param processManager Pointer to the process manager struct.
  * @param PcPlus Integer value of program counter.
+ * @param coreNum The core in which the process is running.
  */
-void processCP(ProcessManager *processManager, int PcPlus);
+void processCP(ProcessManager *processManager, int PcPlus, int coreNum);
 
 
 /**
@@ -118,30 +124,34 @@ void processCP(ProcessManager *processManager, int PcPlus);
  *
  * @param processManager Pointer to the process manager struct.
  * @param filename Pointer to the name of the file to rewind the process from.
+ * @param coreNum The core which the process is running.
  */
-void processRewind(ProcessManager *processManager, char *filename);
+void processRewind(ProcessManager *processManager, char *filename, int coreNum);
 
 
 /**
  * @brief Updates the process table with the execution information of the current process.
  *
  * @param processManager Pointer to the process manager struct.
+ * @param coreNum Core which the process is running.
  */
-void attExec(ProcessManager *processManager);
+void attExec(ProcessManager *processManager, int coreNum);
 
 /**
- * @brief Adds 1 to the Program
+ * @brief Adds 1 to the Program Counter
  *
  * @param processManager Pointer to the process manager struct.
+ * @param coreNum Core which the Program Counter is being increased
  */
-void upCPU(CPU *cpu);
+void upCPU(CPU *cpu, int coreNum);
 
 /**
  * @brief Interprets the instruction of the current process and executes the appropriate action.
  *
  * @param processManager Pointer to the process manager struct.
+ * @param coreNum Core which will interpret the instruction of its current process.
  */
-void upperInterpreter(ProcessManager *processManager, int typeOfScheduler);
+void upperInterpreter(ProcessManager *processManager, int typeOfScheduler, int coreNum);
 
 
 /**

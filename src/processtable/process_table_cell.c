@@ -37,7 +37,7 @@ ProcessTableCell *copyProcessTableCell(ProcessTableCell *processTableCellToCopy,
     }
 
     processTableCell->state = READY;
-    processTableCell->CPUTime = 0;
+    processTableCell->CPUTime = 8;
     processTableCell->initialTime = timer;
     processTableCell->id = id;
     processTableCell->parentProcessId = parentId;

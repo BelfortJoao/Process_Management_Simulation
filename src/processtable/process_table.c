@@ -76,10 +76,10 @@ void deleteProcessTableProcess(int id, ProcessTable *processTable)
 }
 
 
-bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus)
+bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus, int coreNum)
 {
     ProcessTableCell *processTableCell = getProcessTableCellByProcessId(processTable->processTableCellQueue,
-                                                                        processTable->runningId);
+                                                                        processTable->runningId[coreNum]);
 
     if (!processTableCell)
     {
@@ -89,8 +89,8 @@ bool copyProcess(ProcessTable *processTable, Timer timer, int PcPlus)
     if (!insertCellToProcessTableQueue(processTable->processTableCellQueue,
                                        copyProcessTableCell(processTableCell,
                                                             processTable->nextFreeId,
-                                                            processTable->runningId,
-                                                            processTableCell->programCounter + 1,
+                                                            processTable->runningId[coreNum],
+                                                            processTableCell->programCounter,
                                                             timer)))
     {
         return false;
