@@ -247,7 +247,8 @@ void endProcess(ProcessManager *processManager, int typeOfScheduler, int coreNum
     else
     {
         processManager->processTable->runningId[coreNum] = -1;
-        endCPU(processManager->cpu);
+        //endCPU(processManager->cpu);
+        processManager->cpu->coreArray[coreNum]->runningProcess = NULL;
     }
 
     deleteProcessTableProcess(processIdToDelete, processManager->processTable);
@@ -283,6 +284,7 @@ void execute(ProcessManager *processManager, int typeOfScheduler, int coreNum)
                   0);
 
     processToRunCell->state = RUNNING;
+
 }
 
 
@@ -291,7 +293,7 @@ void processExecuting(ProcessManager *processManager, int typeOfScheduler)
     processUnblock(processManager);
     for (int i = 0; i < processManager->cpu->numberOfCores; i++)
     {
-        if (processManager->processTable->runningId[i] < 0) {
+        if (processManager->processTable->runningId[i] < 0|| processManager->cpu->coreArray[i]->runningProcess == NULL){
             execute(processManager, typeOfScheduler, i);
             if (processManager->kill) {
                 freeProcessManager(processManager);
@@ -401,7 +403,6 @@ void upperInterpreter(ProcessManager *processManager, int typeOfScheduler, int c
     int PcPlus;
     char **filename;
 
-    upCPU(processManager->cpu, coreNum);
     attExec(processManager, coreNum);
 
     if (processManager->cpu->coreArray[coreNum]->coreState == WORKING)
@@ -427,6 +428,7 @@ void upperInterpreter(ProcessManager *processManager, int typeOfScheduler, int c
                 break;
         }
     }
+    upCPU(processManager->cpu, coreNum);
 }
 
 

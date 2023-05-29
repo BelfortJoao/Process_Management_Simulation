@@ -40,7 +40,7 @@ void initializeCoreFromFile(Core *core, char *filename)
     }
 
     core->coreState = WORKING;
-    core->programCounter = -1;
+    core->programCounter = 0;
     initializeTimer(&core->executing_timer);
     initializeTimer(&core->program_timer);
     core->program_timer = DEFAULT_QUANTUM;
