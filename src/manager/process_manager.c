@@ -112,6 +112,10 @@ void blockProcess(ProcessManager *processManager, int blockTime, int typeOfSched
 
 void scheduleProcess(ProcessManager *processManager, int typeOfScheduler, int coreNum)
 {
+    if (processManager->processTable->runningId[coreNum] < 0)
+    {
+        return;
+    }
     // Ready array -> Running.
     ProcessTableCell *processToReadyCell = getProcessTableCellByProcessId(
             processManager->processTable->processTableCellQueue,
@@ -178,7 +182,7 @@ void scheduleProcess(ProcessManager *processManager, int typeOfScheduler, int co
 
 void endProcess(ProcessManager *processManager, int typeOfScheduler, int coreNum)
 {
-    if (processManager->processTable->runningId[coreNum] == -1)
+    if (processManager->processTable->runningId[coreNum] < 0)
     {
         return;
     }
