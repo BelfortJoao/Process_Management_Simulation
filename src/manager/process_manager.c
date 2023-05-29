@@ -357,13 +357,88 @@ void processCP(ProcessManager *processManager, int PcPlus)
     }
 }
 
+//ISSO DEVE IR PARA OUTRA TAD----------------------------------------------
+
+typedef struct {
+    char** linhas;
+    int tamanho;
+} Arquivo;
+
+Arquivo lerArquivo(const char* nomeArquivo) {
+    const char* caminhoArquivo = "../files/";
+    char caminhoCompleto[100];
+    strcpy(caminhoCompleto, caminhoArquivo);
+    strcat(caminhoCompleto, nomeArquivo);
+
+    FILE* arquivo = fopen(caminhoCompleto, "r");
+    if (arquivo == NULL) {
+        fprintf(stderr, "Erro ao abrir o arquivo.\n");
+        Arquivo arq;
+        arq.linhas = NULL;
+        arq.tamanho = -1;
+        return arq;
+    }
+
+    // Contar o número de linhas do arquivo
+    int numeroLinhas = 0;
+    char ch;
+    while ((ch = fgetc(arquivo)) != EOF) {
+        if (ch == '\n') {
+            numeroLinhas++;
+        }
+    }
+    // Se o arquivo não termina com uma nova linha, incrementa o contador
+    if (ftell(arquivo) > 0) {
+        numeroLinhas++;
+    }
+    rewind(arquivo);
+
+    // Aloca memória para as linhas
+    char** linhas = (char**)malloc(numeroLinhas * sizeof(char*));
+    if (linhas == NULL) {
+        fprintf(stderr, "Erro ao alocar memória.\n");
+        fclose(arquivo);
+        Arquivo arq;
+        arq.linhas = NULL;
+        arq.tamanho = -1;
+        return arq;
+    }
+
+    // Lê as linhas do arquivo
+    char buffer[256];
+    int linhaAtual = 0;
+    while (fgets(buffer, sizeof(buffer), arquivo) != NULL) {
+        buffer[strcspn(buffer, "\n")] = '\0';  // Remove o caractere de nova linha
+        linhas[linhaAtual] = strdup(buffer);   // Aloca memória e copia a linha
+        linhaAtual++;
+    }
+
+    fclose(arquivo);
+
+    Arquivo arq;
+    arq.linhas = linhas;
+    arq.tamanho = numeroLinhas;
+    return arq;
+}
+
+//--------------------------------------------------------------------------
 
 void processRewind(ProcessManager *processManager, char *filename)
 {
-    removeFromProcessTableQueue(processManager->processTable->processTableCellQueue,
-                                processManager->processTable->runningId);
-
-    insertToProcessTableQueue(processManager->processTable->processTableCellQueue, filename, -1, processManager->timer);
+    //erro no filename
+    if (filename == NULL)
+    {
+        printf("Erro no nome do arquivo\n");
+        return;
+    }
+    Arquivo arq;
+    arq = lerArquivo(filename);
+    processManager->cpu->runningProcess->program = realloc(processManager->cpu->runningProcess->program, arq.tamanho);
+    printf("%s", *arq.linhas);
+    printf("%d", arq.tamanho);
+    processManager->cpu->runningProcess->program = arq.linhas;
+    processManager->cpu->runningProcess->numLines = arq.tamanho;
+    processManager->cpu->programCounter = 0;
 }
 
 
@@ -382,8 +457,8 @@ void upperInterpreter(ProcessManager *processManager, int typeOfScheduler)
 {
     int blockTime;
     int PcPlus;
-    char **filename;
-    int cpuResp = interpreter(processManager->cpu, &blockTime, filename, &PcPlus);
+    char *filename;
+    int cpuResp = interpreter(processManager->cpu, &blockTime, &filename, &PcPlus);
 
     processManager->cpu->programCounter++;
     attExec(processManager);
@@ -402,7 +477,7 @@ void upperInterpreter(ProcessManager *processManager, int typeOfScheduler)
             processCP(processManager, PcPlus);
             break;
         case 4://Recria o processo atual com base em um arquivo
-            processRewind(processManager, *filename);
+            processRewind(processManager, filename);
             break;
         default:
             break;
